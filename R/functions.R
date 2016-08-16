@@ -15,10 +15,10 @@ library(urltools)
 #' @keywords classification
 #' @export
 #' @examples
-#' getClassification("http://localhost:8080/rds/api/catalog/","myCollection","myView",class.id="myClass")
-#' getClassification("http://localhost:8080/rds/api/catalog/","myCollection","myView",class.id="myClass",limit=10,offset=10)
-#' getClassification("http://localhost:8080/rds/api/catalog/","myCollection","myView",class.id="myClass",codeSort="DESC")
-getClassification <- function(url,collection,view,class.id=NULL,limit=NULL,offset=NULL,codeSort=NULL,key=NULL){
+#' get.classification("http://localhost:8080/rds/api/catalog/","myCollection","myView",class.id="myClass")
+#' get.classification("http://localhost:8080/rds/api/catalog/","myCollection","myView",class.id="myClass",limit=10,offset=10)
+#' get.classification("http://localhost:8080/rds/api/catalog/","myCollection","myView",class.id="myClass",codeSort="DESC")
+get.classification <- function(url,collection,view,class.id=NULL,limit=NULL,offset=NULL,codeSort=NULL,key=NULL){
   # create the GET request and retrieve the JSON result
   request <- paste(url,collection,"/",view,"/classification/",class.id,sep="",collapse=NULL)
   
@@ -68,10 +68,10 @@ getClassification <- function(url,collection,view,class.id=NULL,limit=NULL,offse
 #' @keywords variable
 #' @export
 #' @examples
-#' getClassifications("http://localhost:8080/rds/api/catalog/","myCollection","myView") 
-#' getClassifications("http://localhost:8080/rds/api/catalog/","myCollection","myView",limit=10,offset=10,sort="DESC") 
-#' getClassifications("http://localhost:8080/rds/api/catalog/","myCollection","myView",codeLimit=100,codeSort="DESC")  
-getClassifications <- function(url,collection,view,limit=NULL,offset=NULL,codeLimit=NULL,codeOffset=NULL,sort=NULL,codeSort=NULL,key=NULL){
+#' get.classifications("http://localhost:8080/rds/api/catalog/","myCollection","myView") 
+#' get.classifications("http://localhost:8080/rds/api/catalog/","myCollection","myView",limit=10,offset=10,sort="DESC") 
+#' get.classifications("http://localhost:8080/rds/api/catalog/","myCollection","myView",codeLimit=100,codeSort="DESC")  
+get.classifications <- function(url,collection,view,limit=NULL,offset=NULL,codeLimit=NULL,codeOffset=NULL,sort=NULL,codeSort=NULL,key=NULL){
   # create the GET request and retrieve the JSON result
   request <- paste(url,collection,"/",view,"/classifications",sep="",collapse=NULL)
   
@@ -137,22 +137,13 @@ getClassifications <- function(url,collection,view,limit=NULL,offset=NULL,codeLi
 #' @keywords variable
 #' @export
 #' @examples
-#' getVariable("http://localhost:8080/rds/api/catalog/","myCollection","myView","myVariable") 
-getVariable <- function(url,collection,view,var.id=NULL,key=NULL){
+#' get.variable("http://localhost:8080/rds/api/catalog/","myCollection","myView","myVariable") 
+get.variable <- function(url,collection,view,var.id=NULL,key=NULL){
   # create the GET request and retrieve the JSON result
   request <- paste(url,collection,"/",view,"/variable/",var.id,sep="",collapse=NULL)
   
   # append any filled out options to the request 
   paramPrefix = "?"
-  if(!is.null(limit)){
-    request <- paste(request,paramPrefix,"limit=",limit,sep="",collapse=NULL)
-    paramPrefix = "&"
-  }
-  
-  if(!is.null(offset)){
-    request <- paste(request,paramPrefix,"offset=",offset,sep="",collapse=NULL)
-    paramPrefix = "&"
-  }
   
   if(!is.null(key)){
     request <- paste(request,paramPrefix,"key=",key,sep="",collapse=NULL)
@@ -175,9 +166,9 @@ getVariable <- function(url,collection,view,var.id=NULL,key=NULL){
 #' @keywords variable
 #' @export
 #' @examples
-#' getVariable("http://localhost:8080/rds/api/catalog/","myCollection","myView",cols="var1,var2") 
-#' getVariable("http://localhost:8080/rds/api/catalog/","myCollection","myView",cols="$demographics") 
-getVariables <- function(url,collection,view,cols=NULL,key=NULL){
+#' get.variables("http://localhost:8080/rds/api/catalog/","myCollection","myView",cols="var1,var2") 
+#' get.variables("http://localhost:8080/rds/api/catalog/","myCollection","myView",cols="$demographics") 
+get.variables <- function(url,collection,view,cols=NULL,key=NULL){
   # create the GET request and retrieve the JSON result
   request <- paste(url,collection,"/",view,"/variables",sep="",collapse=NULL)
   
