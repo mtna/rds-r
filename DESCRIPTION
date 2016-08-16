@@ -1,4 +1,4 @@
-Package: rds
+Package: rrds
 Title: Rich Data Services
 Version: 1.0.0
 Authors@R: person("Andrew", "DeCarlo", email = "andrew.decarlo@mtna.us", role = c("aut", "cre"))
