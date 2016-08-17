@@ -377,7 +377,7 @@ GRPS IDENTIFIED W TRUMAN 1
                             V480035B
                             </td>
                             </tr>
-                            </table>
+</table>
 
 Individual Variable Metadata
 ----------------------------
