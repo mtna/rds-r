@@ -10,6 +10,8 @@ Overview
 
 This document will explore using Metadata Technology North America's (MTNA) Rich Data Services (RDS) and how to integrate it with R. MTNA has written an RDS package for R that provides functions to efficiently access the data and metadata stored in a RDS server. This document serves as an example of how to access and use the two data functions provided, select and tabulate. In this example we will be using data from the American National Election Study in 1948. We have this stored on MTNA's public RDS server at {host}.
 
+    ## Visit http://strengejacke.de/sjPlot for package-vignettes.
+
 Data Dictionary
 ---------------
 
