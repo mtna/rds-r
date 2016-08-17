@@ -3,6 +3,8 @@ Overview
 
 This document will explore using Metadata Technology North America's (MTNA) Rich Data Services (RDS) and how to integrate it with R. MTNA has written an RDS package for R that provides functions to efficiently access the data and metadata stored in a RDS server. This document serves as an example of how to access and use the two data functions provided, select and tabulate. In this example we will be using data from the American National Election Study in 1948. We have this stored on MTNA's public RDS server at {host}.
 
+    ## Visit http://strengejacke.de/sjPlot for package-vignettes.
+
 Selecting data
 --------------
 
@@ -12,7 +14,7 @@ Be aware that RDS puts a default limit of 10,000 cells to enchance the performan
 
 The **select** function will return an **rds.dataset** object, which contains metadata (**rds.metadata**), data (**data.frame**), and info (**data.frame**). The **rds.metadata** object has methods that allow for quick and convenient access to the variable and classification metadata that is returned with the select query.
 
-For the sake of brevity and saving space in our HTML browser, we will limit the output to the first 10 rows returned by the query. Notice that in the info section returned data we can tell if there is more data to be returned for this query. Both columns and records can be paged by adjusting the **limit**, **offset**, **colLimit**, or **colOffset.** parameters.
+For the sake of brevity and saving space in our HTML browser, we will limit the output to the first 10 rows returned by the query. Notice that in the info section returned we can tell if there is more data to be returned for this query. Both columns and records can be paged by adjusting the **limit**, **offset**, **colLimit**, or **colOffset.** parameters.
 
 ``` r
 trumanData <- select("http://localhost:8080/rds/api/catalog/","test","NES1948",cols="$truman",limit=10)
@@ -475,10 +477,12 @@ RDS has a **tabulate** function that allows users to create tabulations and aggr
 The tabulate function will return the same **rds.dataset** object that the select function did.
 
 ``` r
-trumanData <- rds::tabulate("http://localhost:8080/rds/api/catalog/","test","NES1948",dimensions="V480014a")
-data <- trumanData@data
-par(mar=c(2, 8, 2, 2))
-bar <- barplot(data$count,horiz=TRUE, panel.first=grid(), las = 1, names.arg=data$V480014a, cex.names=0.8)
+tabData <- rds::tabulate("http://localhost:8080/rds/api/catalog/", 
+    "test", "NES1948", dimensions = "V480014a")
+data <- tabData@data
+par(mar = c(2, 8, 2, 2))
+bar <- barplot(data$count, horiz = TRUE, panel.first = grid(), 
+    las = 1, names.arg = data$V480014a, cex.names = 0.8)
 ```
 
 ![](rdsData_files/figure-markdown_github/unnamed-chunk-3-1.png)
@@ -488,8 +492,8 @@ bar <- barplot(data$count,horiz=TRUE, panel.first=grid(), las = 1, names.arg=dat
 So now we have created a bar chart for the frequencies of variable **V480014a**, so what if we want to show a bar, pie, or any other chart with the code values rather than the codes? We can use the **inject** parameter to specify that we want the codes returned to be replaced with their code values.
 
 ``` r
-trumanData <- rds::tabulate("http://localhost:8080/rds/api/catalog/","test","NES1948",dimensions="V480014a",inject=TRUE)
-data <- trumanData@data
+tabData <- rds::tabulate("http://localhost:8080/rds/api/catalog/","test","NES1948",dimensions="V480014a",inject=TRUE)
+data <- tabData@data
 par(mar=c(2, 20, 2, 0))
 bar <- barplot(data$count,horiz=TRUE, panel.first=grid(), las = 1, names.arg=data$V480014a, cex.names=0.8)
 ```
