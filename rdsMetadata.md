@@ -184,56 +184,56 @@ GRPS IDENTIFIED W TRUMAN 1
 </td>
 <td style="padding:0.2cm; text-align:left; vertical-align:top; text-align:center;">
 1.  GROUPS IDENTIFIED WITH TRUMAN
-    </td>
-    <td style="padding:0.2cm; text-align:left; vertical-align:top; text-align:center;">
-    40
-    </td>
-    <td style="padding:0.2cm; text-align:left; vertical-align:top; text-align:center;">
-    NUMERIC
-    </td>
-    <td style="padding:0.2cm; text-align:left; vertical-align:top; text-align:center;">
-    NUMERIC
-    </td>
-    <td style="padding:0.2cm; text-align:left; vertical-align:top; text-align:center;">
-    2
-    </td>
-    <td style="padding:0.2cm; text-align:left; vertical-align:top; text-align:center;">
-    V480031A
-    </td>
-    </tr>
-    <tr>
-    <td style="padding:0.2cm; text-align:left; vertical-align:top; text-align:center; background-color:#eaeaea;">
-    V480031b
-    </td>
-    <td style="padding:0.2cm; text-align:left; vertical-align:top; text-align:center; background-color:#eaeaea;">
-    V480031b
-    </td>
-    <td style="padding:0.2cm; text-align:left; vertical-align:top; text-align:center; background-color:#eaeaea;">
-    GRPS IDENTIFIED W TRUMAN 2
-    </td>
-    <td style="padding:0.2cm; text-align:left; vertical-align:top; text-align:center; background-color:#eaeaea;">
-    1.  GROUPS IDENTIFIED WITH TRUMAN
-        </td>
-        <td style="padding:0.2cm; text-align:left; vertical-align:top; text-align:center; background-color:#eaeaea;">
-        41
-        </td>
-        <td style="padding:0.2cm; text-align:left; vertical-align:top; text-align:center; background-color:#eaeaea;">
-        NUMERIC
-        </td>
-        <td style="padding:0.2cm; text-align:left; vertical-align:top; text-align:center; background-color:#eaeaea;">
-        NUMERIC
-        </td>
-        <td style="padding:0.2cm; text-align:left; vertical-align:top; text-align:center; background-color:#eaeaea;">
-        2
-        </td>
-        <td style="padding:0.2cm; text-align:left; vertical-align:top; text-align:center; background-color:#eaeaea;">
-        V480031B
-        </td>
-        </tr>
-        <tr>
-        <td style="padding:0.2cm; text-align:left; vertical-align:top; text-align:center;">
-        V480031c
-        </td>
+</td>
+<td style="padding:0.2cm; text-align:left; vertical-align:top; text-align:center;">
+40
+</td>
+<td style="padding:0.2cm; text-align:left; vertical-align:top; text-align:center;">
+NUMERIC
+</td>
+<td style="padding:0.2cm; text-align:left; vertical-align:top; text-align:center;">
+NUMERIC
+</td>
+<td style="padding:0.2cm; text-align:left; vertical-align:top; text-align:center;">
+2
+</td>
+<td style="padding:0.2cm; text-align:left; vertical-align:top; text-align:center;">
+V480031A
+</td>
+</tr>
+<tr>
+<td style="padding:0.2cm; text-align:left; vertical-align:top; text-align:center; background-color:#eaeaea;">
+V480031b
+</td>
+<td style="padding:0.2cm; text-align:left; vertical-align:top; text-align:center; background-color:#eaeaea;">
+V480031b
+</td>
+<td style="padding:0.2cm; text-align:left; vertical-align:top; text-align:center; background-color:#eaeaea;">
+GRPS IDENTIFIED W TRUMAN 2
+</td>
+<td style="padding:0.2cm; text-align:left; vertical-align:top; text-align:center; background-color:#eaeaea;">
+1.  GROUPS IDENTIFIED WITH TRUMAN
+</td>
+<td style="padding:0.2cm; text-align:left; vertical-align:top; text-align:center; background-color:#eaeaea;">
+41
+</td>
+<td style="padding:0.2cm; text-align:left; vertical-align:top; text-align:center; background-color:#eaeaea;">
+NUMERIC
+</td>
+<td style="padding:0.2cm; text-align:left; vertical-align:top; text-align:center; background-color:#eaeaea;">
+NUMERIC
+</td>
+<td style="padding:0.2cm; text-align:left; vertical-align:top; text-align:center; background-color:#eaeaea;">
+2
+</td>
+<td style="padding:0.2cm; text-align:left; vertical-align:top; text-align:center; background-color:#eaeaea;">
+V480031B
+</td>
+</tr>
+<tr>
+<td style="padding:0.2cm; text-align:left; vertical-align:top; text-align:center;">
+V480031c
+</td>
         <td style="padding:0.2cm; text-align:left; vertical-align:top; text-align:center;">
         V480031c
         </td>
@@ -373,9 +373,9 @@ GRPS IDENTIFIED W TRUMAN 1
                             </td>
                             <td style="padding:0.2cm; text-align:left; vertical-align:top; text-align:center;">
                             V480035B
-                            </td>
-                            </tr>
-                            </table>
+</td>
+</tr>
+</table>
 
 Individual Variable Metadata
 ----------------------------
