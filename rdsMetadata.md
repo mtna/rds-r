@@ -22,8 +22,10 @@ To access the metadata for a view we will use the **get.variables** function, we
 The variable metadata will be returned as a data.frame with the variable properties as the header and each variables values as a record.
 
 ``` r
-anesVariables <- get.variables("http://localhost:8080/rds/api/catalog/","test","NES1948",cols="$truman")
-table <- sjPlot::sjt.df(anesVariables, useViewer = F,describe=FALSE,encoding = "UTF-8", no.output=TRUE, altr.row.col=TRUE, show.rownames=FALSE)$knitr
+anesVariables <- get.variables("http://localhost:8080/rds/api/catalog/", "test", 
+    "NES1948", cols = "$truman")
+table <- sjPlot::sjt.df(anesVariables, useViewer = F, describe = FALSE, encoding = "UTF-8", 
+    no.output = TRUE, altr.row.col = TRUE, show.rownames = FALSE)$knitr
 ```
 
 <table style="border-collapse:collapse; border:none;">
@@ -184,56 +186,56 @@ GRPS IDENTIFIED W TRUMAN 1
 </td>
 <td style="padding:0.2cm; text-align:left; vertical-align:top; text-align:center;">
 1.  GROUPS IDENTIFIED WITH TRUMAN
-</td>
-<td style="padding:0.2cm; text-align:left; vertical-align:top; text-align:center;">
-40
-</td>
-<td style="padding:0.2cm; text-align:left; vertical-align:top; text-align:center;">
-NUMERIC
-</td>
-<td style="padding:0.2cm; text-align:left; vertical-align:top; text-align:center;">
-NUMERIC
-</td>
-<td style="padding:0.2cm; text-align:left; vertical-align:top; text-align:center;">
-2
-</td>
-<td style="padding:0.2cm; text-align:left; vertical-align:top; text-align:center;">
-V480031A
-</td>
-</tr>
-<tr>
-<td style="padding:0.2cm; text-align:left; vertical-align:top; text-align:center; background-color:#eaeaea;">
-V480031b
-</td>
-<td style="padding:0.2cm; text-align:left; vertical-align:top; text-align:center; background-color:#eaeaea;">
-V480031b
-</td>
-<td style="padding:0.2cm; text-align:left; vertical-align:top; text-align:center; background-color:#eaeaea;">
-GRPS IDENTIFIED W TRUMAN 2
-</td>
-<td style="padding:0.2cm; text-align:left; vertical-align:top; text-align:center; background-color:#eaeaea;">
-1.  GROUPS IDENTIFIED WITH TRUMAN
-</td>
-<td style="padding:0.2cm; text-align:left; vertical-align:top; text-align:center; background-color:#eaeaea;">
-41
-</td>
-<td style="padding:0.2cm; text-align:left; vertical-align:top; text-align:center; background-color:#eaeaea;">
-NUMERIC
-</td>
-<td style="padding:0.2cm; text-align:left; vertical-align:top; text-align:center; background-color:#eaeaea;">
-NUMERIC
-</td>
-<td style="padding:0.2cm; text-align:left; vertical-align:top; text-align:center; background-color:#eaeaea;">
-2
-</td>
-<td style="padding:0.2cm; text-align:left; vertical-align:top; text-align:center; background-color:#eaeaea;">
-V480031B
-</td>
-</tr>
-<tr>
-<td style="padding:0.2cm; text-align:left; vertical-align:top; text-align:center;">
-V480031c
-</td>
+    </td>
+    <td style="padding:0.2cm; text-align:left; vertical-align:top; text-align:center;">
+    40
+    </td>
+    <td style="padding:0.2cm; text-align:left; vertical-align:top; text-align:center;">
+    NUMERIC
+    </td>
+    <td style="padding:0.2cm; text-align:left; vertical-align:top; text-align:center;">
+    NUMERIC
+    </td>
+    <td style="padding:0.2cm; text-align:left; vertical-align:top; text-align:center;">
+    2
+    </td>
+    <td style="padding:0.2cm; text-align:left; vertical-align:top; text-align:center;">
+    V480031A
+    </td>
+    </tr>
+    <tr>
+    <td style="padding:0.2cm; text-align:left; vertical-align:top; text-align:center; background-color:#eaeaea;">
+    V480031b
+    </td>
+    <td style="padding:0.2cm; text-align:left; vertical-align:top; text-align:center; background-color:#eaeaea;">
+    V480031b
+    </td>
+    <td style="padding:0.2cm; text-align:left; vertical-align:top; text-align:center; background-color:#eaeaea;">
+    GRPS IDENTIFIED W TRUMAN 2
+    </td>
+    <td style="padding:0.2cm; text-align:left; vertical-align:top; text-align:center; background-color:#eaeaea;">
+    1.  GROUPS IDENTIFIED WITH TRUMAN
+        </td>
+        <td style="padding:0.2cm; text-align:left; vertical-align:top; text-align:center; background-color:#eaeaea;">
+        41
+        </td>
+        <td style="padding:0.2cm; text-align:left; vertical-align:top; text-align:center; background-color:#eaeaea;">
+        NUMERIC
+        </td>
+        <td style="padding:0.2cm; text-align:left; vertical-align:top; text-align:center; background-color:#eaeaea;">
+        NUMERIC
+        </td>
+        <td style="padding:0.2cm; text-align:left; vertical-align:top; text-align:center; background-color:#eaeaea;">
+        2
+        </td>
+        <td style="padding:0.2cm; text-align:left; vertical-align:top; text-align:center; background-color:#eaeaea;">
+        V480031B
+        </td>
+        </tr>
+        <tr>
+        <td style="padding:0.2cm; text-align:left; vertical-align:top; text-align:center;">
+        V480031c
+        </td>
         <td style="padding:0.2cm; text-align:left; vertical-align:top; text-align:center;">
         V480031c
         </td>
@@ -373,9 +375,9 @@ V480031c
                             </td>
                             <td style="padding:0.2cm; text-align:left; vertical-align:top; text-align:center;">
                             V480035B
-</td>
-</tr>
-</table>
+                            </td>
+                            </tr>
+                            </table>
 
 Individual Variable Metadata
 ----------------------------
@@ -383,8 +385,10 @@ Individual Variable Metadata
 In the event that users need to access a single variables metadata instead of a group of variables the **get.variable** function can be used. Again we will need to know the base URL, collection, and view, as well as the variable ID. In this case we will specify the **var.id** parameter as V480014a.
 
 ``` r
-var <- get.variable("http://localhost:8080/rds/api/catalog/","test","NES1948",var.id="V480014a")
-table <- sjPlot::sjt.df(var, useViewer = F,describe=FALSE,encoding = "UTF-8", no.output=TRUE, show.rownames=FALSE)$knitr
+var <- get.variable("http://localhost:8080/rds/api/catalog/", "test", "NES1948", 
+    var.id = "V480014a")
+table <- sjPlot::sjt.df(var, useViewer = F, describe = FALSE, encoding = "UTF-8", 
+    no.output = TRUE, show.rownames = FALSE)$knitr
 ```
 
 <table style="border-collapse:collapse; border:none;">
@@ -455,12 +459,16 @@ Looking at the previously retrieved variable, V480014a, users may notice that th
 Due to the fact that classifications can sometimes be very large (tens of thousands of codes) code limits can be placed on the classification to allow pagination through the classification if desired, the default code limit is 100. Codes can also be sorted in ASC or DESC order by their codes.
 
 ``` r
-class <- get.classification("http://localhost:8080/rds/api/catalog/","test","NES1948",class.id=var$classification)
+class <- get.classification("http://localhost:8080/rds/api/catalog/", "test", "NES1948", 
+    class.id = var$classification)
 codes <- class@codes
-asc.table <- sjPlot::sjt.df(codes, useViewer = F,describe=FALSE,encoding = "UTF-8", no.output=TRUE, altr.row.col=TRUE, show.rownames=FALSE)$knitr
-class <- get.classification("http://localhost:8080/rds/api/catalog/","test","NES1948",class.id=var$classification,codeSort = "DESC")
+asc.table <- sjPlot::sjt.df(codes, useViewer = F, describe = FALSE, encoding = "UTF-8", 
+    no.output = TRUE, altr.row.col = TRUE, show.rownames = FALSE)$knitr
+class <- get.classification("http://localhost:8080/rds/api/catalog/", "test", "NES1948", 
+    class.id = var$classification, codeSort = "DESC")
 codes <- class@codes
-desc.table <- sjPlot::sjt.df(codes, useViewer = F,describe=FALSE,encoding = "UTF-8", no.output=TRUE, altr.row.col=TRUE, show.rownames=FALSE)$knitr
+desc.table <- sjPlot::sjt.df(codes, useViewer = F, describe = FALSE, encoding = "UTF-8", 
+    no.output = TRUE, altr.row.col = TRUE, show.rownames = FALSE)$knitr
 ```
 
 <table style="border-collapse:collapse; border:none;">
@@ -682,7 +690,8 @@ Multiple Classifications
 Multiple classifications can be retrieved as well using the **get.classifications** function. This will return a list of **rds.classification** objects.
 
 ``` r
-classifications <- get.classifications("http://localhost:8080/rds/api/catalog/","test","NES1948")
+classifications <- get.classifications("http://localhost:8080/rds/api/catalog/", 
+    "test", "NES1948")
 ```
 
 <br/><br/><br/><br/>
