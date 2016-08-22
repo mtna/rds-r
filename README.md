@@ -31,14 +31,9 @@ Setup
 Libraries used for this markdown demonstration.
 
 ``` r
-library(rds.r, quietly = TRUE, warn.conflicts = FALSE)
-library(sjPlot, quietly = TRUE, warn.conflicts = FALSE)
-```
-
-    ## #refugeeswelcome
-
-``` r
-library(ggplot2, quietly = TRUE, warn.conflicts = FALSE)
+library(rds.r)
+library(sjPlot)
+library(ggplot2)
 library(plyr)
 ```
 
