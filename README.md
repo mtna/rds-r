@@ -1776,7 +1776,7 @@ NA
 Tabulating Data
 ---------------
 
-So now lets create some tables and graphs that try to answer some questions. Perhaps we would like to know if there is any difference between why male and female respondents think people voted for Truman. First lets create the table using the **tabulate** function.
+Perhaps we would like to know if there is any difference between why male and female respondents think people voted for Truman. First lets create the table using the **tabulate** function.
 
 ``` r
 tabulation <- tabulate("http://richdataservices.com/public/api/catalog/", "test", 
