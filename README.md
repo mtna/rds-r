@@ -1,5 +1,4 @@
 # rds.r
-
 -   Overview
 -   Install
 -   Setup
@@ -32,9 +31,15 @@ Setup
 Libraries used for this markdown demonstration.
 
 ``` r
-library(rds.r)
-library(sjPlot)
-library(ggplot2)
+library(rds.r, quietly = TRUE, warn.conflicts = FALSE)
+library(sjPlot, quietly = TRUE, warn.conflicts = FALSE)
+```
+
+    ## #refugeeswelcome
+
+``` r
+library(ggplot2, quietly = TRUE, warn.conflicts = FALSE)
+library(plyr)
 ```
 
 Why RDS?
@@ -2025,20 +2030,26 @@ Turning Tabulations into Charts
 Because the tabulate function returns a data set that contains the data and metadata, all we need to do is plug in the appropriate data and metadata into our favorite charting tool.
 
 ``` r
-# get the data from the previously returned dataSet
-data <- tabulation@data
-
-# get the metadata from the previously returned dataSet
+# get the metadata from the previously returned dataSet which applies to both the
+# male and female data
 metadata <- tabulation@metadata
 V480045 <- rds:::variable(metadata, "V480045")
 V480014a <- rds:::variable(metadata, "V480014a")
 classification <- rds:::classification(metadata, V480045$classification)
 
-# chart
-ggplot(data, aes(x = data$V480014a, y = data$count, fill = factor(data$V480045))) + 
-    geom_bar(stat = "identity") + theme(axis.text.x = element_text(angle = 90, hjust = 1, 
-    vjust = 0.5), legend.position = "top") + xlab(V480014a$label) + ylab("Count") + 
-    scale_fill_discrete(name = "") + coord_flip()
+## we will compute the percentage and format it as a percentage label for the
+## chart
+data = ddply(data, .(V480014a), transform, percent = count/sum(count) * 100)
+data = ddply(data, .(V480014a), transform, pos = (cumsum(count) - 0.5 * count))
+data$label = paste0(sprintf("%.0f", data$percent), "%")
+
+# plot the data
+ggplot(data, aes(x = factor(V480014a), y = count, fill = V480045)) + geom_bar(stat = "identity") + 
+    geom_text(aes(y = pos, label = label), size = 3) + theme(axis.text.x = element_text(angle = 90, 
+    hjust = 1, vjust = 0.5), axis.text.y = element_text(size = 12), legend.position = "top") + 
+    xlab(V480014a$label) + coord_flip()
 ```
 
-![](rdsData_files/figure-markdown_github/unnamed-chunk-7-1.png) <br/><br/><br/><br/>
+![](rdsData_files/figure-markdown_github/unnamed-chunk-7-1.png)
+
+<br/><br/><br/><br/>
