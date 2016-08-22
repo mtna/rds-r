@@ -4,7 +4,7 @@
 \alias{injectMetadata}
 \title{Inject Metadata}
 \usage{
-injectMetadata(data, json)
+injectMetadata(data, metadata)
 }
 \arguments{
 \item{data}{The original data frame from}
