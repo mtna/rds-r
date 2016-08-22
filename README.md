@@ -2032,8 +2032,8 @@ V480045 <- rds:::variable(metadata, "V480045")
 V480014a <- rds:::variable(metadata, "V480014a")
 classification <- rds:::classification(metadata, V480045$classification)
 
-## we will compute the percentage and format it as a percentage label for the
-## chart
+## we will compute the percentage of that male and female 
+## respondes for each category
 data = ddply(data, .(V480014a), transform, percent = count/sum(count) * 100)
 data = ddply(data, .(V480014a), transform, pos = (cumsum(count) - 0.5 * count))
 data$label = paste0(sprintf("%.0f", data$percent), "%")
