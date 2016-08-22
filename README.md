@@ -22,9 +22,9 @@ Retrieving data and metadata for analytical, reporting, or visualization purpose
 -   Finding relevant documentation
 -   Manually transcribing codes/classification/labels and other descriptive elements into R objects
 
-RDS completely simplifies this process by offeing a powerful REST API to perfomr all of the above in *a single step*! No need to download data, convert across formats, spend skimming though PDF/Excel/Word or other cryptic files for documentation.
+RDS completely simplifies this process by offeing a powerful REST API to perform all of the above in *a single step*! No need to download data, convert across formats, spend hours skimming though cryptic PDF/Excel/Word and othe rlegacy files for documentation.
 
-RDS combined on the fly querying and tabulation operations with metadata retrieval capabilities. Comprehensive variable and classification metadata can accompany any data queried through RDS, enabling the immediate reuse and rendering. 
+RDS combines on the fly querying and tabulation capabilities with metadata retrieval features. Comprehensive variable and classification metadata can accompany any data queried through RDS, enabling immediate reuse and rendering. 
 
 Visit the RDS web site for detailed informtion on the platform capabilities or learn more about how to complement and deliver your data to you users. 
 
