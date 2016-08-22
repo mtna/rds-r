@@ -51,10 +51,10 @@ library(plyr)
 <a name="querying"></a>
 ##Querying Data (select)
 -  [Background](#querying.intro)
--  [Your first RDS call](#querying.calling)
+-  [Calling RDS](#querying.calling)
 -  [Rendering the dictionnary](#querying.dictionnary)
 -  [Rendering the data](#querying.data)
--  [Rendering well documented data](#querying.data2)
+-  [Rendering documented data](#querying.data2)
 -  [Showing classifications or code lists](#querying.classification)
 
 <a name="querying.intro"></a>
@@ -63,7 +63,7 @@ Lets imagine that we are researching the United States presidential election fro
 
 However, to identify the variables of interest we would need to read through all 67 variables and their names and labels and choose the variables that have to do with respondent demographics or questions about Truman.
 
-<a name="querying.intro"></a>
+<a name="querying.calling"></a>
 ### Calling RDS
 RDS will save you the trouble, instead of manually reading the variables information, we can request the variables and their metadata be returned to use by searching for keywords. This will return more than data, the variable and classification metadata will be available as well. This will allow us to document the variables we are using to provide ourselves and others with more context around the data we are using.
 
@@ -478,6 +478,7 @@ GRPS IDENTIFIED W TRUMAN 1
                             </tr>
 </table>
 
+<a name="querying.data"></a>
 ### Data
 
 <table style="border-collapse:collapse; border:none;">
@@ -1099,7 +1100,7 @@ V480048
 </tr>
 </table>
 
-<a name="querying.data"></a>
+<a name="querying.data2"></a>
 ### Data With Code Values
 
 Maybe we want to know the code values for the codes of one or more of these variables, we have two options to do this.
@@ -1741,6 +1742,8 @@ HIGH SCHOOL
 </td>
 </tr>
 </table>
+
+<a name="querying.classification"></a>
 ### Sex of Respondent: Classification
 
 We could also simply access the classification information for a given variable.
@@ -2037,7 +2040,6 @@ OTHER
 </table>
 
 <a name="visualizing"></a>
-
 ##Turning Data into Charts (Visualizaing)
 
 Because the tabulate function returns a data set that contains the data and metadata, all we need to do is plug in the appropriate data and metadata into our favorite charting tool.
@@ -2068,7 +2070,6 @@ ggplot(data, aes(x = factor(V480014a), y = count, fill = V480045)) + geom_bar(st
 <br/><br/><br/><br/>
 
 <a name="contribute"></a>
-
 ## Contribute
 Putting this product together and maintaining the repository takes time and resources. We welcome your support in any shape or form, in particular:
 
