@@ -35,9 +35,7 @@ Visit the RDS web site for detailed informtion on the platform capabilities or l
 install.packages("rds.r")
 ```
 
-<a name="demo"></a>
-
-For the examples below, we will be using data from the [1948 American National Election Study 1948 (ANES)](http://www.electionstudies.org/studypages/1948prepost/1948prepost.htm) dataset hosted on the MTNA's public RDS server. This simple dataset contains 662 records and 65 variables/columns. 
+The examples below, we will be using data from the [1948 American National Election Study 1948 (ANES)](http://www.electionstudies.org/studypages/1948prepost/1948prepost.htm) dataset hosted on the MTNA's public RDS server. This simple dataset contains 662 records and 65 variables/columns. 
 
 R libraries used for demonstration purposes include:
 
