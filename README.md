@@ -1,34 +1,46 @@
 # rds.r
--   Overview
--   Install
--   Setup
--   Why RDS?
--   Querying data
-    -   Dictionary
-    -   Data
-    -   Data With Code Values
-    -   Sex of Respondent: Classification
--   Tabulating Data
--   Turning Tabulations into Charts
+-   [Overview](#overview)
+-   [Why RDS](#why)
+-   [Install](#install)
+-   [Demo](#demo)
+-   [Querying Data](#querying)
+-   [Tabulating Data](#tabulating)
+-   [Visualizing Data](#visualizing)
+-   [Contribute](#contribute)
+-   [License](#license)
 
-Overview
---------
+<a name="overview"></a>
+##Overview
 
-Access data and metadata together in one quick call. With RDS there is no need to search for documentation to fill out the data, as it is provided to users through the same response as the data is. Variable and classification metadata can accompany any data that is queried through RDS through the use of a few simple parameters.
+This R library facilitates access and integration with MTNA [Rich Data Services](http://www.richdataservices.com) API, enabling immediate access to RDS backed datasets and metadata collections. RDS provides on-premises or cloud based solution for concurrently accessing, querying, tabulating, and packaging data and metadata through a flexible REST API. 
 
-In this document we will be using data from the American National Election Study 1948 (ANES) that is stored on MTNA's public RDS server.
+<a name="why"></a>
+##Why RDS?
+Retrieving data and metadata for analytical, reporting, or visualization purposes is typcially a time and resource consuming process that involves several steps such:
+-   Locating and downloading the data
+-   Converting and load into R
+-   Computing subsets or aggregation
+-   Finding relevant documentation
+-   Manually transcribing codes/classification/labels and other descriptive elements into R objects
 
-Install
--------
+RDS completely simplifies this process by offeing a powerful REST API to perfomr all of the above in *a single step*! No need to download data, convert across formats, spend skimming though PDF/Excel/Word or other cryptic files for documentation.
+
+RDS combined on the fly querying and tabulation operations with metadata retrieval capabilities. Comprehensive variable and classification metadata can accompany any data queried through RDS, enabling the immediate reuse and rendering. 
+
+Visit the RDS web site for detailed informtion on the platform capabilities or learn more about how to complement and deliver your data to you users. 
+
+<a name="install"></a>
+##Install
 
 ``` r
 install.packages("rds.r")
 ```
 
-Setup
------
+<a name="demo"></a>
+##Demo
+In the examples below, we will be using data from the [1948 American National Election Study 1948 (ANES)](http://www.electionstudies.org/studypages/1948prepost/1948prepost.htm) dataset hosted on the MTNA's public RDS server. This simple dataset contains 662 records and 65 variables/columns. 
 
-Libraries used for this markdown demonstration.
+R libraries used for demonstration purposes include:
 
 ``` r
 library(rds.r)
@@ -37,22 +49,23 @@ library(ggplot2)
 library(plyr)
 ```
 
-Why RDS?
---------
+<a name="querying"></a>
+##Querying Data (select)
+-  [Background](#querying.intro)
+-  [Your first RDS call](#querying.calling)
+-  [Rendering the dictionnary](#querying.dictionnary)
+-  [Rendering the data](#querying.data)
+-  [Rendering well documented data](#querying.data2)
+-  [Showing classifications or code lists](#querying.classification)
 
-Traditionally when researchers want to analyze and evaluate data that is not their own they will have to complete several tasks before they can start their research.
+<a name="querying.intro"></a>
+### Background
+Lets imagine that we are researching the United States presidential election from 1948, between Harry Truman, and Thomas Dewey. We are interested in demographic data of the respondent and why they did or did not vote for Harry Truman. We may take a look at the [documentation on the ANES website](http://www.electionstudies.org/studypages/1948prepost/nes1948.txt) which has a lot of good information about the variables and their codes stored in an ASCII format. 
 
--   Locate the data set they want to work with
--   Acquire the data and load it in R
--   Access the documentation and transcribe the documentation into a useful format in R
+However, to identify the variables of interest we would need to read through all 67 variables and their names and labels and choose the variables that have to do with respondent demographics or questions about Truman.
 
-RDS cuts down the time it takes for reasearchers to locate and access the data of interest in a particular data set through its innovative querying capabilities and the metadata that can accompany every query.
-
-Querying data
--------------
-
-Lets imagine that we are researching the United States presidential election from 1948, between Harry Truman, and Thomas Dewey. We are interested in demographic data of the respondent and why they did or did not vote for Harry Truman. We may take a look at the documentation on the ANES website <http://www.electionstudies.org/studypages/1948prepost/nes1948.txt> which has a lot of good information about the variables and their codes stored in an ASCII format. However, to identify the variables of interest we would need to read through all 67 variables and their names and labels and choose the variables that have to do with respondent demographics or questions about Truman.
-
+<a name="querying.intro"></a>
+### Calling RDS
 RDS will save you the trouble, instead of manually reading the variables information, we can request the variables and their metadata be returned to use by searching for keywords. This will return more than data, the variable and classification metadata will be available as well. This will allow us to document the variables we are using to provide ourselves and others with more context around the data we are using.
 
 ``` r
@@ -80,6 +93,7 @@ dataTable <- sjPlot::sjt.df(data, useViewer = F, describe = FALSE, encoding = "U
     no.output = TRUE, altr.row.col = TRUE, show.rownames = FALSE)$knitr
 ```
 
+<a name="querying.dictionnary"></a>
 ### Dictionary
 
 <table style="border-collapse:collapse; border:none;">
@@ -1085,6 +1099,8 @@ V480048
 </td>
 </tr>
 </table>
+
+<a name="querying.data"></a>
 ### Data With Code Values
 
 Maybe we want to know the code values for the codes of one or more of these variables, we have two options to do this.
@@ -1773,8 +1789,9 @@ NA
 </td>
 </tr>
 </table>
-Tabulating Data
----------------
+
+<a name="tabulating"></a>
+##Tabulating Data
 
 Perhaps we would like to know if there is any difference between why male and female respondents think people voted for Truman. First lets create the table using the **tabulate** function.
 
@@ -2019,8 +2036,10 @@ OTHER
 </td>
 </tr>
 </table>
-Turning Tabulations into Charts
--------------------------------
+
+<a name="visualizing"></a>
+
+##Turning Data into Charts (Visualizaing)
 
 Because the tabulate function returns a data set that contains the data and metadata, all we need to do is plug in the appropriate data and metadata into our favorite charting tool.
 
@@ -2048,3 +2067,18 @@ ggplot(data, aes(x = factor(V480014a), y = count, fill = V480045)) + geom_bar(st
 ![](rdsData_files/figure-markdown_github/unnamed-chunk-7-1.png)
 
 <br/><br/><br/><br/>
+
+<a name="contribute"></a>
+
+## Contribute
+Putting this product together and maintaining the repository takes time and resources. We welcome your support in any shape or form, in particular:
+
+* Fork/clone, and conribute to the package
+* Let us know is you find any discrepancy or have suggestions towards enhancing the content or quality of the tool
+* Donations are appreciated and can be made through [PayPal](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=GKAYVJSBLN92E)
+* Consider using RDS or any of our data/metadata [services, products, or expertise](http://www.mtna.us)
+
+<a name="license"></a>
+## License
+This work is licensed under the [BSD-3 License](https://opensource.org/licenses/BSD-3-Clause). See [LICENCE](LICENSE) file for details.
+
