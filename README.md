@@ -32,9 +32,9 @@ Setup
 Libraries used for this markdown demonstration.
 
 ``` r
-library(rds.r, quietly = TRUE, warn.conflicts = FALSE)
-library(sjPlot, quietly = TRUE, warn.conflicts = FALSE)
-library(plotly, quietly = TRUE, warn.conflicts = FALSE)
+library(rds.r)
+library(sjPlot)
+library(ggplot2)
 ```
 
 Why RDS?
@@ -463,7 +463,7 @@ GRPS IDENTIFIED W TRUMAN 1
                             V480048
                             </td>
                             </tr>
-                            </table>
+</table>
 
 ### Data
 
@@ -2025,8 +2025,6 @@ Turning Tabulations into Charts
 Because the tabulate function returns a data set that contains the data and metadata, all we need to do is plug in the appropriate data and metadata into our favorite charting tool.
 
 ``` r
-library(ggplot2)
-
 # get the data from the previously returned dataSet
 data <- tabulation@data
 
