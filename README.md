@@ -15,14 +15,14 @@ This R library facilitates access and integration with MTNA [Rich Data Services]
 
 <a name="why"></a>
 ##Why RDS?
-Retrieving data and metadata for analytical, reporting, or visualization purposes is typcially a time and resource consuming process that involves several steps such:
+Retrieving data and metadata for analytical, reporting, or visualization purposes is typically a time and resource consuming process that involves several steps such as:
 -   Locating and downloading the data
 -   Converting and load into R
 -   Computing subsets or aggregation
 -   Finding relevant documentation
 -   Manually transcribing codes/classification/labels and other descriptive elements into R objects
 
-RDS completely simplifies this process by offeing a powerful REST API to perform all of the above in *a single step*! No need to download data, convert across formats, spend hours skimming though cryptic PDF/Excel/Word and othe rlegacy files for documentation.
+RDS completely simplifies this process by offeing a powerful REST API to perform all of the above in *a single step*! No need to download data, convert across formats, spend hours skimming though cryptic PDF/Excel/Word and other legacy files for documentation.
 
 RDS combines on the fly querying and tabulation capabilities with metadata retrieval features. Comprehensive variable and classification metadata can accompany any data queried through RDS, enabling immediate reuse and rendering. 
 
@@ -35,7 +35,7 @@ Visit the RDS web site for detailed informtion on the platform capabilities or l
 install.packages("rds.r")
 ```
 
-The examples below, we will be using data from the [1948 American National Election Study 1948 (ANES)](http://www.electionstudies.org/studypages/1948prepost/1948prepost.htm) dataset hosted on the MTNA's public RDS server. This simple dataset contains 662 records and 65 variables/columns. 
+In the examples below, we will be using data from the [1948 American National Election Study 1948 (ANES)](http://www.electionstudies.org/studypages/1948prepost/1948prepost.htm) dataset hosted on the MTNA's public RDS server. This simple dataset contains 662 records and 65 variables/columns. 
 
 R libraries used for demonstration purposes include:
 
@@ -63,7 +63,7 @@ However, to identify the variables of interest we would need to read through all
 
 <a name="querying.calling"></a>
 ### Calling RDS
-RDS will save you the trouble, instead of manually reading the variables information, we can request the variables and their metadata be returned to use by searching for keywords. This will return more than data, the variable and classification metadata will be available as well. This will allow us to document the variables we are using to provide ourselves and others with more context around the data we are using.
+RDS will save you the trouble, instead of manually reading the variables information, we can request the variables and their metadata be returned to us by searching for keywords. This will return more than data, the variable and classification metadata will be available as well. This will allow us to document the variables we are using to provide ourselves and others with more context around the data we are using.
 
 ``` r
 # For the purposes of this example we will use the 'selectSubset' function to
@@ -1103,20 +1103,11 @@ V480048
 
 Maybe we want to know the code values for the codes of one or more of these variables, we have two options to do this.
 
-First we could inject the code values into the returned data set as using the **inject** parameter.
+First we could inject the code values into the returned data set using the **inject** parameter.
 
 ``` r
 dataSet <- selectSubset("http://richdataservices.com/public/api/catalog/", "test", 
     "anes1948", cols = "$truman,$respondent", limit = 10, metadata = TRUE, inject = TRUE)
-```
-
-    ## Warning in `levels<-`(`*tmp*`, value = if (nl == nL) as.character(labels)
-    ## else paste0(labels, : duplicated levels in factors are deprecated
-
-    ## Warning in `levels<-`(`*tmp*`, value = if (nl == nL) as.character(labels)
-    ## else paste0(labels, : duplicated levels in factors are deprecated
-
-``` r
 data <- dataSet@data
 dataTable <- sjPlot::sjt.df(data, useViewer = F, describe = FALSE, encoding = "UTF-8", 
     no.output = TRUE, altr.row.col = TRUE, show.rownames = FALSE)$knitr
@@ -2040,7 +2031,7 @@ OTHER
 <a name="visualizing"></a>
 ##Turning Data into Charts (Visualizaing)
 
-Because the tabulate function returns a data set that contains the data and metadata, all we need to do is plug in the appropriate data and metadata into our favorite charting tool.
+Because the tabulate function returns a data set that contains the data and metadata we can create a chart with minimal effort. Simply plug the metadata and data into the appropriate places and do any other formatting that is necessary displaying the chart.
 
 ``` r
 # get the metadata from the previously returned dataSet which applies to both the
@@ -2051,7 +2042,7 @@ V480014a <- rds:::variable(metadata, "V480014a")
 classification <- rds:::classification(metadata, V480045$classification)
 
 ## we will compute the percentage of that male and female 
-## respondes for each category
+## responses for each category
 data = ddply(data, .(V480014a), transform, percent = count/sum(count) * 100)
 data = ddply(data, .(V480014a), transform, pos = (cumsum(count) - 0.5 * count))
 data$label = paste0(sprintf("%.0f", data$percent), "%")
