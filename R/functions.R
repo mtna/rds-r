@@ -1,5 +1,4 @@
 library(jsonlite)
-library(urltools)
 
 #' Get Classification Function
 #'
@@ -222,7 +221,10 @@ injectMetadata <- function(data,metadata){
 
 #' Select Function
 #'
-#' This function allows you to use the select function of RDS. 
+#' This function allows you to use the select function of RDS. RDS typically gives out a limited amount of 
+#' data to keep the service quick and efficient. This select function will query RDS as many times as needed
+#' to compile and return the entire data set to the R user. 
+#' 
 #' @param url The base URL of the RDS server
 #' @param collection The collection ID
 #' @param view The view ID
@@ -242,8 +244,10 @@ injectMetadata <- function(data,metadata){
 #' @param freqs Specifies that any frequencies available should be included in the returned metadata
 #' @param stats Specifies that any summary statistics available should be included in the returned 
 #' @param count Specifies that the total count of records in the view should be included in the info section
+#' @param varProperties Specifies the variable properties to include / exclude from the returned variable metadata. Can be a regex or property names. 
 #' @param key API key for views that require a key. 
 #' @param inject Specifies if metadata should be injected into the data frame. If true and there are classifications available the columns codes will be replaced with code values. Defaults to FALSE
+#' @param sleep Specifies the time to wait between each query to the server in order to not overwhelm the server. Default is 0.2 seconds.
 #' @keywords select
 #' @export
 #' @examples
@@ -259,7 +263,7 @@ select <- function(url,collection,view,cols=NULL,where=NULL,orderby=NULL,
   
   # get the initial data set that we will append information to. 
   dataSet <- selectSubset(url,collection,view,cols,where,orderby,distinct,limit,offset,colLimit,colOffset,
-                          classLimit,classOffset,codeLimit,codeOffset,facts,freqs,stats,count,varProperties,key,inject)
+                          classLimit,classOffset,codeLimit,codeOffset,facts,freqs,stats,count,varProperties,key,metadata = TRUE,inject)
   
   #create a list of data sets that will be appended to each other to build up all the columns in the final dataset
   i <- 1
@@ -292,6 +296,7 @@ select <- function(url,collection,view,cols=NULL,where=NULL,orderby=NULL,
   }
   
   # determine the number of rows to ask for, in this version we need to ensure < 10k cells to be able to get the maximum return within the cell limit
+  # in the future we will probably get the cell limit from the data source. 
   limit <- floor(10000/info$colCount);
   
   # set up list of data sets
@@ -346,9 +351,9 @@ select <- function(url,collection,view,cols=NULL,where=NULL,orderby=NULL,
   return(dataSet)
 }
 
-#' Select Function
+#' Select Subset Function
 #'
-#' This function allows you to use the select function of RDS. 
+#' This function allows users to select a subset of data from RDS. 
 #' @param url The base URL of the RDS server
 #' @param collection The collection ID
 #' @param view The view ID
@@ -368,7 +373,9 @@ select <- function(url,collection,view,cols=NULL,where=NULL,orderby=NULL,
 #' @param freqs Specifies that any frequencies available should be included in the returned metadata
 #' @param stats Specifies that any summary statistics available should be included in the returned 
 #' @param count Specifies that the total count of records in the view should be included in the info section
+#' @param varProperties Specifies the variable properties to include / exclude from the returned variable metadata. Can be a regex or property names. 
 #' @param key API key for views that require a key. 
+#' @param metadata Specifies that metadata should be returned along with the data. Defaults to FALSE
 #' @param inject Specifies if metadata should be injected into the data frame. If true and there are classifications available the columns codes will be replaced with code values. Defaults to FALSE
 #' @keywords select
 #' @export
@@ -382,8 +389,15 @@ selectSubset <- function(url,collection,view,cols=NULL,where=NULL,orderby=NULL,
                          distinct=FALSE,limit=NULL,offset=NULL,colLimit=NULL,colOffset=NULL,
                          classLimit=NULL,classOffset=NULL,codeLimit=NULL,codeOffset=NULL,facts=FALSE,
                          freqs=FALSE,stats=FALSE, count=FALSE,varProperties=NULL,key=NULL,metadata=FALSE,inject=FALSE){
-  # create the GET request and retrieve the JSON result
-  request <- paste(url,collection,"/",view,"/select?metadata",sep="",collapse=NULL)
+ 
+   # create the GET request and retrieve the JSON result
+  request <- paste(url,collection,"/",view,"/select",sep="",collapse=NULL)
+ 
+  if(metadata){
+    request <- paste(request,"?metadata",sep="",collapse=NULL)
+  }else{
+    request <- paste(request,"?metadata=FALSE",sep="",collapse=NULL)
+  }
   
   # append any filled out options to the request 
   if(!is.null(cols)){
@@ -454,7 +468,6 @@ selectSubset <- function(url,collection,view,cols=NULL,where=NULL,orderby=NULL,
     request <- paste(request,"&key=",key,sep="",collapse=NULL)
   }
   
-  print(request)
   json <- jsonlite::fromJSON(request)
   
   # format the data and ensure the variable names are used as colnames in the data.frame 

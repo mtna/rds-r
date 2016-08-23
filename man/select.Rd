@@ -50,12 +50,18 @@ select(url, collection, view, cols = NULL, where = NULL, orderby = NULL,
 
 \item{count}{Specifies that the total count of records in the view should be included in the info section}
 
+\item{varProperties}{Specifies the variable properties to include / exclude from the returned variable metadata. Can be a regex or property names.}
+
 \item{key}{API key for views that require a key.}
 
 \item{inject}{Specifies if metadata should be injected into the data frame. If true and there are classifications available the columns codes will be replaced with code values. Defaults to FALSE}
+
+\item{sleep}{Specifies the time to wait between each query to the server in order to not overwhelm the server. Default is 0.2 seconds.}
 }
 \description{
-This function allows you to use the select function of RDS.
+This function allows you to use the select function of RDS. RDS typically gives out a limited amount of 
+data to keep the service quick and efficient. This select function will query RDS as many times as needed
+to compile and return the entire data set to the R user.
 }
 \keyword{select}
 

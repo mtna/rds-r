@@ -2,7 +2,7 @@
 % Please edit documentation in R/functions.R
 \name{selectSubset}
 \alias{selectSubset}
-\title{Select Function}
+\title{Select Subset Function}
 \usage{
 selectSubset(url, collection, view, cols = NULL, where = NULL,
   orderby = NULL, distinct = FALSE, limit = NULL, offset = NULL,
@@ -50,12 +50,16 @@ selectSubset(url, collection, view, cols = NULL, where = NULL,
 
 \item{count}{Specifies that the total count of records in the view should be included in the info section}
 
+\item{varProperties}{Specifies the variable properties to include / exclude from the returned variable metadata. Can be a regex or property names.}
+
 \item{key}{API key for views that require a key.}
+
+\item{metadata}{Specifies that metadata should be returned along with the data. Defaults to FALSE}
 
 \item{inject}{Specifies if metadata should be injected into the data frame. If true and there are classifications available the columns codes will be replaced with code values. Defaults to FALSE}
 }
 \description{
-This function allows you to use the select function of RDS.
+This function allows users to select a subset of data from RDS.
 }
 \keyword{select}
 
