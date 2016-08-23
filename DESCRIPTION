@@ -4,7 +4,7 @@ Version: 1.0.0
 Authors@R: person("Andrew", "DeCarlo", email = "andrew.decarlo@mtna.us", role = c("aut", "cre"))
 Description: Provides functions to acces data and metadata from an RDS server. 
 Depends:
-    R (>= 3.2.2),jsonlite,urltools
+    R (>= 3.2.2),jsonlite
 License: LICENSE
 Encoding: UTF-8
 LazyData: true

@@ -76,7 +76,7 @@ RDS will save you the trouble, instead of manually reading the variables informa
 varProperties <- "id,label,question,storageType,width,classification"
 
 dataSet <- selectSubset("http://richdataservices.com/public/api/catalog/", "test", 
-    "anes1948", cols = "$truman,$respondent", limit = 10, varProperties = varProperties)
+    "anes1948", cols = "$truman,$respondent", limit = 10, varProperties = varProperties, metadata = TRUE)
 
 # Variable information
 metadata <- dataSet@metadata
