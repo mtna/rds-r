@@ -2029,7 +2029,7 @@ OTHER
 </table>
 
 <a name="visualizing"></a>
-##Turning Data into Charts (Visualizaing)
+##Turning Data into Charts (Visualizing)
 
 Because the tabulate function returns a data set that contains the data and metadata we can create a chart with minimal effort. Simply plug the metadata and data into the appropriate places and do any other formatting that is necessary displaying the chart.
 
