@@ -2069,5 +2069,5 @@ Putting this product together and maintaining the repository takes time and reso
 
 <a name="license"></a>
 ## License
-This work is licensed under the [BSD-3 License](https://opensource.org/licenses/BSD-3-Clause). See [LICENCE](LICENSE) file for details.
+This work is licensed under the [BSD-3 License](https://opensource.org/licenses/BSD-3-Clause). See [LICENSE](LICENSE) file for details.
 
