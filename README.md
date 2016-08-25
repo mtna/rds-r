@@ -31,8 +31,7 @@ Visit the RDS web site for detailed informtion on the platform capabilities or l
 
 <a name="inaction"></a>
 ##RDS in Action
-
-<iframe width="850" height="500" src="https://www.youtube.com/embed/zeEEfrXRT9g" frameborder="0" allowfullscreen></iframe>
+[![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/zeEEfrXRT9g/0.jpg)](https://www.youtube.com/watch?v=zeEEfrXRT9g)
 
 <a name="install"></a>
 ##Install
@@ -42,8 +41,6 @@ install.packages("rds.r")
 ```
 
 In the examples below, we will be using data from the [1948 American National Election Study 1948 (ANES)](http://www.electionstudies.org/studypages/1948prepost/1948prepost.htm) dataset hosted on the MTNA's public RDS server. This simple dataset contains 662 records and 65 variables/columns. 
-
-R libraries used for demonstration purposes include:
 
 <a name="querying"></a>
 ##Querying Data (select)
