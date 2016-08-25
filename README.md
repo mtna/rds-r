@@ -1,6 +1,7 @@
 # rds.r
 -   [Overview](#overview)
 -   [Why RDS](#why)
+-   [RDS in Action](#inaction)
 -   [Install](#install)
 -   [Querying Data](#querying)
 -   [Tabulating Data](#tabulating)
@@ -27,6 +28,10 @@ RDS completely simplifies this process by offeing a powerful REST API to perform
 RDS combines on the fly querying and tabulation capabilities with metadata retrieval features. Comprehensive variable and classification metadata can accompany any data queried through RDS, enabling immediate reuse and rendering. 
 
 Visit the RDS web site for detailed informtion on the platform capabilities or learn more about how to complement and deliver your data to you users. 
+
+<a name="inaction"></a>
+##RDS in Action
+<iframe width="850" height="500" src="https://www.youtube.com/embed/zeEEfrXRT9g" frameborder="0" allowfullscreen></iframe>
 
 <a name="install"></a>
 ##Install
