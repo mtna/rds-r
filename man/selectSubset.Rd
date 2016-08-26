@@ -61,5 +61,12 @@ selectSubset(url, collection, view, cols = NULL, where = NULL,
 \description{
 This function allows users to select a subset of data from RDS.
 }
+\examples{
+select("http://localhost:8080/rds/api/catalog/","myCollection","myView",cols="var1,var2") 
+select("http://localhost:8080/rds/api/catalog/","myCollection","myView",cols="var1,var2",where="var1<1 AND var2>=3") 
+select("http://localhost:8080/rds/api/catalog/","myCollection","myView",cols="var1,var2",orderby="var1 DESC,var2 ASC") 
+select("http://localhost:8080/rds/api/catalog/","myCollection","myView",cols="var1,var2",distinct=TRUE,limit=100,offset=100,count=TRUE) 
+select("http://localhost:8080/rds/api/catalog/","myCollection","myView",cols="$demographics",inject=TRUE) 
+}
 \keyword{select}
 

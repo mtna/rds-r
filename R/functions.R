@@ -1,4 +1,5 @@
 library(jsonlite)
+library(urltools)
 
 #' Get Classification Function
 #'
@@ -252,9 +253,9 @@ injectMetadata <- function(data,metadata){
 #' @export
 #' @examples
 #' select("http://localhost:8080/rds/api/catalog/","myCollection","myView",cols="var1,var2") 
-#' select("http://localhost:8080/rds/api/catalog/","myCollection","myView",cols="$var1,var2",where="var1<1 AND var2>=3) 
-#' select("http://localhost:8080/rds/api/catalog/","myCollection","myView",cols="$var1,var2",orderby="var1 DESC,var2 ASC") 
-#' select("http://localhost:8080/rds/api/catalog/","myCollection","myView",cols="$var1,var2",distinct=TRUE,limit=100,offset=100,count=TRUE) 
+#' select("http://localhost:8080/rds/api/catalog/","myCollection","myView",cols="var1,var2",where="var1<1 AND var2>=3") 
+#' select("http://localhost:8080/rds/api/catalog/","myCollection","myView",cols="var1,var2",orderby="var1 DESC,var2 ASC") 
+#' select("http://localhost:8080/rds/api/catalog/","myCollection","myView",cols="var1,var2",distinct=TRUE,limit=100,offset=100,count=TRUE) 
 #' select("http://localhost:8080/rds/api/catalog/","myCollection","myView",cols="$demographics",inject=TRUE) 
 select <- function(url,collection,view,cols=NULL,where=NULL,orderby=NULL,
                    distinct=FALSE,limit=NULL,offset=NULL,colLimit=NULL,colOffset=NULL,
@@ -381,9 +382,9 @@ select <- function(url,collection,view,cols=NULL,where=NULL,orderby=NULL,
 #' @export
 #' @examples
 #' select("http://localhost:8080/rds/api/catalog/","myCollection","myView",cols="var1,var2") 
-#' select("http://localhost:8080/rds/api/catalog/","myCollection","myView",cols="$var1,var2",where="var1<1 AND var2>=3) 
-#' select("http://localhost:8080/rds/api/catalog/","myCollection","myView",cols="$var1,var2",orderby="var1 DESC,var2 ASC") 
-#' select("http://localhost:8080/rds/api/catalog/","myCollection","myView",cols="$var1,var2",distinct=TRUE,limit=100,offset=100,count=TRUE) 
+#' select("http://localhost:8080/rds/api/catalog/","myCollection","myView",cols="var1,var2",where="var1<1 AND var2>=3") 
+#' select("http://localhost:8080/rds/api/catalog/","myCollection","myView",cols="var1,var2",orderby="var1 DESC,var2 ASC") 
+#' select("http://localhost:8080/rds/api/catalog/","myCollection","myView",cols="var1,var2",distinct=TRUE,limit=100,offset=100,count=TRUE) 
 #' select("http://localhost:8080/rds/api/catalog/","myCollection","myView",cols="$demographics",inject=TRUE) 
 selectSubset <- function(url,collection,view,cols=NULL,where=NULL,orderby=NULL,
                          distinct=FALSE,limit=NULL,offset=NULL,colLimit=NULL,colOffset=NULL,
