@@ -524,10 +524,6 @@ tabulate <- function(url, collection, view, dimensions=NULL, inject=FALSE,
     request <- paste(request,"&offset=",offset,sep="",collapse=NULL)
   }
   
-  if(count)  {
-    request <- paste(request,"&count",sep="",collapse=NULL)
-  }
-  
   if(!is.null(key))  {
     request <- paste(request,"&key=",key,sep="",collapse=NULL)
   }

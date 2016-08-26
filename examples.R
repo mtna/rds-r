@@ -2,7 +2,7 @@ library("ggplot2")
 install("/home/andrew/R/development/rds.r")
 
 #select. Metadata and data being returned together. 
-?rds::select
+?rds.r::select
 dataSet <- select("http://richdataservices.com/public/api/catalog/","test","anes1948")
 data <- dataSet@data
 
@@ -12,7 +12,7 @@ data <- dataSet@data
 dataSet <- select("http://richdataservices.com/public/api/catalog/","test","anes1948",inject=TRUE)
 data <- dataSet@data
 
-dataSet <- select("http://richdataservices.com/public/api/catalog/","test","anes1948",cols="$respondent",where="V480003=1",orderby="V480045,V480047 DESC", distinct = TRUE)
+dataSet <- select("http://richdataservices.com/public/api/catalog/","test","anes1948",cols="$respondent",where="V480003=1",orderby="V480045,V480047 DESC",distinct=TRUE)
 data <- dataSet@data
 info <- dataSet@info
 
@@ -22,20 +22,20 @@ info <- dataSet@info
 
 #get the metdata returned with the data and use the methods to access var and class metadata
 metadata<-dataSet@metadata
-variables <- rds:::variables(metadata)
-var <- rds:::variable(metadata,"V480006")
+variables <- rds.r:::variables(metadata)
+var <- rds.r:::variable(metadata,"V480006")
 
-classifications <- rds:::classifications(metadata)
-class <- rds:::classification(metadata, var$classification)
+classifications <- rds.r:::classifications(metadata)
+class <- rds.r:::classification(metadata, var$classification)
 codes <- class@codes
 info <- class@info
 
 #tabulations
-?rds::tabulate
-dataSet <- rds::tabulate("http://richdataservices.com/public/api/catalog/","test","anes1948",dimensions="V480003",inject=TRUE)
+?rds.r::tabulate
+dataSet <- rds.r::tabulate("http://richdataservices.com/public/api/catalog/","test","anes1948",dimensions="V480003",inject=TRUE)
 data<-dataSet@data
 metadata<-dataSet@metadata
-V480003<-rds:::variable(metadata,"V480003")
+V480003<-rds.r:::variable(metadata,"V480003")
 
 ggplot(data, aes(x = factor(data$V480003), y = data$count)) +
   geom_bar(stat = "identity") +
