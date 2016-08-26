@@ -4,12 +4,12 @@
 \alias{select}
 \title{Select Function}
 \usage{
-select(url, collection, view, cols = NULL, where = NULL, orderby = NULL,
-  distinct = FALSE, limit = NULL, offset = NULL, colLimit = NULL,
-  colOffset = NULL, classLimit = NULL, classOffset = NULL,
-  codeLimit = NULL, codeOffset = NULL, facts = FALSE, freqs = FALSE,
-  stats = FALSE, count = FALSE, varProperties = NULL, key = NULL,
-  inject = FALSE, sleep = 0.2)
+select(url, collection, view, autoPage = TRUE, classLimit = NULL,
+  classOffset = NULL, codeLimit = NULL, codeOffset = NULL, cols = NULL,
+  colLimit = NULL, colOffset = NULL, count = FALSE, distinct = FALSE,
+  facts = FALSE, freqs = FALSE, inject = FALSE, key = NULL,
+  limit = NULL, offset = NULL, orderby = NULL, sleep = 0.2,
+  stats = FALSE, varProperties = NULL, where = NULL)
 }
 \arguments{
 \item{url}{The base URL of the RDS server}
@@ -18,21 +18,7 @@ select(url, collection, view, cols = NULL, where = NULL, orderby = NULL,
 
 \item{view}{The view ID}
 
-\item{cols}{The columns to select}
-
-\item{where}{Describes how to subset the records}
-
-\item{orderby}{Describes how the results should be ordered}
-
-\item{distinct}{Specifies that only distinct values should be returned}
-
-\item{limit}{Specifies the number of records to return}
-
-\item{offset}{Specifies the starting index of the records}
-
-\item{colLimit}{Specifies the limit of classifications that should be returned}
-
-\item{colOffset}{Specifies the starting index of the classifications to be returned}
+\item{autoPage}{If set to true multiple queries will be sent to the RDS server in order to compile the complete data set}
 
 \item{classLimit}{Specifies the limit of classifications that should be returned}
 
@@ -42,21 +28,37 @@ select(url, collection, view, cols = NULL, where = NULL, orderby = NULL,
 
 \item{codeOffset}{Specifies the starting indexes of the codes in each classification}
 
+\item{cols}{The columns to select}
+
+\item{colLimit}{Specifies the limit of classifications that should be returned}
+
+\item{colOffset}{Specifies the starting index of the classifications to be returned}
+
+\item{count}{Specifies that the total count of records in the view should be included in the info section}
+
+\item{distinct}{Specifies that only distinct values should be returned}
+
 \item{facts}{Specifies that any facts available should be included in the returned metadata}
 
 \item{freqs}{Specifies that any frequencies available should be included in the returned metadata}
 
-\item{stats}{Specifies that any summary statistics available should be included in the returned}
-
-\item{count}{Specifies that the total count of records in the view should be included in the info section}
-
-\item{varProperties}{Specifies the variable properties to include / exclude from the returned variable metadata. Can be a regex or property names.}
+\item{inject}{Specifies if metadata should be injected into the data frame. If true and there are classifications available the columns codes will be replaced with code values. Defaults to FALSE}
 
 \item{key}{API key for views that require a key.}
 
-\item{inject}{Specifies if metadata should be injected into the data frame. If true and there are classifications available the columns codes will be replaced with code values. Defaults to FALSE}
+\item{limit}{Specifies the number of records to return}
+
+\item{offset}{Specifies the starting index of the records}
+
+\item{orderby}{Describes how the results should be ordered}
 
 \item{sleep}{Specifies the time to wait between each query to the server in order to not overwhelm the server. Default is 0.2 seconds.}
+
+\item{stats}{Specifies that any summary statistics available should be included in the returned}
+
+\item{varProperties}{Specifies the variable properties to include / exclude from the returned variable metadata. Can be a regex or property names.}
+
+\item{where}{Describes how to subset the records}
 }
 \description{
 This function allows you to use the select function of RDS. RDS typically gives out a limited amount of 

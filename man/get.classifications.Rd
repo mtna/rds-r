@@ -4,9 +4,9 @@
 \alias{get.classifications}
 \title{Get Classifications Function}
 \usage{
-get.classifications(url, collection, view, limit = NULL, offset = NULL,
-  codeLimit = NULL, codeOffset = NULL, sort = NULL, codeSort = NULL,
-  key = NULL)
+get.classifications(url, collection, view, codeLimit = NULL,
+  codeOffset = NULL, codeSort = NULL, key = NULL, limit = NULL,
+  offset = NULL, sort = NULL)
 }
 \arguments{
 \item{url}{The base URL of the RDS server}
@@ -15,19 +15,19 @@ get.classifications(url, collection, view, limit = NULL, offset = NULL,
 
 \item{view}{The view ID}
 
-\item{limit}{Specifies the number of classifications to return}
-
-\item{offset}{Specifies the starting index of the classifications}
-
 \item{codeLimit}{Specifies the number of codes to return in each classification}
 
 \item{codeOffset}{Specifies the starting index of the codes in each classification}
 
-\item{sort}{Specifies how to sort the classfications returned. Classifications will be sorted by their ID and can be sorted ASC or DESC}
-
 \item{codeSort}{Specifies how the codes should be sorted, options are ASC or DESC}
 
 \item{key}{API key for views that require a key.}
+
+\item{limit}{Specifies the number of classifications to return}
+
+\item{offset}{Specifies the starting index of the classifications}
+
+\item{sort}{Specifies how to sort the classfications returned. Classifications will be sorted by their ID and can be sorted ASC or DESC}
 }
 \description{
 This function allows you to use the select multiple classifications.

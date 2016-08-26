@@ -4,9 +4,9 @@
 \alias{tabulate}
 \title{Tabulate Function}
 \usage{
-tabulate(url, collection, view, dimensions = NULL, measures = NULL,
-  orderby = NULL, where = NULL, limit = NULL, offset = NULL,
-  count = FALSE, key = NULL, inject = FALSE)
+tabulate(url, collection, view, dimensions = NULL, inject = FALSE,
+  key = NULL, limit = NULL, measures = NULL, offset = NULL,
+  orderby = NULL, where = NULL)
 }
 \arguments{
 \item{url}{The base URL of the server RDS is running on}
@@ -15,37 +15,21 @@ tabulate(url, collection, view, dimensions = NULL, measures = NULL,
 
 \item{view}{The view ID}
 
-\item{orderby}{Describes how the results should be ordered}
-
-\item{where}{Describes how to subset the records}
-
-\item{limit}{Specifies the number of records to return}
-
-\item{offset}{Specifies the starting index of the records}
-
-\item{count}{Specifies that the total count of records in the view should be included in the info section}
-
-\item{key}{API key for views that require a key.}
+\item{dimensions}{The names of the variables that should be used as dimensions}
 
 \item{inject}{Specifies if metadata should be injected into the data frame. If true and there are classifications available the columns codes will be replaced with code values. Defaults to FALSE}
 
-\item{cols}{The columns to select}
+\item{key}{API key for views that require a key.}
 
-\item{distinct}{Specifies that only distinct values should be returned}
+\item{limit}{Specifies the number of records to return}
 
-\item{classLimit}{Specifies the limit of classifications that should be returned}
+\item{measures}{The variables that should be used as a measure, will be the count by default}
 
-\item{classOffset}{Specifies the starting index of the classifications to be returned}
+\item{offset}{Specifies the starting index of the records}
 
-\item{codeLimit}{Specifies the limit of codes that should be returned in each classification}
+\item{orderby}{Describes how the results should be ordered}
 
-\item{codeOffset}{Specifies the starting indexes of the codes in each classification}
-
-\item{facts}{Specifies that any facts available should be included in the returned metadata}
-
-\item{freqs}{Specifies that any frequencies available should be included in the returned metadata}
-
-\item{stats}{Specifies that any summary statistics available should be included in the returned}
+\item{where}{Describes the subset of records the tabulation should run on}
 }
 \description{
 This function allows you to use the tabulate function of RDS.

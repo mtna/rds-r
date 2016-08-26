@@ -4,7 +4,7 @@
 \alias{get.variable}
 \title{Get Variable Function}
 \usage{
-get.variable(url, collection, view, var.id = NULL, key = NULL)
+get.variable(url, collection, view, key = NULL, var.id = NULL)
 }
 \arguments{
 \item{url}{The base URL of the RDS server}
@@ -13,9 +13,9 @@ get.variable(url, collection, view, var.id = NULL, key = NULL)
 
 \item{view}{The view ID}
 
-\item{var.id}{The variable ID to select}
-
 \item{key}{API key for views that require a key.}
+
+\item{var.id}{The variable ID to select}
 }
 \description{
 This function allows you to select the metadata for a single variable based off its ID.

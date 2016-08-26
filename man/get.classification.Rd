@@ -4,8 +4,8 @@
 \alias{get.classification}
 \title{Get Classification Function}
 \usage{
-get.classification(url, collection, view, class.id = NULL, limit = NULL,
-  offset = NULL, codeSort = NULL, key = NULL)
+get.classification(url, collection, view, class.id = NULL, codeSort = NULL,
+  key = NULL, limit = NULL, offset = NULL)
 }
 \arguments{
 \item{url}{The base URL of the RDS server}
@@ -16,13 +16,13 @@ get.classification(url, collection, view, class.id = NULL, limit = NULL,
 
 \item{class.id}{The classification ID to select}
 
-\item{limit}{Specifies the number of codes to return}
-
-\item{offset}{Specifies the starting index of the codes}
-
 \item{codeSort}{Specifies how the codes should be sorted, options are ASC or DESC}
 
 \item{key}{API key for views that require a key.}
+
+\item{limit}{Specifies the number of codes to return}
+
+\item{offset}{Specifies the starting index of the codes}
 }
 \description{
 This function allows you to select a classification based on its ID.
