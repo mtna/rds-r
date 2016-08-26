@@ -64,7 +64,7 @@ However, to identify the variables of interest we would need to read through all
 RDS will save you the trouble, instead of manually reading the variables information, we can request the variables and their metadata be returned to us by searching for keywords. This will return more than data, the variable and classification metadata will be available as well. This will allow us to document the variables we are using to provide ourselves and others with more context around the data we are using.
 
 ``` r
-# For the purposes of this example we will use the 'selectSubset' function to
+# For the purposes of this example we will use the 'select' function with autoPaging turend off to
 # ensure the table does not get too big for the HTML, for analysis we would use
 # the 'select' function to return the entire data set.  data <-
 # select('http://richdataservices.com/public/api/catalog/','test','anes1948',cols=$truman,$respondent')
@@ -73,8 +73,8 @@ RDS will save you the trouble, instead of manually reading the variables informa
 # visually appealing
 varProperties <- "id,label,question,storageType,width,classification"
 
-dataSet <- selectSubset("http://richdataservices.com/public/api/catalog/", "test", 
-    "anes1948", cols = "$truman,$respondent", limit = 10, varProperties = varProperties, metadata = TRUE)
+dataSet <- select("http://richdataservices.com/public/api/catalog/", "test", 
+    "anes1948", cols = "$truman,$respondent", limit = 10, varProperties = varProperties, autoPage = FALSE)
 
 # Variable information
 metadata <- dataSet@metadata
@@ -1097,15 +1097,15 @@ V480048
 </table>
 
 <a name="querying.data2"></a>
-### Data With Code Values
+### Data With Meaning
 
 Maybe we want to know the code values for the codes of one or more of these variables, we have two options to do this.
 
 First we could inject the code values into the returned data set using the **inject** parameter.
 
 ``` r
-dataSet <- selectSubset("http://richdataservices.com/public/api/catalog/", "test", 
-    "anes1948", cols = "$truman,$respondent", limit = 10, metadata = TRUE, inject = TRUE)
+dataSet <- select("http://richdataservices.com/public/api/catalog/", "test", 
+    "anes1948", cols = "$truman,$respondent", limit = 10, inject = TRUE, autoPage=FALSE)
 data <- dataSet@data
 dataTable <- sjPlot::sjt.df(data, useViewer = F, describe = FALSE, encoding = "UTF-8", 
     no.output = TRUE, altr.row.col = TRUE, show.rownames = FALSE)$knitr
