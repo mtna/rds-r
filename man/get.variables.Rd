@@ -18,7 +18,7 @@ get.variables(url, collection, view, cols = NULL, key = NULL)
 \item{key}{API key for views that require a key.}
 }
 \description{
-This function allows you to use the select multiple variables metadata.
+This function allows you to select multiple variables metadata.
 }
 \examples{
 get.variables("http://localhost:8080/rds/api/catalog/","myCollection","myView",cols="var1,var2") 

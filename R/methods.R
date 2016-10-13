@@ -37,6 +37,15 @@ setMethod("variable", signature("rds.metadata", "character"), function(metadata,
   if(!is.null(metadata@json)){
     variables <- metadata@json$variables$resources
     variable <- variables[variables$id==var.id,]
+    removals <- c()
+    for (i in names(variable)) {
+      column <- variable[[i]]
+      if(length(column) == 0){
+        removals <- c(removals, i)
+      }
+    }
+    
+    variable <- variable[ , !(names(variable) %in% removals)]
     return(variable)
   }
 })
@@ -46,6 +55,16 @@ setGeneric("variables", function(metadata) standardGeneric("variables"))
 setMethod("variables", signature("rds.metadata"), function(metadata) {
   if(!is.null(metadata@json)){
     variables <- metadata@json$variables$resources
+    
+    removals <- c()
+    for (i in names(variables)) {
+      column <- variables[[i]]
+      if(length(column) == 0){
+        removals <- c(removals, i)
+      }
+    }
+    variables <- variables[ , !(names(variables) %in% removals)]
+    return(variables)
     return(variables)
   }
 })

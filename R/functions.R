@@ -154,12 +154,21 @@ get.variable <- function(url, collection, view, key=NULL, var.id=NULL){
   
   json <- jsonlite::fromJSON(request)
   variable <- data.frame(json)
+  removals <- c()
+  for (i in names(variable)) {
+    column <- variable[[i]]
+    if(length(column) == 0){
+      removals <- c(removals, i)
+    }
+  }
+  
+  variable <- variable[ , !(names(variable) %in% removals)]
   return(variable)
 }
 
 #' Get Variables Function
 #'
-#' This function allows you to use the select multiple variables metadata. 
+#' This function allows you to select multiple variables metadata. 
 #' @param url The base URL of the RDS server
 #' @param collection The collection ID
 #' @param view The view ID
@@ -173,7 +182,7 @@ get.variable <- function(url, collection, view, key=NULL, var.id=NULL){
 get.variables <- function(url,collection,view,cols=NULL,key=NULL){
   # create the GET request and retrieve the JSON result
   request <- paste(url,collection,"/",view,"/variables",sep="",collapse=NULL)
-  
+ 
   # append any filled out options to the request 
   paramPrefix = "?"
   if(!is.null(cols)){
@@ -188,6 +197,15 @@ get.variables <- function(url,collection,view,cols=NULL,key=NULL){
   
   json <- jsonlite::fromJSON(request)
   variables <- data.frame(json$variables$resources)
+  
+  removals <- c()
+  for (i in names(variables)) {
+    column <- variables[[i]]
+    if(length(column) == 0){
+      removals <- c(removals, i)
+    }
+  }
+  variables <- variables[ , !(names(variables) %in% removals)]
   return(variables)
 }
 
@@ -260,14 +278,14 @@ injectMetadata <- function(data,metadata){
 #' select("http://localhost:8080/rds/api/catalog/","myCollection","myView",cols="var1,var2",orderby="var1 DESC,var2 ASC") 
 #' select("http://localhost:8080/rds/api/catalog/","myCollection","myView",cols="var1,var2",distinct=TRUE,limit=100,offset=100,count=TRUE) 
 #' select("http://localhost:8080/rds/api/catalog/","myCollection","myView",cols="$demographics",inject=TRUE) 
-select <- function(url, collection, view, autoPage=TRUE, classLimit=NULL, classOffset=NULL, codeLimit=NULL, codeOffset=NULL,
+select <- function(url, collection, view, autoPage=TRUE, classLimit=NULL, classOffset=NULL, codeEquals=NULL, codeLimit=NULL, codeOffset=NULL,
                    cols=NULL, colLimit=NULL, colOffset=NULL, count=FALSE, distinct=FALSE, facts=FALSE, freqs=FALSE, 
                    inject=FALSE, key=NULL, limit=NULL, offset=NULL, orderby=NULL, sleep=0.2, stats=FALSE, varProperties=NULL,
                    where=NULL){
   
   # get the initial data set that we will append information to. 
   dataSet <- selectPage(url,collection,view,cols,where,orderby,distinct,limit,offset,colLimit,colOffset,
-                        classLimit,classOffset,codeLimit,codeOffset,facts,freqs,stats,count=TRUE,varProperties,key, metadata=TRUE, inject=FALSE)
+                        classLimit,classOffset,codeEquals,codeLimit,codeOffset,facts,freqs,stats,count=TRUE,varProperties,key, metadata=TRUE, inject=FALSE)
   
   #create a list of data sets that will be appended to each other to build up all the columns in the final dataset
   i <- 1
@@ -284,7 +302,7 @@ select <- function(url, collection, view, autoPage=TRUE, classLimit=NULL, classO
       Sys.sleep(sleep)
       colOffset <- columnInfo$colOffset + columnInfo$colLimit
       colDataSet <- selectPage(url,collection,view,cols,where,orderby,distinct,limit,offset,colLimit,colOffset,
-                               classLimit,classOffset,codeLimit,codeOffset,facts,freqs,stats,count=FALSE,varProperties,key,metadata=FALSE,inject=FALSE)
+                               classLimit,classOffset,codeEquals,codeLimit,codeOffset,facts,freqs,stats,count=FALSE,varProperties,key,metadata=FALSE,inject=FALSE)
       
       columnInfo <- colDataSet@info
       i <- i+1
@@ -329,7 +347,7 @@ select <- function(url, collection, view, autoPage=TRUE, classLimit=NULL, classO
       colOffset=0
       colLimit=info$colCount
       rowDataSet <- selectPage(url,collection,view,cols,where,orderby,distinct,limit,offset,colLimit,colOffset,
-                               classLimit,classOffset,codeLimit,codeOffset,facts,freqs,stats,count=FALSE,varProperties,key,metadata=getMetadata,inject=FALSE)
+                               classLimit,classOffset,codeEquals,codeLimit,codeOffset,facts,freqs,stats,count=FALSE,varProperties,key,metadata=getMetadata,inject=FALSE)
       if(i == 1){
         metadata <- rowDataSet@metadata
       }else{
@@ -366,7 +384,7 @@ select <- function(url, collection, view, autoPage=TRUE, classLimit=NULL, classO
 
 selectPage <- function(url,collection,view,cols=NULL,where=NULL,orderby=NULL,
                        distinct=FALSE,limit=NULL,offset=NULL,colLimit=NULL,colOffset=NULL,
-                       classLimit=NULL,classOffset=NULL,codeLimit=NULL,codeOffset=NULL,facts=FALSE,
+                       classLimit=NULL,classOffset=NULL,codeEquals=NULL,codeLimit=NULL,codeOffset=NULL,facts=FALSE,
                        freqs=FALSE,stats=FALSE, count=FALSE,varProperties=NULL,key=NULL,metadata=FALSE,inject=FALSE){
   
   # create the GET request and retrieve the JSON result
@@ -419,6 +437,10 @@ selectPage <- function(url,collection,view,cols=NULL,where=NULL,orderby=NULL,
     request <- paste(request,"&classOffset=",classOffset,sep="",collapse=NULL)
   }
   
+  if(!is.null(codeEquals))  {
+    request <- paste(request,"&codeEquals=",codeEquals,sep="",collapse=NULL)
+  }
+  
   if(!is.null(codeLimit))  {
     request <- paste(request,"&codeLimit=",codeLimit,sep="",collapse=NULL)
   }
@@ -447,6 +469,7 @@ selectPage <- function(url,collection,view,cols=NULL,where=NULL,orderby=NULL,
     request <- paste(request,"&key=",key,sep="",collapse=NULL)
   }
   
+  print(request)
   json <- jsonlite::fromJSON(request)
   
   # format the data and ensure the variable names are used as colnames in the data.frame 
@@ -509,7 +532,7 @@ tabulate <- function(url, collection, view, dimensions=NULL, inject=FALSE,
   }
   
   if(!is.null(where))  {
-    request <- paste(request,"&where=",where,sep="",collapse=NULL)
+    request <- paste(request,"&where=",url_encode(where),sep="",collapse=NULL)
   }
   
   if(!is.null(orderby))  {

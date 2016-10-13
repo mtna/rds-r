@@ -5,11 +5,12 @@
 \title{Select Function}
 \usage{
 select(url, collection, view, autoPage = TRUE, classLimit = NULL,
-  classOffset = NULL, codeLimit = NULL, codeOffset = NULL, cols = NULL,
-  colLimit = NULL, colOffset = NULL, count = FALSE, distinct = FALSE,
-  facts = FALSE, freqs = FALSE, inject = FALSE, key = NULL,
-  limit = NULL, offset = NULL, orderby = NULL, sleep = 0.2,
-  stats = FALSE, varProperties = NULL, where = NULL)
+  classOffset = NULL, codeEquals = NULL, codeLimit = NULL,
+  codeOffset = NULL, cols = NULL, colLimit = NULL, colOffset = NULL,
+  count = FALSE, distinct = FALSE, facts = FALSE, freqs = FALSE,
+  inject = FALSE, key = NULL, limit = NULL, offset = NULL,
+  orderby = NULL, sleep = 0.2, stats = FALSE, varProperties = NULL,
+  where = NULL)
 }
 \arguments{
 \item{url}{The base URL of the RDS server}
