@@ -1,22 +1,31 @@
-library("ggplot2")
-install("/home/andrew/R/development/rds.r")
+install.packages("ggplot2")
+install.packages("devtools")
 
+library("ggplot2")
+library("devtools")
+install("/Users/carsonhuntermtna/R/development/rds-r")
+library("rds.r")
 #select. Metadata and data being returned together. 
 ?rds.r::select
-dataSet <- select("http://richdataservices.com/public/api/catalog/","test","anes1948")
+dataSet <- select("http://localhost:8080/rds/api/query/","anes","anes1948aws")
 data <- dataSet@data
 
-dataSet <- select("http://richdataservices.com/public/api/catalog/","test","anes1948",autoPage=FALSE)
+#this isn't a valid call - should this be variables/varaible? or just look at the catalog?
+#dataSet <- select("http://localhost:8080/rds/api/query/catalog/","anes","anes1948aws",autoPage=FALSE)
+dataSet <- select("http://localhost:8080/rds/api/query/","anes","anes1948aws",autoPage=FALSE)
 data <- dataSet@data
 
-dataSet <- select("http://richdataservices.com/public/api/catalog/","test","anes1948",inject=TRUE)
+#has unstopped loop problem
+#dataSet <- select("http://localhost:8080/rds/api/catalog/","anes","anes1948",inject=TRUE)
+dataSet <- select("http://localhost:8080/rds/api/query/","anes","anes1948aws",inject=TRUE)
 data <- dataSet@data
 
-dataSet <- select("http://richdataservices.com/public/api/catalog/","test","anes1948",cols="$respondent",where="V480003=1",orderby="V480045,V480047 DESC",distinct=TRUE)
+dataSet <- select("http://localhost:8080/rds/api/query/","anes","anes1948aws",cols="$respondent",where="V480003=1",orderby="V480045,V480047 DESC",distinct=TRUE)
 data <- dataSet@data
 info <- dataSet@info
 
-dataSet <- select("http://richdataservices.com/public/api/catalog/","test","anes1948",cols="$respondent",where="V480003=1",orderby="V480045,V480047 DESC",distinct=TRUE,inject=TRUE)
+#question: is respondent a section from the old json? 
+dataSet <- select("http://localhost:8080/rds/api/query/","anes","anes1948aws",cols="$respondent",where="V480003=1",orderby="V480045,V480047 DESC",distinct=TRUE,inject=TRUE)
 data <- dataSet@data
 info <- dataSet@info
 
@@ -32,7 +41,7 @@ info <- class@info
 
 #tabulations
 ?rds.r::tabulate
-dataSet <- rds.r::tabulate("http://richdataservices.com/public/api/catalog/","test","anes1948",dimensions="V480003",inject=TRUE)
+dataSet <- rds.r::tabulate("http://localhost:8080/rds/api/query/","anes","anes1948aws",dimensions="V480003",inject=TRUE)
 data<-dataSet@data
 metadata<-dataSet@metadata
 V480003<-rds.r:::variable(metadata,"V480003")
@@ -44,16 +53,19 @@ ggplot(data, aes(x = factor(data$V480003), y = data$count)) +
   coord_flip()
 
 #select a single variables metadata
+#HELP: this quits on jsonlite::fromJson(request)
 ?get.variable
-varMetadata <- get.variable("http://richdataservices.com/public/api/catalog/","test","anes1948",var.id="V480003")
+varMetadata <- get.variable("http://localhost:8080/rds/api/catalog/","anes","anes1948aws",var.id="V480003")
 
 #query variable metadata for multiple variables metadata
+##HELP what is the respondent? its a keyword
 ?get.variables
-variablesMetadata <- get.variables("http://richdataservices.com/public/api/catalog/","test","anes1948",cols="$respondent")
+variablesMetadata <- get.variables("http://localhost:8080/rds/api/catalog/","anes","anes1948aws",cols="$respondent")
 
 #select a single classifications metadata
 ?get.classification
-classMetadata <- get.classification("http://richdataservices.com/public/api/catalog/","test","anes1948",class.id=varMetadata$classification)
+#classMetadata <- get.classification("http://localhost:8080/rds/api/catalog/","anes","anes1948aws",class.id=varMetadata$classification)
+classMetadata <- get.classification("http://localhost:8080/rds/api/catalog/","anes","anes1948aws",class.id="V480003")
 id <- classMetadata@id
 codes <- classMetadata@codes
 info <- classMetadata@info
