@@ -1,70 +1,54 @@
-setGeneric("classification", function(metadata, class.id) standardGeneric("classification"))
+setGeneric("classification", function(classificationsMetadata, class.id) standardGeneric("classification"))
 
-setMethod("classification", signature("rds.metadata", "character"), function(metadata, class.id) {
-  if(!is.null(metadata@json)){
-    if(!is.null(metadata@json$classifications)){
-      index <- match(c(class.id),metadata@json$classifications$resources$id)
-      id    <- metadata@json$classifications$resources$id[index]
-      codes <- metadata@json$classifications$resources$codes$resources[[index]]
-      info  <- metadata@json$classifications$resources$codes$info[index,]
-      classification <- new("rds.classification",id=id, codes=codes, info=info)
-      return(classification)
-    }
+setMethod("classification", signature("list", "character"), function(classificationsMetadata, class.id) {
+  if(!is.null(classificationsMetadata)){
+      # TODO this would be better to use index instead of for/if, but can't figure it out
+      # index <- match(c(class.id),metadata@json$classifications$resources$id)
+    #index <- match(c(class.id),classificationsMetadata$id)
+      for(i in 1:length(classificationsMetadata)){
+        if(classificationsMetadata[[i]]@id==class.id){
+          id    <- classificationsMetadata[[i]]@id
+          keywordCount <- classificationsMetadata[[i]]@name
+          codes <- classificationsMetadata[[i]]@codes
+          levelCount <- classificationsMetadata[[i]]@levelCount
+          uri <- classificationsMetadata[[i]]@uri
+          codeCount <- classificationsMetadata[[i]]@codeCount
+          name <- classificationsMetadata[[i]]@name
+          classification <- new("rds.classification",id=id, uri=uri, name=name, codeCount=codeCount, levelCount=levelCount,codes=codes)
+          return(classification)
+        }
+      }
   }
 })
 
-setGeneric("classifications", function(metadata) standardGeneric("classifications"))
+#TODO rewriting classifications method to get them not from metadata
+#TODO add way to get codes - make a separate call?
+setGeneric("classifications", function(classificationsMetadata) standardGeneric("classifications"))
 
-setMethod("classifications", signature("rds.metadata"), function(metadata) {
-  if(!is.null(metadata@json)){
-    if(!is.null(metadata@json$classifications)){
+setMethod("classifications", signature("rds.classifications"), function(classificationsMetadata) {
+  if(!is.null(classificationsMetadata@json)){
       classifications <- list()
-      for(i in 1:length(metadata@json$classifications$resources$id)){
-        id    <- metadata@json$classifications$resources$id[i]
-        codes <- metadata@json$classifications$resources$codes$resources[[i]]
-        info  <- metadata@json$classifications$resources$codes$info[i,]
-        classification <- new("rds.classification",id=id, codes=codes, info=info)
+      codes <- list()
+    
+      for(i in 1:length(classificationsMetadata@json)){
+        id    <- classificationsMetadata@json[[i]]@id
+        name <- classificationsMetadata@json[[i]]@name
+        codes <- classificationsMetadata@json[[i]]@codes
+        levelCount <- classificationsMetadata@json[[i]]@levelCount
+        uri <- classificationsMetadata@json[[i]]@uri
+        codeCount <- classificationsMetadata@json[[i]]@codeCount
+        classification <- new("rds.classification",id=id, uri=uri, name=name, codeCount=codeCount, levelCount=levelCount,codes=codes)
         classifications <- c(classifications, classification)
       }
       return(classifications)
-    }
-  }
+   }
 })
 
-setGeneric("variable", function(metadata,var.id) standardGeneric("variable")) 
+setGeneric("variable", function(variables,var.id) standardGeneric("variable")) 
 
-setMethod("variable", signature("rds.metadata", "character"), function(metadata, var.id) {
-  if(!is.null(metadata@json)){
-    variables <- metadata@json$variables$resources
-    variable <- variables[variables$id==var.id,]
-    removals <- c()
-    for (i in names(variable)) {
-      column <- variable[[i]]
-      if(length(column) == 0){
-        removals <- c(removals, i)
-      }
-    }
-    
-    variable <- variable[ , !(names(variable) %in% removals)]
-    return(variable)
-  }
-})
-
-setGeneric("variables", function(metadata) standardGeneric("variables")) 
-
-setMethod("variables", signature("rds.metadata"), function(metadata) {
-  if(!is.null(metadata@json)){
-    variables <- metadata@json$variables$resources
-    
-    removals <- c()
-    for (i in names(variables)) {
-      column <- variables[[i]]
-      if(length(column) == 0){
-        removals <- c(removals, i)
-      }
-    }
-    variables <- variables[ , !(names(variables) %in% removals)]
-    return(variables)
-    return(variables)
+setMethod("variable", signature("rds.variables", "character"), function(variables, var.id) {
+  if(!is.null(variables@json)){
+    matchedVar <- match(var.id, names(variables@json))
+    return(variables@json[[matchedVar]])
   }
 })

@@ -20,7 +20,6 @@ library(urltools)
 #' get.classification("http://localhost:8080/rds/api/catalog/","myCollection","myView",class.id="myClass",codeSort="DESC")
 get.classification <- function(url, collection, view, class.id=NULL, codeSort=NULL, 
                                key=NULL, limit=NULL, offset=NULL){
-  browser()
   # create the GET request and retrieve the JSON result
   request <- paste(url,collection,"/",view,"/classification/",class.id,sep="",collapse=NULL)
   
@@ -51,6 +50,7 @@ get.classification <- function(url, collection, view, class.id=NULL, codeSort=NU
   codeCount <-json$rootCodeCount
   keywordCount <- json$keywordCount
   levelCount <- json$levelCount
+  
   #testing
   if(codeCount>0){
     #query for codes in a separate call and add them on to this classification
@@ -77,18 +77,15 @@ get.classification <- function(url, collection, view, class.id=NULL, codeSort=NU
       codeRequest <- paste(codeRequest,paramPrefix,"key=",key,sep="",collapse=NULL)
       paramPrefix = "&"
     }
-    
     codeListJson <- jsonlite::fromJSON(codeRequest)
     print(codeListJson)
   }
-  codes <- data.frame(codeList)
+  codes <- data.frame(codeListJson)
   #end test
   
-  
-  
-  codes <- data.frame(json$codes$resources)
-  info <- data.frame(json$codes$info)
-  classification <- new("rds.classification", id = id, codes = codes, info = info)
+  #codes <- data.frame(json$codes$resources)
+  #info <- data.frame(json$codes$info)
+  classification <- new("rds.classification", id = id, codes = codes)
   return(classification)
 }
 
@@ -155,19 +152,22 @@ get.classifications <- function(url, collection, view, codeLimit=NULL, codeOffse
   
   json <- jsonlite::fromJSON(request)
   classifications <- list()
-  if(!is.null(json$classifications)){
-    for(i in 1:length(json$classifications$resources$id)){
-      id    <- json$classifications$resources$id[i]
-      codes <- json$classifications$resources$codes$resources[[i]]
-      info  <- json$classifications$resources$codes$info[i,]
-      classification <- new("rds.classification",id=id, codes=codes, info=info)
-      classifications <- c(classifications, classification)
-    }
+  
+  for(i in 1:nrow(json)){
+    id    <- json$id[[i]]
+    uri<-json$uri[[i]]
+    name<-json$name[[i]]
+    codeCount<-json$codeCount[[i]]
+    levelCount<-json$levelCount[[i]]
+    #codes <- json[[i]]
+    #info  <- json$classifications$resources$codes$info[i,]
+    classification <- new("rds.classification",id=id, uri=uri, name=name, codeCount=codeCount,levelCount=levelCount)
+    classifications <- c(classifications, classification)
   }
+
   return(classifications)
 }
 
-browser()
 #' Get Variable Function
 #'
 #' This function allows you to select the metadata for a single variable based off its ID. 
@@ -182,7 +182,6 @@ browser()
 #' get.variable("http://localhost:8080/rds/api/catalog/","myCollection","myView","myVariable") 
 get.variable <- function(url, collection, view, key=NULL, var.id=NULL){
   # create the GET request and retrieve the JSON result
-  browser()
   request <- paste(url,collection,"/",view,"/variable/",var.id,sep="",collapse=NULL)
   
   # append any filled out options to the request 
@@ -196,6 +195,7 @@ get.variable <- function(url, collection, view, key=NULL, var.id=NULL){
   json <- jsonlite::fromJSON(request)
   variable <- data.frame(json)
   removals <- c()
+
   for (i in names(variable)) {
     column <- variable[[i]]
     if(length(column) == 0){
@@ -222,11 +222,10 @@ get.variable <- function(url, collection, view, key=NULL, var.id=NULL){
 #' get.variables("http://localhost:8080/rds/api/catalog/","myCollection","myView",cols="$demographics") 
 get.variables <- function(url,collection,view,cols=NULL,key=NULL){
   # create the GET request and retrieve the JSON result
-  browser()
   request <- paste(url,collection,"/",view,"/variables",sep="",collapse=NULL)
  
-  # append any filled out options to the request 
-  paramPrefix = "?"
+   # append any filled out options to the request 
+   paramPrefix = "?"
   if(!is.null(cols)){
     request <- paste(request,paramPrefix,"cols=",cols,sep="",collapse=NULL)
     paramPrefix = "&"
@@ -237,9 +236,10 @@ get.variables <- function(url,collection,view,cols=NULL,key=NULL){
     paramPrefix = "&"
   }
   
-  json <- jsonlite::fromJSON(request)
-  variables <- data.frame(json$variables$resources)
-  
+  # json <- jsonlite::fromJSON(request)
+  # variables <- data.frame(json$variables)
+   variables <- jsonlite::fromJSON(request)
+
   removals <- c()
   for (i in names(variables)) {
     column <- variables[[i]]
@@ -249,37 +249,6 @@ get.variables <- function(url,collection,view,cols=NULL,key=NULL){
   }
   variables <- variables[ , !(names(variables) %in% removals)]
   return(variables)
-}
-
-#' Inject Metadata
-#'
-#' This function will inject classification categories into the data frame to replace the codes.
-#' @param data The original data frame from 
-#' @param collection The collection ID
-#' @keywords injection, metadata
-#' @export
-#' @examples
-#' injectMetadata()
-injectMetadata <- function(data,metadata){
-  if(!is.null(metadata$classifications)){
-    map <- c()
-    for(i in 1:length(metadata$classifications$resources$id)){
-      key<-metadata$classifications$resources$id[i]
-      value<-metadata$classifications$resources$codes$resources[i]
-      map[key]<-value
-      map[[key]]
-    }
-    
-    for(i in 1:metadata$variables$info$count){
-      varId <-metadata$variables$resources$id[i]
-      varClass <- metadata$variables$resources$classification[i]
-      if(!is.na(varClass)){
-        class <- map[[varClass]]
-        data[,varId] <- factor(data[,varId],class$value,class$label)
-      }
-    }
-  }
-  return(data)
 }
 
 #' Select Function
@@ -320,19 +289,20 @@ injectMetadata <- function(data,metadata){
 #' select("http://localhost:8080/rds/api/catalog/","myCollection","myView",cols="var1,var2",orderby="var1 DESC,var2 ASC") 
 #' select("http://localhost:8080/rds/api/catalog/","myCollection","myView",cols="var1,var2",distinct=TRUE,limit=100,offset=100,count=TRUE) 
 #' select("http://localhost:8080/rds/api/catalog/","myCollection","myView",cols="$demographics",inject=TRUE) 
-select <- function(url, collection, view, autoPage=TRUE, classLimit=NULL, classOffset=NULL, codeEquals=NULL, codeLimit=NULL, codeOffset=NULL,
+select <- function(url, collection, view, inject=FALSE, autoPage=TRUE, classLimit=NULL, classOffset=NULL, codeEquals=NULL, codeLimit=NULL, codeOffset=NULL,
                    cols=NULL, colLimit=NULL, colOffset=NULL, count=FALSE, distinct=FALSE, facts=FALSE, freqs=FALSE, 
-                   inject=FALSE, key=NULL, limit=NULL, offset=NULL, orderby=NULL, sleep=0.2, stats=FALSE, varProperties=NULL,
+                    key=NULL, limit=NULL, offset=NULL, orderby=NULL, sleep=0.2, stats=FALSE, varProperties=NULL,
                    where=NULL){
-  
+
   # get the initial data set that we will append information to. 
-  dataSet <- selectPage(url,collection,view,cols,where,orderby,distinct,limit,offset,colLimit,colOffset,
-                        classLimit,classOffset,codeEquals,codeLimit,codeOffset,facts,freqs,stats,count=TRUE,varProperties,key, metadata=TRUE, inject=FALSE)
+  dataSet <- selectPage(url,collection,view,inject,cols,where,orderby,distinct,limit,offset,colLimit,colOffset,
+                        classLimit,classOffset,codeEquals,codeLimit,codeOffset,facts,freqs,stats,count=TRUE,varProperties,key, metadata=TRUE)
   
   #create a list of data sets that will be appended to each other to build up all the columns in the final dataset
   i <- 1
   dataSets <- list()
   data <- dataSet@data
+  #records <- dataSet@records
   
   # set up the info that will be used for pagination
   info <- dataSet@info
@@ -342,13 +312,13 @@ select <- function(url, collection, view, autoPage=TRUE, classLimit=NULL, classO
     while(columnInfo$moreColumns){
       Sys.sleep(sleep)
       colOffset <- columnInfo$columnOffset + columnInfo$columnLimit
+      browser()
       colDataSet <- selectPage(url,collection,view,cols,where,orderby,distinct,limit,offset,colLimit,colOffset,
-                               classLimit,classOffset,codeEquals,codeLimit,codeOffset,facts,freqs,stats,count=FALSE,varProperties,key,metadata=FALSE,inject=FALSE)
+                               classLimit,classOffset,codeEquals,codeLimit,codeOffset,facts,freqs,stats,count=FALSE,varProperties,key,metadata=FALSE,inject)
       
       columnInfo <- colDataSet@info
       i <- i+1
       dataSets[[i]] <- colDataSet@data
-      
     }
     
     # append the column datasets to each other
@@ -374,8 +344,11 @@ select <- function(url, collection, view, autoPage=TRUE, classLimit=NULL, classO
   }
   
   # we will grab the metadata once and use it for the resulting data set
-  metadata <- dataSet@metadata
-  #browser()
+  #metadata <- dataSet@metadata
+  variables <- dataSet@variables
+ 
+  classifications <- dataSet@classifications 
+  #might have to call get classifications? or just get  classification id and uri when you iterate through variables? 
   if(autoPage){
     # get records using selectPage
     while(rowInfo$moreRows){
@@ -386,13 +359,15 @@ select <- function(url, collection, view, autoPage=TRUE, classLimit=NULL, classO
       }
       offset <- rowInfo$rowOffset+rowInfo$rowLimit
       colOffset=0
-      colLimit=info$columnCount
+     #TODO changed this from colLimit=info$columnCount to using current col limit
       rowDataSet <- selectPage(url,collection,view,cols,where,orderby,distinct,limit,offset,colLimit,colOffset,
                                classLimit,classOffset,codeEquals,codeLimit,codeOffset,facts,freqs,stats,count=FALSE,varProperties,key,metadata=getMetadata,inject=FALSE)
       if(i == 1){
-        metadata <- rowDataSet@metadata
+       # metadata <- rowDataSet@metadata
+        variables<- rowDataSet@variables
       }else{
-        rowDataSet@metadata <- metadata
+        #rowDataSet@metadata <- metadata
+        rowDataSet@variables <- variables
       }
       
       i <- i+1
@@ -412,22 +387,21 @@ select <- function(url, collection, view, autoPage=TRUE, classLimit=NULL, classO
       }
     }
   }
-  
   if(inject){
-    data <- injectMetadata(data,metadata@json)
+    #records <- dataSet@records
+    #data <- injectMetadata(data,metadata@json)
   }
   
   # return a new RDS data set object with the data and the info
-  dataSet <- new("rds.dataset", metadata = metadata, data = data, info = info)
+  dataSet <- new("rds.dataset", variables = variables, data = data, info = info)
   
   return(dataSet)
 }
 
-selectPage <- function(url,collection,view,cols=NULL,where=NULL,orderby=NULL,
+selectPage <- function(url,collection,view,inject=FALSE,cols=NULL,where=NULL,orderby=NULL,
                        distinct=FALSE,limit=NULL,offset=NULL,colLimit=NULL,colOffset=NULL,
                        classLimit=NULL,classOffset=NULL,codeEquals=NULL,codeLimit=NULL,codeOffset=NULL,facts=FALSE,
-                       freqs=FALSE,stats=FALSE, count=FALSE,varProperties=NULL,key=NULL,metadata=FALSE,inject=FALSE){
-  
+                       freqs=FALSE,stats=FALSE, count=FALSE,varProperties=NULL,key=NULL,metadata=FALSE){
   # create the GET request and retrieve the JSON result
   request <- paste(url,collection,"/",view,"/select",sep="",collapse=NULL)
   
@@ -445,7 +419,6 @@ selectPage <- function(url,collection,view,cols=NULL,where=NULL,orderby=NULL,
   if(!is.null(where))  {
     request <- paste(request,"&where=",where,sep="",collapse=NULL)
   }
-  
   if(!is.null(orderby))  {
     request <- paste(request,"&orderby=",url_encode(orderby),sep="",collapse=NULL)
   }
@@ -509,31 +482,43 @@ selectPage <- function(url,collection,view,cols=NULL,where=NULL,orderby=NULL,
   if(!is.null(key))  {
     request <- paste(request,"&key=",key,sep="",collapse=NULL)
   }
+  if (inject) {
+    request <- paste(request, "&inject=", inject, sep = "", collapse = NULL)
+  }
   
   print(request)
   json <- jsonlite::fromJSON(request)
-  
   # format the data and ensure the variable names are used as colnames in the data.frame 
   data <- data.frame(json$records)
-  colnames(data)<-json$variables$id
+  dataList <- json$records
+  #put all of the variable names in a list and assign them to the columns.
+  variableNames <- list();
+  for(variable in json$variables){
+    id    <- variable$id
+    variableNames <- c(variableNames, id)
+  }
+  colnames(data)<-variableNames
+
   
   # if metadata injection is desired we will look for classifications and make the proper adjusments to the data frame. 
   if(metadata & inject){
-    data <- injectMetadata(data,json$metadata)
+   # data <- injectMetadata(data,json$metadata)
   }
   
   # format the info as a data.frame
   info <- data.frame(json$info)
   
   # return a new RDS data set object with the data and the info
-  rds.metadata <- new("rds.metadata")
+  #rds.metadata <- new("rds.metadata")
+  rds.variables <-new("rds.variables")
   if(metadata){
-    #for(property in json$variables){
+    for(property in json$variables){
     #  print(property) 
-    #}
-   # rds.metadata <- new("rds.metadata", json=json$metadata)
+    }
+   # rds.metadata <- new("rds.metadata", json=json$variables)
+    rds.variables <- new("rds.variables", json=json$variables)
   }
-  dataSet <- new("rds.dataset", metadata = rds.metadata, data = data, info = info)
+  dataSet <- new("rds.dataset", variables = rds.variables,data = data, info = info)
   
   return(dataSet)
 }
@@ -560,12 +545,25 @@ selectPage <- function(url,collection,view,cols=NULL,where=NULL,orderby=NULL,
 #' tabulate("http://localhost:8080/rds/api/catalog/","myCollection","myView",dimensions="var1,var2",measures="AVG(var3)",where="var1!=5",inject=TRUE) 
 tabulate <- function(url, collection, view, dimensions=NULL, inject=FALSE, 
                      key=NULL, limit=NULL, measures=NULL, offset=NULL, orderby=NULL,
-                     where=NULL){
+                     where=NULL, metadata=FALSE){
+  
   # create the GET request and retrieve the JSON result
   request <- paste(url,collection,"/",view,"/tabulate",sep="",collapse=NULL)
   
+  
+  
   # append any filled out options to the request 
-  request <- paste(request,"?metadata",sep="",collapse=NULL)  
+  # TODO I added "=true" to the metadata param, make this configurable.
+ # request <- paste(request,"?metadata",metadata,sep="",collapse=NULL)  
+  if(metadata){
+    request <- paste(request,"?metadata=true",sep="",collapse=NULL)
+  }else{
+    request <- paste(request,"?metadata=FALSE",sep="",collapse=NULL)
+  }
+  
+  if(inject){
+    request <- paste(request,"&inject=true",sep="",collapse=NULL)
+  }
   
   if(!is.null(dimensions)){
     request <- paste(request,"&dims=",dimensions,sep="",collapse=NULL)
@@ -594,26 +592,29 @@ tabulate <- function(url, collection, view, dimensions=NULL, inject=FALSE,
   if(!is.null(key))  {
     request <- paste(request,"&key=",key,sep="",collapse=NULL)
   }
-  
+  print(request)
   json <- jsonlite::fromJSON(request)
-  
   # format the data and ensure the variable names are used as colnames in the data.frame 
   data <- data.frame(json$records)
-  colnames(data)<-json$metadata$variables$resources$id
-  
-  # if metadata injection is desired we will look for classifications and make the proper adjusments to the data frame. 
-  if(inject){
-    data <- injectMetadata(data,json$metadata)
+ 
+  variableNames <- list();
+  for(variable in json$variables){
+    id    <- variable$id
+    variableNames <- c(variableNames, id)
   }
+  colnames(data)<-variableNames
+ #colnames(data)<-json$metadata$variables$resources$id
+ 
   
   # format the info as a data.frame
   info <-data.frame(json$info) 
-  
-  # return a new RDS data set object with the data and the info
-  metadata <- new("rds.metadata")
-  if(!is.null(json$metadata)){
-    metadata <- new("rds.metadata", json=json$metadata)
+
+  variables <- new("rds.variables")
+
+  #TODO is there a way to exclude the count node that comes back with variables
+  if(!is.null(json$variables)){
+    variables <- new("rds.variables", json=json$variables)
   }
-  dataSet <- new("rds.dataset", metadata = metadata, data = data, info = info)
+  dataSet <- new("rds.dataset", variables = variables, data = data, info = info)
   return(dataSet)
 }

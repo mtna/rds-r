@@ -91,39 +91,39 @@ data<-dataSet@data
 
 dataSet <- select("http://localhost:8080/rds/api/query/","anes","anes1948aws",autoPage=FALSE)
 data <- dataSet@data
+dataTable <- sjPlot::tab_df(data, use.viewer = F, encoding = "UTF-8", alternate.rows=TRUE, show.rownames=FALSE)$knitr
+print(dataTable)
+extr <- sjPlot::tab_df(data, use.viewer= T, encoding="UTF-8", alternate.rows = TRUE, show.rownames = FALSE)$knitr
+print(ex)
+
 
 # Variable information
-variables<-dataSet@variables
-V480045 <- rds.r:::variable(variables,"V480045")
-classificationsMetadata <- get.classifications("http://localhost:8080/rds/api/catalog/","anes","anes1948aws")
-
-classification <- rds.r:::classification(classificationsMetadata, "V480045")
-#TODO not working
-classTable <- sjPlot::tab_df(classification@codes, use.viewer = F,encoding = "UTF-8", alternate.rows=TRUE,show.rownames=FALSE)
-
-tabulation <- rds.r::tabulate("http://localhost:8080/rds/api/query/","anes","anes1948aws",dimensions="V480045,V480014a", inject=TRUE)
-
 variables <- dataSet@variables
-V480045 <- rds.r:::variable(variables,"V480045")
-V480014a <- rds.r:::variable(variables,"V480014a")
-classificationsMetadata <- get.classifications("http://localhost:8080/rds/api/catalog/","anes","anes1948aws")
-#use v50008$classifId when it's on the model
-classification <- rds.r:::classification(classificationsMetadata, "V480045")
-library(plyr)
+list <- variables@json
+# format the data and ensure the variable names are used as colnames in the data.frame 
+newDf <- data.frame(variables)
+jtable <- sjPlot::tab_df(variablesMetadata)
+print(jtable)
 
-## we will compute the percentage and format it as a percentage label for the chart
-json<-variables@json
-count<-length(json)
-data1 = ddply(data, .(V480045), transform, Pct = 67/sum(67) * 100)
-data = ddply(data, .(V480014a), transform, pos = (cumsum(67) - 0.5 * 67))
-data$label = paste0(sprintf("%.0f", data$percent), "%")
+vdf <- data.frame(variables@json)
+variableNames <- list();
+for(variable in variables@json){
+  id    <- variable$id
+  variableNames <- c(variableNames, id)
+}
+colnames(vdf)<-variableNames
 
-#plot the data
-ggplot(data, aes(x = factor(V480045), y = 67, fill = V480045)) +
-  geom_bar(stat = "identity") +
-  geom_text(aes(y = pos, label = label), size = 3) +
-  theme(axis.text.x=element_text(angle=90,hjust=1,vjust=0.5),axis.text.y=element_text(size=12), legend.position="top")+
-  xlab(V480045$label)+
-  coord_flip()
+data <- data.frame(dataSet@data)
+variableNames <- list();
+for(variable in variables@json){
+  id    <- variable$id
+  variableNames <- c(variableNames, id)
+}
+colnames(data)<-variableNames
+rmarkdown::render("R/development/rds-r/examples.R")
 
-dataSet <- select("http://localhost:8080/rds/api/query/","anes","anes1948aws",cols="$truman,$respondent",colLimit=10)
+dataTable <- sjPlot::tab_df(data, use.viewer = F, encoding = "UTF-8", alternate.rows=TRUE, show.rownames=FALSE)
+print(dataTable)
+
+devtools::install_github("jeffjjohnston/RStudioConsoleRender")
+rmarkdown::render(active_document_path, envir=.GlobalEnv)
