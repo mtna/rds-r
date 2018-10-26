@@ -1,0 +1,135 @@
+---
+title: "Selecting and Tabulating Data with Rich Data Services"
+output:
+  html_document
+---
+
+##Overview
+Access data and metadata together in one quick call. With RDS there is no need to search for documentation to fill out the data, as it is provided to users through the same response as the data is. Variable and classification metadata can accompany any data that is queried through RDS through the use of a few simple parameters.
+
+In this document we will be using data from the American National Election Study 1948 (ANES) that is stored on MTNA's public RDS server. 
+
+##Install
+```{r install,eval=FALSE}
+install.packages("rds.r")
+```
+##Setup
+Libraries used for this markdown demonstration.
+```{r libraries, eval=TRUE, tidy=TRUE, tidy.opts=list(width.cutoff=80)}
+library(rds.r)
+library(sjPlot)
+library(ggplot2)
+library(plyr)
+```
+
+##Why RDS?
+Traditionally when researchers want to analyze and evaluate data that is not their own they will have to complete several tasks before they can start their research. 
+
+* Locate the data set they want to work with
+* Acquire the data and load it in R
+* Access the documentation and transcribe the documentation into a useful format in R
+
+RDS cuts down the time it takes for reasearchers to locate and access the data of interest in a particular data set through its innovative querying capabilities and the metadata that can accompany every query.
+
+##Querying data
+Lets imagine that we are researching the United States presidential election from 1948, between Harry Truman, and Thomas Dewey. We are interested in demographic data of the respondent and why they did or did not vote for Harry Truman. We may take a look at the documentation on the ANES website https://electionstudies.org/wp-content/uploads/1948/03/anes_timeseries_1948vardoc_codebook.pdf which has a lot of good information about the variables and their codes stored in an ASCII format. However, to identify the variables of interest we would need to read through all 67 variables and their names and labels and choose the variables that have to do with respondent demographics or questions about Truman.
+
+RDS will save you the trouble, instead of manually reading the variables information, we can request the variables and their metadata be returned to us by searching for keywords. This will return more than data, the variable and classification metadata will be available as well. This will allow us to document the variables we are using to provide ourselves and others with more context around the data we are using. 
+```{r querying-data, eval = TRUE, results = 'hide', tidy=TRUE, tidy.opts=list(width.cutoff=80), cache=TRUE}
+# For the purposes of this example we will use the "selectSubset" function to ensure the table does not get too big for the HTML, 
+# for analysis we would use the "select" function to return the entire data set. 
+# data <- select("http://richdataservices.com/public/api/catalog/","test","anes1948",cols=$truman,$respondent")
+
+# We will limit the variable properties returned to make our data dictionary more visually appealing
+varProperties <- "id,label,question,storageType,width,classification"
+
+#dataSet <- selectSubset("http://richdataservices.com/public/api/catalog/","test","anes1948",cols="$truman,$respondent",limit=10, varProperties = varProperties, metadata=TRUE)
+dataSet <- select("http://localhost:8080/rds/api/query/","anes","anes1948aws",cols="$truman,$respondent",limit=10)
+
+# Variable information
+variables <- dataSet@variables
+#TODO need to figure out how to make variables into a data frame I think?
+#variableDocs <- rds.r:::variables(variables)
+variablesMetadata <- get.variables("http://localhost:8080/rds/api/catalog/","anes","anes1948aws",cols="$respondent")
+
+varTable <- sjPlot::tab_df(variablesMetadata, use.viewer = F, encoding = "UTF-8", alternate.rows=TRUE, show.rownames=FALSE)
+
+# Data
+data <- dataSet@data
+dataTable <- sjPlot::tab_df(data, use.viewer = F, encoding = "UTF-8", alternate.rows=TRUE, show.rownames=FALSE)
+```
+###Dictionary
+`r varTable`
+
+###Data
+`r dataTable`
+
+###Data With Code Values
+Maybe we want to know the code values for the codes of one or more of these variables, we have two options to do this. 
+
+First we could inject the code values into the returned data set as using the **inject** parameter.
+```{r data-with-code-values, eval = TRUE, results = 'hide', tidy=TRUE, tidy.opts=list(width.cutoff=80),cache=TRUE}
+dataSet <- select("http://localhost:8080/rds/api/query/","anes","anes1948aws")
+
+data <- dataSet@data
+#TODO not working
+dataTable <- sjPlot::tab_df(data, use.viewer = F, encoding = "UTF-8", alternate.rows=TRUE, show.rownames=FALSE)
+```
+`r dataTable`
+
+###Sex of Respondent: Classification
+We could also simply access the classification information for a given variable.
+```{r classifications, eval = TRUE, results = 'hide', tidy=TRUE, tidy.opts=list(width.cutoff=80),cache=TRUE}
+dataSet <- select("http://localhost:8080/rds/api/query/","anes","anes1948aws",cols="V480045",autoPage=FALSE, inject=TRUE)
+data<-dataSet@data
+classTable <- sjPlot::tab_df(data, use.viewer = T,encoding = "UTF-8", alternate.rows=TRUE,show.rownames=FALSE)
+
+```
+`r classTable`
+
+##Tabulating Data
+Perhaps we would like to know if there is any difference between why male and female respondents think people voted for Truman. First lets create the table using the **tabulate** function.
+```{r tabulation, eval = TRUE, results = 'hide', tidy=TRUE, tidy.opts=list(width.cutoff=80),cache=TRUE}
+tabulation <- rds.r::tabulate("http://localhost:8080/rds/api/query/","anes","anes1948aws", metadata=TRUE,dimensions="V480045,V480014a", inject=TRUE)
+  data <- tabulation@data
+  variables <-tabulation@variables
+  variableNames <- list();
+  for(variable in tabulation@variables@json){
+    if(!is.null(variable$label)){
+    label    <- variable$label
+    }else{
+      label<-variable$name
+    }
+    variableNames <- c(variableNames, label)
+  }
+ 
+table<- sjtable<- sjt.xtab(data$V480045, data$V480014a,var.labels=variableNames)  
+
+```
+`r table`
+
+##Turning Tabulations into Charts
+Because the tabulate function returns a data set that contains the data and metadata, all we need to do is plug in the appropriate data and metadata into our favorite charting tool. 
+```{r tabulations-to-charts, eval = TRUE, results = 'hide', tidy=TRUE, tidy.opts=list(width.cutoff=80),fig.width=12, fig.height=10,cache=TRUE}
+variables <- tabulation@variables
+V480045 <- rds.r:::variable(variables,"V480045")
+V480014a <- rds.r:::variable(variables,"V480014a")
+#use v50008$classifId when it's on the model
+
+## we will compute the percentage and format it as a percentage label for the chart
+?ddply
+data$count<-as.numeric(as.character(data$count))
+data = ddply(data, .(V480014a), transform, Pct = count/sum(count) * 100)
+data = ddply(data, .(V480014a), transform, pos = (cumsum(count) - 0.5 * count))
+data$label = paste0(sprintf("%.0f", data$percent), "%")
+
+#plot the data
+ggplot(data, aes(x = factor(V480014a), y = count, fill = V480045)) +
+geom_bar(stat = "identity") +
+geom_text(aes(y = pos, label = label), size = 3) +
+theme(axis.text.x=element_text(angle=90,hjust=1,vjust=0.5),axis.text.y=element_text(size=12), legend.position="top")+
+xlab(V480014a$label)+
+coord_flip()
+```
+
+<br/><br/><br/><br/>
