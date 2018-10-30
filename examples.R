@@ -1,54 +1,52 @@
 install.packages("ggplot2")
 install.packages("devtools")
-install("/Users/carsonhuntermtna/R/development/rds-r")
 library("ggplot2")
 library("devtools")
+install("/Users/carsonhuntermtna/R/development/rds-r")
 library("rds.r")
 
 #select. Metadata and data being returned together. 
 ?rds.r::select
-#TODO not grabbing classifications
-dataSet <- select("http://localhost:8080/rds/api/query/","anes","anes1948aws")
+dataSet <- select("http://localhost:8080/rds/api/query/","anes","anes1948")
+
 data <- dataSet@data
 variables <- dataSet@variables
 info <- dataSet@info
 classifications <- dataSet@classifications
 rm(data,dataSet,variables,info,classifications)
 
-dataSet <- select("http://localhost:8080/rds/api/query/","anes","anes1948aws",autoPage=FALSE)
+dataSet <- select("http://localhost:8080/rds/api/query/","anes","anes1948",autoPage=FALSE)
 data <- dataSet@data
 variables <- dataSet@variables
 rm(data,dataSet,variables)
 
-dataSet <- select("http://localhost:8080/rds/api/query/","anes","anes1948aws",inject=TRUE)
+dataSet <- select("http://localhost:8080/rds/api/query/","anes","anes1948",inject=TRUE)
 data <- dataSet@data
 variables <- dataSet@variables
 rm(data,dataSet,variables)
 
 #DISTINCT - not yet implemented
-#query: [1] "http://localhost:8080/rds/api/query/anes/anes1948aws/select?metadata=true&cols=$truman&where=V480003=1&orderby=V480045%2cV480047%20DESC&distinct"
-#dataSet <- select("http://localhost:8080/rds/api/query/","anes","anes1948aws",cols="$truman",where="V480003=1",orderby="V480045,V480047 DESC",distinct=TRUE)
-dataSet <- select("http://localhost:8080/rds/api/query/","anes","anes1948aws",cols="$respondent",where="V480003=1",orderby="V480045,V480047 DESC", distinct=TRUE)
+dataSet <- select("http://localhost:8080/rds/api/query/","anes","anes1948",cols="$respondent",where="V480003=1",orderby="V480045,V480047 DESC", distinct=TRUE)
 data <- dataSet@data
 variables <- dataSet@variables
 rm(data,dataSet,variables)
 
 #distinct not a valid param yet
-#dataSet <- select("http://localhost:8080/rds/api/query/","anes","anes1948aws",cols="$respondent",where="V480003=1",orderby="V480045,V480047 DESC",distinct=TRUE,inject=TRUE)
-dataSet <- select("http://localhost:8080/rds/api/query/","anes","anes1948aws",cols="$respondent",where="V480003=1",orderby="V480045,V480047 DESC",distinct=FALSE,inject=FALSE)
+#dataSet <- select("http://localhost:8080/rds/api/query/","anes","anes1948",cols="$respondent",where="V480003=1",orderby="V480045,V480047 DESC",distinct=TRUE,inject=TRUE)
+dataSet <- select("http://localhost:8080/rds/api/query/","anes","anes1948",cols="$respondent",where="V480003=1",orderby="V480045,V480047 DESC",distinct=FALSE,inject=FALSE)
 data <- dataSet@data
 variables <- dataSet@variables
 rm(data,dataSet,variables)
 
 #get the metdata returned with the data and use the methods to access var and class metadata
-dataSet <- select("http://localhost:8080/rds/api/query/","anes","anes1948aws",cols="$respondent",where="V480003=1",orderby="V480045,V480047 DESC",distinct=FALSE,inject=FALSE)
+dataSet <- select("http://localhost:8080/rds/api/query/","anes","anes1948",cols="$respondent",where="V480003=1",orderby="V480045,V480047 DESC",distinct=FALSE,inject=FALSE)
 variables<-dataSet@variables
 var <- rds.r:::variable(variables,"V480006")
 rm(data,dataSet,variables,var)
 
 #query multiple classifications' metadata
 ?get.classification
-classificationsMetadata <- get.classifications("http://localhost:8080/rds/api/catalog/","anes","anes1948aws")
+classificationsMetadata <- get.classifications("http://localhost:8080/rds/api/catalog/","anes","anes1948")
 classifications <- new("rds.classifications",json=classificationsMetadata)
 newclassifications <- rds.r:::classifications(classifications)
 rm(classificationsMetadata,classifications,newclassifications)
@@ -64,7 +62,7 @@ codes <- class@codes
 #TODO make a function to get codes
 #tabulations
 ?rds.r::tabulate
-dataSet <- rds.r::tabulate("http://localhost:8080/rds/api/query/","anes","anes1948aws",dimensions="V480003", inject=TRUE)
+dataSet <- rds.r::tabulate("http://localhost:8080/rds/api/query/","anes","anes1948",dimensions="V480003", inject=TRUE)
 data<-dataSet@data
 variables<-dataSet@variables
 V480003<-rds.r:::variable(variables,"V480003")
@@ -78,52 +76,22 @@ ggplot(data, aes(x = factor(data$V480003), y = data$count)) +
 
 #select a single variables' metadata
 ?get.variable
-varMetadata <- get.variable("http://localhost:8080/rds/api/catalog/","anes","anes1948aws",var.id="V480003")
+varMetadata <- get.variable("http://localhost:8080/rds/api/catalog/","anes","anes1948",var.id="V480003")
 
 #query variable metadata for multiple variables metadata
 ?get.variables
-variablesMetadata <- get.variables("http://localhost:8080/rds/api/catalog/","anes","anes1948aws",cols="$respondent")
+variablesMetadata <- get.variables("http://localhost:8080/rds/api/catalog/","anes","anes1948",cols="$respondent")
 
 #injecting metadata
-dataSet <- select("http://localhost:8080/rds/api/query/","anes","anes1948aws",inject=TRUE)
+dataSet <- select("http://localhost:8080/rds/api/query/","anes","anes1948",inject=TRUE)
 data<-dataSet@data
 
 
-dataSet <- select("http://localhost:8080/rds/api/query/","anes","anes1948aws",autoPage=FALSE)
+dataSet <- select("http://localhost:8080/rds/api/query/","anes","anes1948",autoPage=FALSE)
 data <- dataSet@data
 
 # Variable information
 variables<-dataSet@variables
 V480045 <- rds.r:::variable(variables,"V480045")
-classificationsMetadata <- get.classifications("http://localhost:8080/rds/api/catalog/","anes","anes1948aws")
+classificationsMetadata <- get.classifications("http://localhost:8080/rds/api/catalog/","anes","anes1948")
 
-classification <- rds.r:::classification(classificationsMetadata, "V480045")
-#TODO not working
-classTable <- sjPlot::tab_df(classification@codes, use.viewer = F,encoding = "UTF-8", alternate.rows=TRUE,show.rownames=FALSE)
-
-tabulation <- rds.r::tabulate("http://localhost:8080/rds/api/query/","anes","anes1948aws",dimensions="V480045,V480014a", inject=TRUE)
-
-variables <- dataSet@variables
-V480045 <- rds.r:::variable(variables,"V480045")
-V480014a <- rds.r:::variable(variables,"V480014a")
-classificationsMetadata <- get.classifications("http://localhost:8080/rds/api/catalog/","anes","anes1948aws")
-#use v50008$classifId when it's on the model
-classification <- rds.r:::classification(classificationsMetadata, "V480045")
-library(plyr)
-
-## we will compute the percentage and format it as a percentage label for the chart
-json<-variables@json
-count<-length(json)
-data1 = ddply(data, .(V480045), transform, Pct = 67/sum(67) * 100)
-data = ddply(data, .(V480014a), transform, pos = (cumsum(67) - 0.5 * 67))
-data$label = paste0(sprintf("%.0f", data$percent), "%")
-
-#plot the data
-ggplot(data, aes(x = factor(V480045), y = 67, fill = V480045)) +
-  geom_bar(stat = "identity") +
-  geom_text(aes(y = pos, label = label), size = 3) +
-  theme(axis.text.x=element_text(angle=90,hjust=1,vjust=0.5),axis.text.y=element_text(size=12), legend.position="top")+
-  xlab(V480045$label)+
-  coord_flip()
-
-dataSet <- select("http://localhost:8080/rds/api/query/","anes","anes1948aws",cols="$truman,$respondent",colLimit=10)

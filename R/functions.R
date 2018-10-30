@@ -5,23 +5,23 @@ library(urltools)
 #'
 #' This function allows you to select a classification based on its ID. 
 #' @param url The base URL of the RDS server
-#' @param collection The collection ID
-#' @param view The view ID
+#' @param catalog The catalog ID
+#' @param dataProduct The dataProcuct ID
 #' @param class.id The classification ID to select
-#' @param limit Specifies the number of codes to return
+#' @param imit Specifies the number of codes to return
 #' @param offset Specifies the starting index of the codes
 #' @param codeSort Specifies how the codes should be sorted, options are ASC or DESC
-#' @param key API key for views that require a key. 
+#' @param key API key for dataProducts that require a key. 
 #' @keywords classification
 #' @export
 #' @examples
-#' get.classification("http://localhost:8080/rds/api/catalog/","myCollection","myView",class.id="myClass")
-#' get.classification("http://localhost:8080/rds/api/catalog/","myCollection","myView",class.id="myClass",limit=10,offset=10)
-#' get.classification("http://localhost:8080/rds/api/catalog/","myCollection","myView",class.id="myClass",codeSort="DESC")
-get.classification <- function(url, collection, view, class.id=NULL, codeSort=NULL, 
+#' get.classification("http://localhost:8080/rds/api/catalog/","myCatalog","myDataProduct",class.id="myClass")
+#' get.classification("http://localhost:8080/rds/api/catalog/","myCatalog","myDataProduct",class.id="myClass",limit=10,offset=10)
+#' get.classification("http://localhost:8080/rds/api/catalog/","myCatalog","myDataProduct",class.id="myClass",codeSort="DESC")
+get.classification <- function(url, catalog, dataProduct, class.id=NULL, codeSort=NULL, 
                                key=NULL, limit=NULL, offset=NULL){
   # create the GET request and retrieve the JSON result
-  request <- paste(url,collection,"/",view,"/classification/",class.id,sep="",collapse=NULL)
+  request <- paste(url,catalog,"/",dataProduct,"/classification/",class.id,sep="",collapse=NULL)
   
   # append any filled out options to the request 
   paramPrefix = "?"
@@ -55,7 +55,7 @@ get.classification <- function(url, collection, view, class.id=NULL, codeSort=NU
   if(codeCount>0){
     #query for codes in a separate call and add them on to this classification
     #TODO add a limit
-    codeRequest <- paste(url,collection,"/",view,"/classification/",class.id,"/codes",sep="",collapse=NULL)
+    codeRequest <- paste(url,catalog,"/",dataProduct,"/classification/",class.id,"/codes",sep="",collapse=NULL)
     # append any filled out options to the request 
     paramPrefix = "?"
     if(!is.null(limit)){
@@ -93,25 +93,25 @@ get.classification <- function(url, collection, view, class.id=NULL, codeSort=NU
 #'
 #' This function allows you to use the select multiple classifications. 
 #' @param url The base URL of the RDS server
-#' @param collection The collection ID
-#' @param view The view ID
+#' @param catalog The catalog ID
+#' @param dataProduct The dataProduct ID
 #' @param codeLimit Specifies the number of codes to return in each classification
 #' @param codeOffset Specifies the starting index of the codes in each classification
 #' @param codeSort Specifies how the codes should be sorted, options are ASC or DESC
-#' @param key API key for views that require a key. 
+#' @param key API key for dataProducts that require a key. 
 #' @param limit Specifies the number of classifications to return
 #' @param offset Specifies the starting index of the classifications
 #' @param sort Specifies how to sort the classfications returned. Classifications will be sorted by their ID and can be sorted ASC or DESC
 #' @keywords variable
 #' @export
 #' @examples
-#' get.classifications("http://localhost:8080/rds/api/catalog/","myCollection","myView") 
-#' get.classifications("http://localhost:8080/rds/api/catalog/","myCollection","myView",limit=10,offset=10,sort="DESC") 
-#' get.classifications("http://localhost:8080/rds/api/catalog/","myCollection","myView",codeLimit=100,codeSort="DESC")  
-get.classifications <- function(url, collection, view, codeLimit=NULL, codeOffset=NULL, codeSort=NULL, 
+#' get.classifications("http://localhost:8080/rds/api/catalog/","myCatalog","myDataProduct") 
+#' get.classifications("http://localhost:8080/rds/api/catalog/","myCatalog","myDataProduct",limit=10,offset=10,sort="DESC") 
+#' get.classifications("http://localhost:8080/rds/api/catalog/","myCatalog","myDataProduct",codeLimit=100,codeSort="DESC")  
+get.classifications <- function(url, catalog, dataProduct, codeLimit=NULL, codeOffset=NULL, codeSort=NULL, 
                                 key=NULL, limit=NULL, offset=NULL, sort=NULL){
   # create the GET request and retrieve the JSON result
-  request <- paste(url,collection,"/",view,"/classifications",sep="",collapse=NULL)
+  request <- paste(url,catalog,"/",dataProduct,"/classifications",sep="",collapse=NULL)
   
   # append any filled out options to the request 
   paramPrefix = "?"
@@ -172,17 +172,17 @@ get.classifications <- function(url, collection, view, codeLimit=NULL, codeOffse
 #'
 #' This function allows you to select the metadata for a single variable based off its ID. 
 #' @param url The base URL of the RDS server
-#' @param collection The collection ID
-#' @param view The view ID
-#' @param key API key for views that require a key. 
+#' @param catalog The catalog ID
+#' @param dataProduct The dataProduct ID
+#' @param key API key for dataProducts that require a key. 
 #' @param var.id The variable ID to select
 #' @keywords variable
 #' @export
 #' @examples
-#' get.variable("http://localhost:8080/rds/api/catalog/","myCollection","myView","myVariable") 
-get.variable <- function(url, collection, view, key=NULL, var.id=NULL){
+#' get.variable("http://localhost:8080/rds/api/catalog/","myCatalog","myDataProduct","myVariable") 
+get.variable <- function(url, catalog, dataProduct, key=NULL, var.id=NULL){
   # create the GET request and retrieve the JSON result
-  request <- paste(url,collection,"/",view,"/variable/",var.id,sep="",collapse=NULL)
+  request <- paste(url,catalog,"/",dataProduct,"/variable/",var.id,sep="",collapse=NULL)
   
   # append any filled out options to the request 
   paramPrefix = "?"
@@ -211,18 +211,19 @@ get.variable <- function(url, collection, view, key=NULL, var.id=NULL){
 #'
 #' This function allows you to select multiple variables metadata. 
 #' @param url The base URL of the RDS server
-#' @param collection The collection ID
-#' @param view The view ID
+#' @param catalog The catalog ID
+#' @param dataProduct The dataProduct ID
 #' @param cols The columns to select
-#' @param key API key for views that require a key. 
+#' @param key API key for dataProducts that require a key. 
+#' @param limit Limit the number of variables returned
 #' @keywords variable
 #' @export
 #' @examples
-#' get.variables("http://localhost:8080/rds/api/catalog/","myCollection","myView",cols="var1,var2") 
-#' get.variables("http://localhost:8080/rds/api/catalog/","myCollection","myView",cols="$demographics") 
-get.variables <- function(url,collection,view,cols=NULL,key=NULL){
+#' get.variables("http://localhost:8080/rds/api/catalog/","myCatalog","myDataProduct",cols="var1,var2") 
+#' get.variables("http://localhost:8080/rds/api/catalog/","myCatalog","myDataProduct",cols="$demographics") 
+get.variables <- function(url,catalog,dataProduct,cols=NULL,key=NULL, columnLimit=NULL){
   # create the GET request and retrieve the JSON result
-  request <- paste(url,collection,"/",view,"/variables",sep="",collapse=NULL)
+  request <- paste(url,catalog,"/",dataProduct,"/variables",sep="",collapse=NULL)
  
    # append any filled out options to the request 
    paramPrefix = "?"
@@ -235,7 +236,12 @@ get.variables <- function(url,collection,view,cols=NULL,key=NULL){
     request <- paste(request,paramPrefix,"key=",key,sep="",collapse=NULL)
     paramPrefix = "&"
   }
-  
+   
+   if(!is.null(columnLimit)){
+     request <- paste(request,paramPrefix,"columnLimit=",columnLimit,sep="",collapse=NULL)
+     paramPrefix = "&"
+   }
+  print(request)
   # json <- jsonlite::fromJSON(request)
   # variables <- data.frame(json$variables)
    variables <- jsonlite::fromJSON(request)
@@ -258,8 +264,8 @@ get.variables <- function(url,collection,view,cols=NULL,key=NULL){
 #' to compile and return the entire data set to the R user. 
 #' 
 #' @param url The base URL of the RDS server
-#' @param collection The collection ID
-#' @param view The view ID
+#' @param catalog The catalog ID
+#' @param dataProduct The dataProduct ID
 #' @param autoPage If set to true multiple queries will be sent to the RDS server in order to compile the complete data set
 #' @param classLimit Specifies the limit of classifications that should be returned
 #' @param classOffset Specifies the starting index of the classifications to be returned
@@ -268,53 +274,59 @@ get.variables <- function(url,collection,view,cols=NULL,key=NULL){
 #' @param cols The columns to select
 #' @param colLimit Specifies the limit of classifications that should be returned
 #' @param colOffset Specifies the starting index of the classifications to be returned
-#' @param count Specifies that the total count of records in the view should be included in the info section
+#' @param count Specifies that the total count of records in the dataProduct should be included in the info section
 #' @param distinct Specifies that only distinct values should be returned
 #' @param facts Specifies that any facts available should be included in the returned metadata
 #' @param freqs Specifies that any frequencies available should be included in the returned metadata
 #' @param inject Specifies if metadata should be injected into the data frame. If true and there are classifications available the columns codes will be replaced with code values. Defaults to FALSE
-#' @param key API key for views that require a key. 
-#' @param limit Specifies the number of records to return
+#' @param key API key for dataProducts that require a key. 
+#' @param rowLimit Specifies the number of records to return
 #' @param offset Specifies the starting index of the records
 #' @param orderby Describes how the results should be ordered
 #' @param sleep Specifies the time to wait between each query to the server in order to not overwhelm the server. Default is 0.2 seconds.
 #' @param stats Specifies that any summary statistics available should be included in the returned 
-#' @param varProperties Specifies the variable properties to include / exclude from the returned variable metadata. Can be a regex or property names. 
 #' @param where Describes how to subset the records
+#' @param cellLimit Specifies maximum number of cells that can be returned - defaults to 10,000
 #' @keywords select
 #' @export
 #' @examples
-#' select("http://localhost:8080/rds/api/catalog/","myCollection","myView",cols="var1,var2") 
-#' select("http://localhost:8080/rds/api/catalog/","myCollection","myView",cols="var1,var2",where="var1<1 AND var2>=3") 
-#' select("http://localhost:8080/rds/api/catalog/","myCollection","myView",cols="var1,var2",orderby="var1 DESC,var2 ASC") 
-#' select("http://localhost:8080/rds/api/catalog/","myCollection","myView",cols="var1,var2",distinct=TRUE,limit=100,offset=100,count=TRUE) 
-#' select("http://localhost:8080/rds/api/catalog/","myCollection","myView",cols="$demographics",inject=TRUE) 
-select <- function(url, collection, view, inject=FALSE, autoPage=TRUE, classLimit=NULL, classOffset=NULL, codeEquals=NULL, codeLimit=NULL, codeOffset=NULL,
+#' select("http://localhost:8080/rds/api/catalog/","myCatalog","myDataProduct",cols="var1,var2") 
+#' select("http://localhost:8080/rds/api/catalog/","myCatalog","myDataProduct",cols="var1,var2",where="var1<1 AND var2>=3") 
+#' select("http://localhost:8080/rds/api/catalog/","myCatalog","myDataProduct",cols="var1,var2",orderby="var1 DESC,var2 ASC") 
+#' select("http://localhost:8080/rds/api/catalog/","myCatalog","myDataProduct",cols="var1,var2",distinct=TRUE,limit=100,offset=100,count=TRUE) 
+#' select("http://localhost:8080/rds/api/catalog/","myCatalog","myDataProduct",cols="$demographics",inject=TRUE) 
+select <- function(url, catalog, dataProduct, inject=FALSE, autoPage=TRUE, classLimit=NULL, classOffset=NULL, codeEquals=NULL, codeLimit=NULL, codeOffset=NULL,
                    cols=NULL, colLimit=NULL, colOffset=NULL, count=FALSE, distinct=FALSE, facts=FALSE, freqs=FALSE, 
-                    key=NULL, limit=NULL, offset=NULL, orderby=NULL, sleep=0.2, stats=FALSE, varProperties=NULL,
-                   where=NULL){
-
+                    key=NULL, rowLimit=NULL, offset=NULL, orderby=NULL, sleep=0.2, stats=FALSE, where=NULL, metadata=FALSE, cellLimit=10000){
   # get the initial data set that we will append information to. 
-  dataSet <- selectPage(url,collection,view,inject,cols,where,orderby,distinct,limit,offset,colLimit,colOffset,
-                        classLimit,classOffset,codeEquals,codeLimit,codeOffset,facts,freqs,stats,count=TRUE,varProperties,key, metadata=TRUE)
-  
+  dataSet <- selectPage(url,catalog,dataProduct,inject,cols,where,orderby,distinct,rowLimit,offset,colLimit,colOffset,
+                        classLimit,classOffset,codeEquals,codeLimit,codeOffset,facts,freqs,stats,count=TRUE,key, metadata)
+
   #create a list of data sets that will be appended to each other to build up all the columns in the final dataset
   i <- 1
   dataSets <- list()
   data <- dataSet@data
-  #records <- dataSet@records
-  
-  # set up the info that will be used for pagination
   info <- dataSet@info
   columnInfo <- info
+  columnCount <- columnInfo$columnCount
+  if(!is.null(rowLimit) && rowLimit*columnCount <= cellLimit){
+    autoPage = false;
+  }else if(!is.null(rowLimit)&& rowLimit > cellLimit){
+    autoPage = true;
+  }
+  if(autoPage){
+    # adjust limit
+    rowLimit = floor(cellLimit/columnCount);
+  }
+  
   if(autoPage){
     # get all the columns through multiple calls to selectPage
     while(columnInfo$moreColumns){
       Sys.sleep(sleep)
       colOffset <- columnInfo$columnOffset + columnInfo$columnLimit
-      browser()
-      colDataSet <- selectPage(url,collection,view,cols,where,orderby,distinct,limit,offset,colLimit,colOffset,
-                               classLimit,classOffset,codeEquals,codeLimit,codeOffset,facts,freqs,stats,count=FALSE,varProperties,key,metadata=FALSE,inject)
+  
+      colDataSet <- selectPage(url,catalog,dataProduct,inject,cols,where,orderby,distinct,rowLimit,offset,colLimit,colOffset,
+                               classLimit,classOffset,codeEquals,codeLimit,codeOffset,facts,freqs,stats,count=FALSE,key,metadata)
       
       columnInfo <- colDataSet@info
       i <- i+1
@@ -328,11 +340,7 @@ select <- function(url, collection, view, inject=FALSE, autoPage=TRUE, classLimi
         data <- cbind(data,dataSets[[i]])
       }
     }
-    
-    # determine the number of rows to ask for, in this version we need to ensure < 10k cells to be able to get the maximum return within the cell limit
-    # in the future we will probably get the cell limit from the data source. 
-    limit <- floor(10000/info$columnCount);
-    
+   
     # set up list of data sets
     i <- 1
     dataSets <- list()
@@ -340,43 +348,42 @@ select <- function(url, collection, view, inject=FALSE, autoPage=TRUE, classLimi
     
     # set up info used for pagination
     rowInfo <- info
-    
-  }
+  } 
   
   # we will grab the metadata once and use it for the resulting data set
-  #metadata <- dataSet@metadata
   variables <- dataSet@variables
- 
   classifications <- dataSet@classifications 
-  #might have to call get classifications? or just get  classification id and uri when you iterate through variables? 
+
   if(autoPage){
-    # get records using selectPage
     while(rowInfo$moreRows){
       Sys.sleep(sleep)
+      #only get the metadata (variables) once and store it, so that you can just continue to build up the dataset
       getMetadata=FALSE
       if(i == 1){
         getMetadata=TRUE
+        offset<- rowInfo$rowOffset
+      }else{
+        offset <- offset+rowInfo$rowLimit
       }
-      offset <- rowInfo$rowOffset+rowInfo$rowLimit
+     
       colOffset=0
-     #TODO changed this from colLimit=info$columnCount to using current col limit
-      rowDataSet <- selectPage(url,collection,view,cols,where,orderby,distinct,limit,offset,colLimit,colOffset,
-                               classLimit,classOffset,codeEquals,codeLimit,codeOffset,facts,freqs,stats,count=FALSE,varProperties,key,metadata=getMetadata,inject=FALSE)
+      colLimit = info$columnCount
+      rowDataSet <- selectPage(url,catalog,dataProduct,inject=FALSE,cols,where,orderby,distinct,rowLimit,offset,colLimit,colOffset,classLimit,classOffset,
+                               codeEquals,codeLimit,codeOffset,facts,freqs,stats,count=FALSE,key,metadata=getMetadata)
+      #the first time through, get the variables from the data set and store them. the second time through, use this stored list since you're not getting the metadata
       if(i == 1){
-       # metadata <- rowDataSet@metadata
         variables<- rowDataSet@variables
       }else{
-        #rowDataSet@metadata <- metadata
         rowDataSet@variables <- variables
       }
-      
       i <- i+1
       dataSets[[i]] <- rowDataSet@data
       rowInfo <- rowDataSet@info
+      rowOffset <- rowInfo$rowOffset
     }
     # ensure the info returned is the last info.
     info<-rowInfo
-    
+
     # append the records together. 
     data <- dataSets[[1]]
     if(length(dataSets)>1){
@@ -387,26 +394,21 @@ select <- function(url, collection, view, inject=FALSE, autoPage=TRUE, classLimi
       }
     }
   }
-  if(inject){
-    #records <- dataSet@records
-    #data <- injectMetadata(data,metadata@json)
-  }
   
   # return a new RDS data set object with the data and the info
   dataSet <- new("rds.dataset", variables = variables, data = data, info = info)
-  
   return(dataSet)
 }
 
-selectPage <- function(url,collection,view,inject=FALSE,cols=NULL,where=NULL,orderby=NULL,
-                       distinct=FALSE,limit=NULL,offset=NULL,colLimit=NULL,colOffset=NULL,
-                       classLimit=NULL,classOffset=NULL,codeEquals=NULL,codeLimit=NULL,codeOffset=NULL,facts=FALSE,
-                       freqs=FALSE,stats=FALSE, count=FALSE,varProperties=NULL,key=NULL,metadata=FALSE){
-  # create the GET request and retrieve the JSON result
-  request <- paste(url,collection,"/",view,"/select",sep="",collapse=NULL)
+selectPage <- function(url,catalog,dataProduct,inject=FALSE,cols=NULL,where=NULL,orderby=NULL,
+                       distinct=FALSE,rowLimit=NULL,offset=NULL,colLimit=NULL,colOffset=NULL,
+                       classLimit=NULL,classOffset=NULL,codeEquals=NULL,codeLimit=NULL,codeOffset=NULL,
+                       facts=FALSE,freqs=FALSE,stats=FALSE, count=FALSE,key=NULL,metadata=FALSE){
   
+  # create the GET request and retrieve the JSON result
+  request <- paste(url,catalog,"/",dataProduct,"/select",sep="",collapse=NULL)
   if(metadata){
-    request <- paste(request,"?metadata=true",sep="",collapse=NULL)
+    request <- paste(request,"?metadata=TRUE",sep="",collapse=NULL)
   }else{
     request <- paste(request,"?metadata=FALSE",sep="",collapse=NULL)
   }
@@ -426,9 +428,8 @@ selectPage <- function(url,collection,view,inject=FALSE,cols=NULL,where=NULL,ord
   if(distinct){
     request <- paste(request,"&distinct",sep="",collapse=NULL)
   }
-  
-  if(!is.null(limit))  {
-    request <- paste(request,"&limit=",limit,sep="",collapse=NULL)
+  if(!is.null(rowLimit))  {
+    request <- paste(request,"&limit=",rowLimit,sep="",collapse=NULL)
   }
   
   if(!is.null(offset))  {
@@ -475,17 +476,12 @@ selectPage <- function(url,collection,view,inject=FALSE,cols=NULL,where=NULL,ord
     request <- paste(request,"&stats",sep="",collapse=NULL)
   }
   
-  if(!is.null(varProperties))  {
-    request <- paste(request,"&varProperties=",varProperties,sep="",collapse=NULL)
-  }
-  
   if(!is.null(key))  {
     request <- paste(request,"&key=",key,sep="",collapse=NULL)
   }
   if (inject) {
     request <- paste(request, "&inject=", inject, sep = "", collapse = NULL)
   }
-  
   print(request)
   json <- jsonlite::fromJSON(request)
   # format the data and ensure the variable names are used as colnames in the data.frame 
@@ -499,23 +495,12 @@ selectPage <- function(url,collection,view,inject=FALSE,cols=NULL,where=NULL,ord
   }
   colnames(data)<-variableNames
 
-  
-  # if metadata injection is desired we will look for classifications and make the proper adjusments to the data frame. 
-  if(metadata & inject){
-   # data <- injectMetadata(data,json$metadata)
-  }
-  
   # format the info as a data.frame
   info <- data.frame(json$info)
   
   # return a new RDS data set object with the data and the info
-  #rds.metadata <- new("rds.metadata")
   rds.variables <-new("rds.variables")
   if(metadata){
-    for(property in json$variables){
-    #  print(property) 
-    }
-   # rds.metadata <- new("rds.metadata", json=json$variables)
     rds.variables <- new("rds.variables", json=json$variables)
   }
   dataSet <- new("rds.dataset", variables = rds.variables,data = data, info = info)
@@ -527,12 +512,12 @@ selectPage <- function(url,collection,view,inject=FALSE,cols=NULL,where=NULL,ord
 #'
 #' This function allows you to use the tabulate function of RDS. 
 #' @param url The base URL of the server RDS is running on
-#' @param collection The collection ID
-#' @param view The view ID
+#' @param catalog The catalog ID
+#' @param dataProduct The dataProduct ID
 #' @param dimensions The names of the variables that should be used as dimensions
 #' @param inject Specifies if metadata should be injected into the data frame. If true and there are classifications available the columns codes will be replaced with code values. Defaults to FALSE
-#' @param key API key for views that require a key. 
-#' @param limit Specifies the number of records to return
+#' @param key API key for dataProducts that require a key. 
+#' @param rowLimit Specifies the number of records to return
 #' @param measures The variables that should be used as a measure, will be the count by default
 #' @param offset Specifies the starting index of the records
 #' @param orderby Describes how the results should be ordered
@@ -540,21 +525,16 @@ selectPage <- function(url,collection,view,inject=FALSE,cols=NULL,where=NULL,ord
 #' @keywords tabulate
 #' @export
 #' @examples
-#' tabulate("http://localhost:8080/rds/api/catalog/","myCollection","myView",dimensions="var1,var2") 
-#' tabulate("http://localhost:8080/rds/api/catalog/","myCollection","myView",dimensions="var1,var2",measures="AVG(var3)")
-#' tabulate("http://localhost:8080/rds/api/catalog/","myCollection","myView",dimensions="var1,var2",measures="AVG(var3)",where="var1!=5",inject=TRUE) 
-tabulate <- function(url, collection, view, dimensions=NULL, inject=FALSE, 
-                     key=NULL, limit=NULL, measures=NULL, offset=NULL, orderby=NULL,
-                     where=NULL, metadata=FALSE){
+#' tabulate("http://localhost:8080/rds/api/catalog/","myCatalog","myDataProduct",dimensions="var1,var2") 
+#' tabulate("http://localhost:8080/rds/api/catalog/","myCatalog","myDataProduct",dimensions="var1,var2",measures="AVG(var3)")
+#' tabulate("http://localhost:8080/rds/api/catalog/","myCatalog","myDataProduct",dimensions="var1,var2",measures="AVG(var3)",where="var1!=5",inject=TRUE) 
+tabulate <- function(url, catalog, dataProduct, dimensions=NULL, inject=FALSE, key=NULL, rowLimit=NULL, 
+                     measures=NULL, offset=NULL, orderby=NULL,where=NULL, metadata=FALSE){
   
   # create the GET request and retrieve the JSON result
-  request <- paste(url,collection,"/",view,"/tabulate",sep="",collapse=NULL)
-  
-  
+  request <- paste(url,catalog,"/",dataProduct,"/tabulate",sep="",collapse=NULL)
   
   # append any filled out options to the request 
-  # TODO I added "=true" to the metadata param, make this configurable.
- # request <- paste(request,"?metadata",metadata,sep="",collapse=NULL)  
   if(metadata){
     request <- paste(request,"?metadata=true",sep="",collapse=NULL)
   }else{
@@ -581,8 +561,8 @@ tabulate <- function(url, collection, view, dimensions=NULL, inject=FALSE,
     request <- paste(request,"&orderby=",url_encode(orderby),sep="",collapse=NULL)
   }
   
-  if(!is.null(limit))  {
-    request <- paste(request,"&limit=",limit,sep="",collapse=NULL)
+  if(!is.null(rowLimit))  {
+    request <- paste(request,"&rowLimit=",rowLimit,sep="",collapse=NULL)
   }
   
   if(!is.null(offset))  {
@@ -603,15 +583,11 @@ tabulate <- function(url, collection, view, dimensions=NULL, inject=FALSE,
     variableNames <- c(variableNames, id)
   }
   colnames(data)<-variableNames
- #colnames(data)<-json$metadata$variables$resources$id
- 
-  
+
   # format the info as a data.frame
   info <-data.frame(json$info) 
-
   variables <- new("rds.variables")
 
-  #TODO is there a way to exclude the count node that comes back with variables
   if(!is.null(json$variables)){
     variables <- new("rds.variables", json=json$variables)
   }
