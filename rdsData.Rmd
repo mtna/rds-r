@@ -103,18 +103,16 @@ Because the tabulate function returns a data set that contains the data and meta
 variables <- tabulation@variables
 V480045 <- rds.r:::variable(variables,"V480045")
 V480014a <- rds.r:::variable(variables,"V480014a")
-#use v50008$classifId when it's on the model
 
 ## we will compute the percentage and format it as a percentage label for the chart
 data$count<-as.numeric(as.character(data$count))
 data = ddply(data, .(V480014a), transform, Pct = count/sum(count) * 100)
 data = ddply(data, .(V480014a), transform, pos = (cumsum(count) - 0.5 * count))
-data$label = paste0(sprintf("%.0f", data$percent), "%")
+data$label = paste0(sprintf("%.0f", data$Pct), "%")
 
 #plot the data
 ggplot(data, aes(x = factor(V480014a), y = count, fill = V480045)) +
 geom_bar(stat = "identity") +
-scale_fill_manual("legend", values = c("1. MALE" = "#0099CC", "2. FEMALE" = "#ed80af", "9. NA" = "#666666"))+
 geom_text(aes(y = pos, label = label), size = 3) +
 theme(axis.text.x=element_text(angle=90,hjust=1,vjust=0.5),axis.text.y=element_text(size=12), legend.position="top")+
 xlab(V480014a$label)+
