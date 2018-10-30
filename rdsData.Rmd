@@ -40,8 +40,8 @@ RDS will save you the trouble, instead of manually reading the variables informa
 ```{r querying-data, eval = TRUE, results = 'hide', tidy=TRUE, tidy.opts=list(width.cutoff=80)}
 # For the purposes of this example we will use the "select" function with keyword parameters to only get columns containing "truman" or "respondent" to ensure the table does not get too big for the HTML, 
 # for analysis we would leave these off to return the entire data set. 
-dataSet <- select("http://localhost:8080/rds/api/query/","anes","anes1948aws",metadata=TRUE, rowLimit=10, autoPage=FALSE, colLimit=10)
-variablesMetadata <- get.variables("http://localhost:8080/rds/api/catalog/","anes","anes1948aws",cols="$respondent",columnLimit=10)
+dataSet <- select("http://localhost:8080/rds/api/query/","anes","anes1948",metadata=TRUE, rowLimit=10, autoPage=FALSE, colLimit=10)
+variablesMetadata <- get.variables("http://localhost:8080/rds/api/catalog/","anes","anes1948",cols="$respondent",columnLimit=10)
 varTable<-htmlTable(variablesMetadata,col.rgroup = c("none", "#F7F7F7"),css.table="width: 100%; ", css.cell = "padding-left: 2%; padding-right: 2%; font-family:\"Helvetica Neue\",Helvetica,Arial,sans-serif; font-size:14px", rnames=FALSE)
 
 # Data
@@ -59,7 +59,7 @@ Maybe we want to know the code values for the codes of one or more of these vari
 
 First we could inject the code values into the returned data set as using the **inject** parameter.
 ```{r data-with-code-values, eval = TRUE, results = 'hide', tidy=TRUE, tidy.opts=list(width.cutoff=80)}
-dataSet <- select("http://localhost:8080/rds/api/query/","anes","anes1948aws", colLimit = 10, rowLimit = 10, metadata = TRUE, inject=TRUE)
+dataSet <- select("http://localhost:8080/rds/api/query/","anes","anes1948", colLimit = 10, rowLimit = 10, metadata = TRUE, inject=TRUE)
 data <- dataSet@data
 
 dataTable<-htmlTable(data,col.rgroup = c("none", "#F7F7F7"), css.table="width: 100%;",css.cell = "padding-left: 2%; padding-right: 2%; font-family:\"Helvetica Neue\",Helvetica,Arial,sans-serif; font-size:14px", rnames=FALSE)
@@ -69,7 +69,7 @@ dataTable<-htmlTable(data,col.rgroup = c("none", "#F7F7F7"), css.table="width: 1
 ###Sex of Respondent: Classification
 We could also simply access the classification information for a given variable.
 ```{r classifications, eval = TRUE, results = 'hide', tidy=TRUE, tidy.opts=list(width.cutoff=80)}
-dataSet <- select("http://localhost:8080/rds/api/query/","anes","anes1948aws",cols="V480045",autoPage=FALSE, inject=TRUE)
+dataSet <- select("http://localhost:8080/rds/api/query/","anes","anes1948",cols="V480045",autoPage=FALSE, inject=TRUE)
 data<-dataSet@data
 classTable<-htmlTable(data, col.rgroup = c("none", "#F7F7F7"), header="V480045",css.table="width: 100%;", rnames=FALSE)
 ```
@@ -78,7 +78,7 @@ classTable<-htmlTable(data, col.rgroup = c("none", "#F7F7F7"), header="V480045",
 ##Tabulating Data
 Perhaps we would like to know if there is any difference between why male and female respondents think people voted for Truman. First lets create the table using the **tabulate** function.
 ```{r tabulation, eval = TRUE, results = 'hide', tidy=TRUE, tidy.opts=list(width.cutoff=80)}
-tabulation <- rds.r::tabulate("http://localhost:8080/rds/api/query/","anes","anes1948aws", metadata=TRUE,dimensions="V480045,V480014a", inject=TRUE)
+tabulation <- rds.r::tabulate("http://localhost:8080/rds/api/query/","anes","anes1948", metadata=TRUE,dimensions="V480045,V480014a", inject=TRUE)
   data <- tabulation@data
   
   #get a list of variable names
