@@ -12,14 +12,16 @@ In this document we will be using data from the American National Election Study
 ##Install
 ```{r install,eval=FALSE}
 install.packages("rds.r")
+install.packages("htmlTable")
 ```
 ##Setup
 Libraries used for this markdown demonstration.
-```{r libraries, eval=TRUE, tidy=TRUE, tidy.opts=list(width.cutoff=80)}
+```{r libraries, eval=TRUE, tidy=TRUE, tidy.opts=list(width.cutoff=80), message=FALSE}
 library(rds.r)
 library(sjPlot)
 library(ggplot2)
 library(plyr)
+library(htmlTable)
 ```
 
 ##Why RDS?
@@ -35,28 +37,16 @@ RDS cuts down the time it takes for reasearchers to locate and access the data o
 Lets imagine that we are researching the United States presidential election from 1948, between Harry Truman, and Thomas Dewey. We are interested in demographic data of the respondent and why they did or did not vote for Harry Truman. We may take a look at the documentation on the ANES website https://electionstudies.org/wp-content/uploads/1948/03/anes_timeseries_1948vardoc_codebook.pdf which has a lot of good information about the variables and their codes stored in an ASCII format. However, to identify the variables of interest we would need to read through all 67 variables and their names and labels and choose the variables that have to do with respondent demographics or questions about Truman.
 
 RDS will save you the trouble, instead of manually reading the variables information, we can request the variables and their metadata be returned to us by searching for keywords. This will return more than data, the variable and classification metadata will be available as well. This will allow us to document the variables we are using to provide ourselves and others with more context around the data we are using. 
-```{r querying-data, eval = TRUE, results = 'hide', tidy=TRUE, tidy.opts=list(width.cutoff=80), cache=TRUE}
-# For the purposes of this example we will use the "selectSubset" function to ensure the table does not get too big for the HTML, 
-# for analysis we would use the "select" function to return the entire data set. 
-# data <- select("http://richdataservices.com/public/api/catalog/","test","anes1948",cols=$truman,$respondent")
-
-# We will limit the variable properties returned to make our data dictionary more visually appealing
-varProperties <- "id,label,question,storageType,width,classification"
-
-#dataSet <- selectSubset("http://richdataservices.com/public/api/catalog/","test","anes1948",cols="$truman,$respondent",limit=10, varProperties = varProperties, metadata=TRUE)
-dataSet <- select("http://localhost:8080/rds/api/query/","anes","anes1948aws",cols="$truman,$respondent",limit=10)
-
-# Variable information
-variables <- dataSet@variables
-#TODO need to figure out how to make variables into a data frame I think?
-#variableDocs <- rds.r:::variables(variables)
-variablesMetadata <- get.variables("http://localhost:8080/rds/api/catalog/","anes","anes1948aws",cols="$respondent")
-
-varTable <- sjPlot::tab_df(variablesMetadata, use.viewer = F, encoding = "UTF-8", alternate.rows=TRUE, show.rownames=FALSE)
+```{r querying-data, eval = TRUE, results = 'hide', tidy=TRUE, tidy.opts=list(width.cutoff=80)}
+# For the purposes of this example we will use the "select" function with keyword parameters to only get columns containing "truman" or "respondent" to ensure the table does not get too big for the HTML, 
+# for analysis we would leave these off to return the entire data set. 
+dataSet <- select("http://localhost:8080/rds/api/query/","anes","anes1948aws",metadata=TRUE, rowLimit=10, autoPage=FALSE, colLimit=10)
+variablesMetadata <- get.variables("http://localhost:8080/rds/api/catalog/","anes","anes1948aws",cols="$respondent",columnLimit=10)
+varTable<-htmlTable(variablesMetadata,col.rgroup = c("none", "#F7F7F7"),css.table="width: 100%; ", css.cell = "padding-left: 2%; padding-right: 2%; font-family:\"Helvetica Neue\",Helvetica,Arial,sans-serif; font-size:14px", rnames=FALSE)
 
 # Data
 data <- dataSet@data
-dataTable <- sjPlot::tab_df(data, use.viewer = F, encoding = "UTF-8", alternate.rows=TRUE, show.rownames=FALSE)
+dataTable<-htmlTable(data,col.rgroup = c("none", "#F7F7F7"),css.table="width: 100%;", css.cell = "padding-left: 2%; padding-right: 2%;font-family:\"Helvetica Neue\",Helvetica,Arial,sans-serif; font-size:14px", rnames=FALSE)
 ```
 ###Dictionary
 `r varTable`
@@ -68,56 +58,54 @@ dataTable <- sjPlot::tab_df(data, use.viewer = F, encoding = "UTF-8", alternate.
 Maybe we want to know the code values for the codes of one or more of these variables, we have two options to do this. 
 
 First we could inject the code values into the returned data set as using the **inject** parameter.
-```{r data-with-code-values, eval = TRUE, results = 'hide', tidy=TRUE, tidy.opts=list(width.cutoff=80),cache=TRUE}
-dataSet <- select("http://localhost:8080/rds/api/query/","anes","anes1948aws")
-
+```{r data-with-code-values, eval = TRUE, results = 'hide', tidy=TRUE, tidy.opts=list(width.cutoff=80)}
+dataSet <- select("http://localhost:8080/rds/api/query/","anes","anes1948aws", colLimit = 10, rowLimit = 10, metadata = TRUE, inject=TRUE)
 data <- dataSet@data
-#TODO not working
-dataTable <- sjPlot::tab_df(data, use.viewer = F, encoding = "UTF-8", alternate.rows=TRUE, show.rownames=FALSE)
+
+dataTable<-htmlTable(data,col.rgroup = c("none", "#F7F7F7"), css.table="width: 100%;",css.cell = "padding-left: 2%; padding-right: 2%; font-family:\"Helvetica Neue\",Helvetica,Arial,sans-serif; font-size:14px", rnames=FALSE)
 ```
 `r dataTable`
 
 ###Sex of Respondent: Classification
 We could also simply access the classification information for a given variable.
-```{r classifications, eval = TRUE, results = 'hide', tidy=TRUE, tidy.opts=list(width.cutoff=80),cache=TRUE}
+```{r classifications, eval = TRUE, results = 'hide', tidy=TRUE, tidy.opts=list(width.cutoff=80)}
 dataSet <- select("http://localhost:8080/rds/api/query/","anes","anes1948aws",cols="V480045",autoPage=FALSE, inject=TRUE)
 data<-dataSet@data
-classTable <- sjPlot::tab_df(data, use.viewer = T,encoding = "UTF-8", alternate.rows=TRUE,show.rownames=FALSE)
-
+classTable<-htmlTable(data, col.rgroup = c("none", "#F7F7F7"), header="V480045",css.table="width: 100%;", rnames=FALSE)
 ```
 `r classTable`
 
 ##Tabulating Data
 Perhaps we would like to know if there is any difference between why male and female respondents think people voted for Truman. First lets create the table using the **tabulate** function.
-```{r tabulation, eval = TRUE, results = 'hide', tidy=TRUE, tidy.opts=list(width.cutoff=80),cache=TRUE}
+```{r tabulation, eval = TRUE, results = 'hide', tidy=TRUE, tidy.opts=list(width.cutoff=80)}
 tabulation <- rds.r::tabulate("http://localhost:8080/rds/api/query/","anes","anes1948aws", metadata=TRUE,dimensions="V480045,V480014a", inject=TRUE)
   data <- tabulation@data
-  variables <-tabulation@variables
+  
+  #get a list of variable names
   variableNames <- list();
   for(variable in tabulation@variables@json){
     if(!is.null(variable$label)){
-    label    <- variable$label
+        label<- variable$label
     }else{
       label<-variable$name
     }
     variableNames <- c(variableNames, label)
   }
  
-table<- sjtable<- sjt.xtab(data$V480045, data$V480014a,var.labels=variableNames)  
+table<- sjtable<- sjt.xtab(data$V480045, data$V480014a,var.labels=variableNames)
 
 ```
 `r table`
 
 ##Turning Tabulations into Charts
 Because the tabulate function returns a data set that contains the data and metadata, all we need to do is plug in the appropriate data and metadata into our favorite charting tool. 
-```{r tabulations-to-charts, eval = TRUE, results = 'hide', tidy=TRUE, tidy.opts=list(width.cutoff=80),fig.width=12, fig.height=10,cache=TRUE}
+```{r tabulations-to-charts, eval = TRUE, results = 'hide', tidy=TRUE, tidy.opts=list(width.cutoff=80),fig.width=12, fig.height=10}
 variables <- tabulation@variables
 V480045 <- rds.r:::variable(variables,"V480045")
 V480014a <- rds.r:::variable(variables,"V480014a")
 #use v50008$classifId when it's on the model
 
 ## we will compute the percentage and format it as a percentage label for the chart
-?ddply
 data$count<-as.numeric(as.character(data$count))
 data = ddply(data, .(V480014a), transform, Pct = count/sum(count) * 100)
 data = ddply(data, .(V480014a), transform, pos = (cumsum(count) - 0.5 * count))
@@ -126,6 +114,7 @@ data$label = paste0(sprintf("%.0f", data$percent), "%")
 #plot the data
 ggplot(data, aes(x = factor(V480014a), y = count, fill = V480045)) +
 geom_bar(stat = "identity") +
+scale_fill_manual("legend", values = c("1. MALE" = "#0099CC", "2. FEMALE" = "#ed80af", "9. NA" = "#666666"))+
 geom_text(aes(y = pos, label = label), size = 3) +
 theme(axis.text.x=element_text(angle=90,hjust=1,vjust=0.5),axis.text.y=element_text(size=12), legend.position="top")+
 xlab(V480014a$label)+
