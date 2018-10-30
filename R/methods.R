@@ -2,9 +2,6 @@ setGeneric("classification", function(classificationsMetadata, class.id) standar
 
 setMethod("classification", signature("list", "character"), function(classificationsMetadata, class.id) {
   if(!is.null(classificationsMetadata)){
-      # TODO this would be better to use index instead of for/if, but can't figure it out
-      # index <- match(c(class.id),metadata@json$classifications$resources$id)
-    #index <- match(c(class.id),classificationsMetadata$id)
       for(i in 1:length(classificationsMetadata)){
         if(classificationsMetadata[[i]]@id==class.id){
           id    <- classificationsMetadata[[i]]@id
@@ -21,8 +18,6 @@ setMethod("classification", signature("list", "character"), function(classificat
   }
 })
 
-#TODO rewriting classifications method to get them not from metadata
-#TODO add way to get codes - make a separate call?
 setGeneric("classifications", function(classificationsMetadata) standardGeneric("classifications"))
 
 setMethod("classifications", signature("rds.classifications"), function(classificationsMetadata) {

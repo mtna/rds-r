@@ -110,6 +110,7 @@ get.classification <- function(url, catalog, dataProduct, class.id=NULL, codeSor
 #' get.classifications("http://localhost:8080/rds/api/catalog/","myCatalog","myDataProduct",codeLimit=100,codeSort="DESC")  
 get.classifications <- function(url, catalog, dataProduct, codeLimit=NULL, codeOffset=NULL, codeSort=NULL, 
                                 key=NULL, limit=NULL, offset=NULL, sort=NULL){
+ 
   # create the GET request and retrieve the JSON result
   request <- paste(url,catalog,"/",dataProduct,"/classifications",sep="",collapse=NULL)
   
@@ -149,7 +150,6 @@ get.classifications <- function(url, catalog, dataProduct, codeLimit=NULL, codeO
     request <- paste(request,paramPrefix,"key=",key,sep="",collapse=NULL)
     paramPrefix = "&"
   }
-  
   json <- jsonlite::fromJSON(request)
   classifications <- list()
   
