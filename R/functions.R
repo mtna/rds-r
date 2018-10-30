@@ -301,7 +301,6 @@ select <- function(url, catalog, dataProduct, inject=FALSE, autoPage=TRUE, class
   # get the initial data set that we will append information to. 
   dataSet <- selectPage(url,catalog,dataProduct,inject,cols,where,orderby,distinct,rowLimit,offset,colLimit,colOffset,
                         classLimit,classOffset,codeEquals,codeLimit,codeOffset,facts,freqs,stats,count=TRUE,key, metadata)
-
   #create a list of data sets that will be appended to each other to build up all the columns in the final dataset
   i <- 1
   dataSets <- list()
@@ -310,9 +309,9 @@ select <- function(url, catalog, dataProduct, inject=FALSE, autoPage=TRUE, class
   columnInfo <- info
   columnCount <- columnInfo$columnCount
   if(!is.null(rowLimit) && rowLimit*columnCount <= cellLimit){
-    autoPage = false;
+    autoPage = FALSE;
   }else if(!is.null(rowLimit)&& rowLimit > cellLimit){
-    autoPage = true;
+    autoPage = TRUE;
   }
   if(autoPage){
     # adjust limit

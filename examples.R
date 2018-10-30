@@ -8,7 +8,6 @@ library("rds.r")
 #select. Metadata and data being returned together. 
 ?rds.r::select
 dataSet <- select("http://localhost:8080/rds/api/query/","anes","anes1948")
-
 data <- dataSet@data
 variables <- dataSet@variables
 info <- dataSet@info
