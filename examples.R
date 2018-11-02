@@ -1,13 +1,16 @@
 install.packages("ggplot2")
 install.packages("devtools")
+install.packages("htmlTable")
 library("ggplot2")
 library("devtools")
+library(htmlTable)
 install("/Users/carsonhuntermtna/R/development/rds-r")
 library("rds.r")
 
 #select. Metadata and data being returned together. 
 ?rds.r::select
-dataSet <- select("http://localhost:8080/rds/api/query/","anes","anes1948")
+?names
+ dataSet <- select("http://localhost:8080/rds/api/query/","anes","anes1948", metadata=TRUE)
 data <- dataSet@data
 variables <- dataSet@variables
 info <- dataSet@info
@@ -19,11 +22,10 @@ data <- dataSet@data
 variables <- dataSet@variables
 rm(data,dataSet,variables)
 
-dataSet <- select("http://localhost:8080/rds/api/query/","anes","anes1948",inject=TRUE)
+dataSet <- select("http://localhost:8080/rds/api/query/","anes","anes1948",inject=TRUE, metadata=TRUE)
 data <- dataSet@data
 variables <- dataSet@variables
 rm(data,dataSet,variables)
-
 
 #DISTINCT - not yet implemented
 dataSet <- select("http://localhost:8080/rds/api/query/","anes","anes1948",cols="$respondent",where="V480003=1",orderby="V480045,V480047 DESC", distinct=TRUE)
@@ -45,16 +47,15 @@ var <- rds.r:::variable(variables,"V480045")
 rm(data,dataSet,variables,var)
 
 #query multiple classifications' metadata
-?get.classification
-classificationsMetadata <- get.classifications("http://localhost:8080/rds/api/catalog/","anes","anes1948")
-classifications <- new("rds.classifications",json=classificationsMetadata)
-newclassifications <- rds.r:::classifications(classifications)
+?get.classifications
+classifications <- get.classifications("http://localhost:8080/rds/api/catalog/","anes","anes1948")
+#classifications <- new("rds.classifications",json=classificationsMetadata)
+#newclassifications <- rds.r:::classifications(classifications)
 
 #select a single classifications metadata
 ?get.classification
-#TODO can't get this bc variable doesn't have classifId on it
-class <- rds.r:::classification(classificationsMetadata, var$classificationId)
-class <- rds.r:::classification(classificationsMetadata, "V480006")
+class <- rds.r:::classification(classifications, var$classificationId)
+class <- rds.r:::classification(classifications, "V480006")
 id <- class@id
 codes <- class@codes
 
@@ -107,3 +108,33 @@ data = ddply(data, .(V480014a), transform, Pct = count/sum(count) * 100)
 data = ddply(data, .(V480014a), transform, pos = (cumsum(count) - 0.5 * count))
 data$label = paste0(sprintf("%.0f", data$Pct), "%")
 
+###testing
+dataSet <- select("http://localhost:8080/rds/api/query/", "anes", "anes1948", cols="$truman,$respondent", metadata=TRUE, rowLimit=10, autoPage=FALSE)
+
+variablesMetadata <- get.variables("http://localhost:8080/rds/api/catalog/","anes","anes1948",cols="$truman,$respondent",columnLimit=10)
+variableDf<-dataSet@variables
+#varMethod <- rds.r::variables(dataSet)
+varTable<-htmlTable(variableDf,col.rgroup = c("none", "#F7F7F7"),css.table="width: 100%; ", css.cell = "padding-left: 2%; padding-right: 2%; font-family:\"Helvetica Neue\",Helvetica,Arial,sans-serif; font-size:14px", rnames=FALSE)
+jsonList<-dataSet@variables@json
+
+print(varTable)
+
+
+tabulation <- rds.r::tabulate("http://localhost:8080/rds/api/query/","anes","anes1948", metadata=TRUE,dimensions="V480045,V480014a", inject=TRUE)
+data <- tabulation@data
+variables<-tabulation@variables
+#get a list of variable names
+variableNames <- list();
+
+variableNames<-variables$label
+install.packages("sjPlot")
+library(sjPlot)
+table<- sjtable<- sjt.xtab(data$V480045, data$V480014a,var.labels=variableNames)
+print(table)
+
+
+#editing classification method
+V480045 <- rds.r::variable(dataSet@variables,"V480045")
+classification <- rds.r::get.classification("http://localhost:8080/rds/api/catalog/","anes","anes1948",class.id=V480045$classificationUri)
+classTable<-htmlTable(classification, col.rgroup = c("none", "#F7F7F7"),css.table="width: 100%;", rnames=FALSE)
+```

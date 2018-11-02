@@ -1,49 +1,53 @@
-setGeneric("classification", function(classificationsMetadata, class.id) standardGeneric("classification"))
+setGeneric("classification", function(classifications, id) standardGeneric("classification"))
 
-setMethod("classification", signature("list", "character"), function(classificationsMetadata, class.id) {
-  if(!is.null(classificationsMetadata)){
-      for(i in 1:length(classificationsMetadata)){
-        if(classificationsMetadata[[i]]@id==class.id){
-          id    <- classificationsMetadata[[i]]@id
-          keywordCount <- classificationsMetadata[[i]]@name
-          codes <- classificationsMetadata[[i]]@codes
-          levelCount <- classificationsMetadata[[i]]@levelCount
-          uri <- classificationsMetadata[[i]]@uri
-          codeCount <- classificationsMetadata[[i]]@codeCount
-          name <- classificationsMetadata[[i]]@name
-          classification <- new("rds.classification",id=id, uri=uri, name=name, codeCount=codeCount, levelCount=levelCount,codes=codes)
-          return(classification)
+setMethod("classification", signature("data.frame", "character"), function(classifications, id) {
+  if(!is.null(classifications)){
+      for(i in 1:nrow(classifications)){
+        if(classifications$id[i]==id){
+          df <- data.frame(classifications[i,])
+          return(df)
         }
       }
   }
 })
 
-setGeneric("classifications", function(classificationsMetadata) standardGeneric("classifications"))
+#get a specific variable from a dataframe, returned in a dataframe
+setGeneric("variable", function(variables,id) standardGeneric("variable")) 
 
-setMethod("classifications", signature("rds.classifications"), function(classificationsMetadata) {
-  if(!is.null(classificationsMetadata@json)){
-      classifications <- list()
-      codes <- list()
-    
-      for(i in 1:length(classificationsMetadata@json)){
-        id    <- classificationsMetadata@json[[i]]@id
-        name <- classificationsMetadata@json[[i]]@name
-        codes <- classificationsMetadata@json[[i]]@codes
-        levelCount <- classificationsMetadata@json[[i]]@levelCount
-        uri <- classificationsMetadata@json[[i]]@uri
-        codeCount <- classificationsMetadata@json[[i]]@codeCount
-        classification <- new("rds.classification",id=id, uri=uri, name=name, codeCount=codeCount, levelCount=levelCount,codes=codes)
-        classifications <- c(classifications, classification)
+setMethod("variable", signature("data.frame", "character"), function(variables, id) {
+  df<-data.frame
+  if(!is.null(variables)){
+    for(i in 1:nrow(variables)){
+         row<-variables[i,]
+      if(row["id"]==id){
+        df <- data.frame(row)
       }
-      return(classifications)
-   }
+    }
+  }
+  return(df)
 })
 
-setGeneric("variable", function(variables,var.id) standardGeneric("variable")) 
+#pass in a list of variables and transform it to a data.frame (tibble)
+setGeneric("variablesFromList", function(jsonList) standardGeneric("variablesFromList")) 
 
-setMethod("variable", signature("rds.variables", "character"), function(variables, var.id) {
-  if(!is.null(variables@json)){
-    matchedVar <- match(var.id, names(variables@json))
-    return(variables@json[[matchedVar]])
-  }
+setMethod("variablesFromList", signature("list"), function(jsonList) {
+  
+    propertyIndex<-1
+    varIndex=1
+    #add all of the variables to a list that will be binded into a data.frams
+    dataList=list()
+    
+   # l<-vector("list", length(variable))
+    for(variable in jsonList){
+      # l<-names(variable)
+      # l<-unique(l)
+     
+      dataList[[propertyIndex]]<-variable
+      propertyIndex<-propertyIndex+1
+    }
+    #create data frame, bind variables from list, and set column nmaes
+    df<-data.frame()
+    df<-dplyr::bind_rows(dataList)
+    return(df)
+  
 })

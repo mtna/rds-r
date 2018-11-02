@@ -7,5 +7,9 @@ export(get.variables)
 
 export(select)
 export(tabulate)
-exportClasses(rds.classification)
+
+exportMethods(variablesFromList)
+exportMethods(variable)
+exportMethods(classification)
 exportClasses(rds.dataset)
+

@@ -81,12 +81,8 @@ get.classification <- function(url, catalog, dataProduct, class.id=NULL, codeSor
     print(codeListJson)
   }
   codes <- data.frame(codeListJson)
-  #end test
-  
-  #codes <- data.frame(json$codes$resources)
-  #info <- data.frame(json$codes$info)
-  classification <- new("rds.classification", id = id, codes = codes)
-  return(classification)
+ 
+  return(codes)
 }
 
 #' Get Classifications Function
@@ -150,21 +146,7 @@ get.classifications <- function(url, catalog, dataProduct, codeLimit=NULL, codeO
     request <- paste(request,paramPrefix,"key=",key,sep="",collapse=NULL)
     paramPrefix = "&"
   }
-  json <- jsonlite::fromJSON(request)
-  classifications <- list()
-  
-  for(i in 1:nrow(json)){
-    id    <- json$id[[i]]
-    uri<-json$uri[[i]]
-    name<-json$name[[i]]
-    codeCount<-json$codeCount[[i]]
-    levelCount<-json$levelCount[[i]]
-    #codes <- json[[i]]
-    #info  <- json$classifications$resources$codes$info[i,]
-    classification <- new("rds.classification",id=id, uri=uri, name=name, codeCount=codeCount,levelCount=levelCount)
-    classifications <- c(classifications, classification)
-  }
-
+  classifications <- jsonlite::fromJSON(request)
   return(classifications)
 }
 
@@ -194,22 +176,13 @@ get.variable <- function(url, catalog, dataProduct, key=NULL, var.id=NULL){
   print(request)
   json <- jsonlite::fromJSON(request)
   variable <- data.frame(json)
-  removals <- c()
-
-  for (i in names(variable)) {
-    column <- variable[[i]]
-    if(length(column) == 0){
-      removals <- c(removals, i)
-    }
-  }
   
-  variable <- variable[ , !(names(variable) %in% removals)]
   return(variable)
 }
 
 #' Get Variables Function
 #'
-#' This function allows you to select multiple variables metadata. 
+#' This function allows you to select multiple variables metadata and returns them as a data frame
 #' @param url The base URL of the RDS server
 #' @param catalog The catalog ID
 #' @param dataProduct The dataProduct ID
@@ -241,19 +214,8 @@ get.variables <- function(url,catalog,dataProduct,cols=NULL,key=NULL, columnLimi
      request <- paste(request,paramPrefix,"columnLimit=",columnLimit,sep="",collapse=NULL)
      paramPrefix = "&"
    }
-  print(request)
-  # json <- jsonlite::fromJSON(request)
-  # variables <- data.frame(json$variables)
+   print(request)
    variables <- jsonlite::fromJSON(request)
-
-  removals <- c()
-  for (i in names(variables)) {
-    column <- variables[[i]]
-    if(length(column) == 0){
-      removals <- c(removals, i)
-    }
-  }
-  variables <- variables[ , !(names(variables) %in% removals)]
   return(variables)
 }
 
@@ -493,16 +455,14 @@ selectPage <- function(url,catalog,dataProduct,inject=FALSE,cols=NULL,where=NULL
     variableNames <- c(variableNames, id)
   }
   colnames(data)<-variableNames
-
   # format the info as a data.frame
   info <- data.frame(json$info)
   
-  # return a new RDS data set object with the data and the info
-  rds.variables <-new("rds.variables")
-  if(metadata){
-    rds.variables <- new("rds.variables", json=json$variables)
+  variables<-data.frame()
+  if(!is.null(json$variables)){
+    variables <- rds.r::variablesFromList(json$variables)
   }
-  dataSet <- new("rds.dataset", variables = rds.variables,data = data, info = info)
+  dataSet <- new("rds.dataset", variables = variables, data = data, info = info)
   
   return(dataSet)
 }
@@ -582,13 +542,12 @@ tabulate <- function(url, catalog, dataProduct, dimensions=NULL, inject=FALSE, k
     variableNames <- c(variableNames, id)
   }
   colnames(data)<-variableNames
-
+  browser()
   # format the info as a data.frame
   info <-data.frame(json$info) 
-  variables <- new("rds.variables")
-
+  variables<-data.frame()
   if(!is.null(json$variables)){
-    variables <- new("rds.variables", json=json$variables)
+    variables <- rds.r::variablesFromList(json$variables)
   }
   dataSet <- new("rds.dataset", variables = variables, data = data, info = info)
   return(dataSet)
