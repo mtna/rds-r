@@ -12,8 +12,8 @@ In this document we will be using data from the American National Election Study
 ##Install
 The following packages will be needed for this demonstration.
 ```{r install,eval=FALSE}
-install.packages("rds.r")
-install.packages("htmlTable")
+install.packages(rds.r)
+install.packages(htmlTable)
 install.packages(sjPlot)
 install.packages(ggplot2)
 install.packages(plyr)
@@ -47,6 +47,8 @@ dataSet <- select("http://localhost:8080/rds/api/query/", "anes", "anes1948", co
 
 # get the variable metadata from the data set that was returned and display it in a table.
 vars <- dataSet@variables
+# for presentation purposes we will drop a few fields and reorder the others
+vars <- vars[ , c("name","label","questionText","dataType","fixedStorageWidth")]
 varTable<-htmlTable(vars,col.rgroup = c("none", "#F7F7F7"),css.table="width: 100%; ", css.cell = "padding-left: 2%; padding-right: 2%; font-family:\"Helvetica Neue\",Helvetica,Arial,sans-serif; font-size:14px", rnames=FALSE)
 
 # get the data from the data set and display it in a table
