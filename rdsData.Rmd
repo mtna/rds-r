@@ -46,8 +46,8 @@ For the purposes of this example we will use the "select" function with keyword 
 dataSet <- select("http://localhost:8080/rds/api/query/", "anes", "anes1948", cols="$truman,$respondent", metadata=TRUE, rowLimit=10, autoPage=FALSE)
 
 # get the variable metadata from the data set that was returned and display it in a table.
-variablesMetadata <- get.variables("http://localhost:8080/rds/api/catalog/","anes","anes1948",cols="$truman,$respondent",columnLimit=10)
-varTable<-htmlTable(variablesMetadata,col.rgroup = c("none", "#F7F7F7"),css.table="width: 100%; ", css.cell = "padding-left: 2%; padding-right: 2%; font-family:\"Helvetica Neue\",Helvetica,Arial,sans-serif; font-size:14px", rnames=FALSE)
+vars <- dataSet@variables
+varTable<-htmlTable(vars,col.rgroup = c("none", "#F7F7F7"),css.table="width: 100%; ", css.cell = "padding-left: 2%; padding-right: 2%; font-family:\"Helvetica Neue\",Helvetica,Arial,sans-serif; font-size:14px", rnames=FALSE)
 
 # get the data from the data set and display it in a table
 data <- dataSet@data
@@ -64,10 +64,9 @@ Maybe we want to know the code values for the codes of one or more of these vari
 
 First we could inject the code values into the returned data set as using the **inject** parameter.
 ```{r data-with-code-values, eval = TRUE, results = 'hide', tidy=TRUE, tidy.opts=list(width.cutoff=80)}
-dataSet <- select("http://localhost:8080/rds/api/query/","anes","anes1948", colLimit = 10, rowLimit = 10, metadata = TRUE, inject=TRUE)
+dataSet <- select("http://localhost:8080/rds/api/query/","anes","anes1948", colLimit=10, rowLimit = 10, metadata = TRUE, inject=TRUE)
 data <- dataSet@data
-
-dataTable<-htmlTable(data,col.rgroup = c("none", "#F7F7F7"), css.table="width: 100%;",css.cell = "padding-left: 2%; padding-right: 2%; font-family:\"Helvetica Neue\",Helvetica,Arial,sans-serif; font-size:14px", rnames=FALSE)
+dataTable<-htmlTable(data,col.rgroup = c("none", "#F7F7F7"), css.table="width: 100%;",css.cell = " font-family:\"Helvetica Neue\",Helvetica,Arial,sans-serif; font-size:14px", rnames=FALSE)
 ```
 `r dataTable`
 
@@ -75,8 +74,8 @@ dataTable<-htmlTable(data,col.rgroup = c("none", "#F7F7F7"), css.table="width: 1
 We could also simply access the classification information for a given variable. We will take the classification URI from the "Sex of Respondent" variable and get teh classification for it. 
 ```{r classifications, eval = TRUE, results = 'hide', tidy=TRUE, tidy.opts=list(width.cutoff=80)}
 V480045 <- rds.r:::variable(dataSet@variables,"V480045")
-classification <- rds.r::get.classification("http://localhost:8080/rds/api/catalog/","anes","anes1948",class.id=V480045$classificationUri)
-classTable<-htmlTable(classification, col.rgroup = c("none", "#F7F7F7"), header="V480045",css.table="width: 100%;", rnames=FALSE)
+classification <- rds.r::get.classification("http://localhost:8080/rds/api/catalog/","anes","anes1948",class.id="V480045")
+classTable<-htmlTable(classification, col.rgroup = c("none", "#F7F7F7"),css.table="width: 100%;", rnames=FALSE)
 ```
 `r classTable`
 
@@ -84,19 +83,10 @@ classTable<-htmlTable(classification, col.rgroup = c("none", "#F7F7F7"), header=
 Perhaps we would like to know if there is any difference between why male and female respondents think people voted for Truman. First lets create the table using the **tabulate** function.
 ```{r tabulation, eval = TRUE, results = 'hide', tidy=TRUE, tidy.opts=list(width.cutoff=80)}
 tabulation <- rds.r::tabulate("http://localhost:8080/rds/api/query/","anes","anes1948", metadata=TRUE,dimensions="V480045,V480014a", inject=TRUE)
-  data <- tabulation@data
-  
-  #get a list of variable names
-  variableNames <- list();
-  for(variable in tabulation@variables@json){
-    if(!is.null(variable$label)){
-        label<- variable$label
-    }else{
-      label<-variable$name
-    }
-    variableNames <- c(variableNames, label)
-  }
- 
+data <- tabulation@data
+variables<-tabulation@variables
+variableNames <- list();
+variableNames<-variables$label
 table<- sjtable<- sjt.xtab(data$V480045, data$V480014a,var.labels=variableNames)
 
 ```
