@@ -542,7 +542,7 @@ tabulate <- function(url, catalog, dataProduct, dimensions=NULL, inject=FALSE, k
     variableNames <- c(variableNames, id)
   }
   colnames(data)<-variableNames
-  browser()
+
   # format the info as a data.frame
   info <-data.frame(json$info) 
   variables<-data.frame()
