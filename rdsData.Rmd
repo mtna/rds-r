@@ -14,14 +14,14 @@ The following packages will be needed for this demonstration.
 ```{r install,eval=FALSE}
 install.packages(rds.r)
 install.packages(htmlTable)
-install.packages(sjPlot)
+install.packages(tidyr)
 install.packages(ggplot2)
 install.packages(plyr)
 ```
 ```{r libraries, eval=TRUE, tidy=TRUE, tidy.opts=list(width.cutoff=80), message=FALSE}
 library(rds.r)
 library(htmlTable)
-library(sjPlot)
+library(tidyr)
 library(ggplot2)
 library(plyr)
 ```
@@ -43,7 +43,7 @@ RDS will save you the trouble, instead of manually reading the variables informa
 For the purposes of this example we will use the "select" function with keyword parameters to only get columns containing "truman" or "respondent", as we are interested in the respondents and how they answered questions about Truman.
 ```{r querying-data, eval = TRUE, results = 'hide', tidy=TRUE, tidy.opts=list(width.cutoff=80)}
 # We use the select function to hit the anes/anes1948 data product and look for cols with the keywords truman and respondent. Metadata is set to true so we can see the variables metadata, and we set row limit to 10 to keep this example short.
-dataSet <- select("http://localhost:8080/rds/api/query/", "anes", "anes1948", cols="$truman,$respondent", metadata=TRUE, rowLimit=10, autoPage=FALSE)
+dataSet <- select("http://localhost:8080/rds/api/query/", "anes", "anes1948", cols="$truman,$respondent", metadata=TRUE, colLimit=10, rowLimit=10, autoPage=FALSE)
 
 # get the variable metadata from the data set that was returned and display it in a table.
 vars <- dataSet@variables
@@ -82,15 +82,19 @@ classTable<-htmlTable(classification, col.rgroup = c("none", "#F7F7F7"),css.tabl
 `r classTable`
 
 ##Tabulating Data
-Perhaps we would like to know if there is any difference between why male and female respondents think people voted for Truman. First lets create the table using the **tabulate** function.
+Perhaps we would like to know if there is any difference between who male and female respondents voted for. First lets create the table using the **tabulate** function.
 ```{r tabulation, eval = TRUE, results = 'hide', tidy=TRUE, tidy.opts=list(width.cutoff=80)}
-tabulation <- rds.r::tabulate("http://localhost:8080/rds/api/query/","anes","anes1948", metadata=TRUE,dimensions="V480045,V480014a", inject=TRUE)
+tabulation <- rds.r::tabulate("http://localhost:8080/rds/api/query/","anes","anes1948", metadata=TRUE,dimensions="V480045,V480018", inject=TRUE, orderby = "V480045,V480018")
 data <- tabulation@data
 variables<-tabulation@variables
-variableNames <- list();
-variableNames<-variables$label
-table<- sjtable<- sjt.xtab(data$V480045, data$V480014a,var.labels=variableNames)
 
+#reshape to wide format
+wideDf <- data %>% spread(V480018, count)
+
+#set first column as row names and remove it from data frame
+row.names(wideDf) <- make.names(wideDf[,1],TRUE)
+wideDf$V480045<- NULL
+table<-htmlTable(wideDf)
 ```
 `r table`
 
@@ -99,20 +103,20 @@ Because the tabulate function returns a data set that contains the data and meta
 ```{r tabulations-to-charts, eval = TRUE, results = 'hide', tidy=TRUE, tidy.opts=list(width.cutoff=80),fig.width=12, fig.height=10}
 variables <- tabulation@variables
 V480045 <- rds.r:::variable(variables,"V480045")
-V480014a <- rds.r:::variable(variables,"V480014a")
+V480018 <- rds.r:::variable(variables,"V480018")
 
 ## we will compute the percentage and format it as a percentage label for the chart
 data$count<-as.numeric(as.character(data$count))
-data = ddply(data, .(V480014a), transform, Pct = count/sum(count) * 100)
-data = ddply(data, .(V480014a), transform, pos = (cumsum(count) - 0.5 * count))
+data = ddply(data, .(V480018), transform, Pct = count/sum(count) * 100)
+data = ddply(data, .(V480018), transform, pos = (cumsum(count) - 0.5 * count))
 data$label = paste0(sprintf("%.0f", data$Pct), "%")
 
 #plot the data
-ggplot(data, aes(x = factor(V480014a), y = count, fill = V480045)) +
+ggplot(data, aes(x = factor(V480018), y = count, fill = V480045)) +
 geom_bar(stat = "identity") +
 geom_text(aes(y = pos, label = label), size = 3) +
 theme(axis.text.x=element_text(angle=90,hjust=1,vjust=0.5),axis.text.y=element_text(size=12), legend.position="top")+
-xlab(V480014a$label)+
+xlab(V480018$label)+
 coord_flip()
 ```
 
