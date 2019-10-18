@@ -1,0 +1,305 @@
+---
+title: "RDS Catalog Statistics"
+output:
+  html_document:
+    df_print: paged
+---
+
+```{r setup, eval=TRUE, echo=FALSE}
+library("ggplot2")
+library("jsonlite")  
+library("gridExtra")
+```
+
+## Overview
+
+This report is meant to provide usage statistics of the RDS instance. 
+
+
+```{r printstatistics, results="asis", eval = TRUE, echo=FALSE}
+# setup
+host <- "http://192.168.1.3:8080"
+statsApi <- "/rds/api/statistics/catalog"
+
+
+# get catalog statistics
+catalogStatisticsRequest <-
+  paste(host,
+        statsApi,
+        "?format=amcharts",
+        sep = "",
+        collapse = NULL)
+
+catalogStatistics <- jsonlite::fromJSON(catalogStatisticsRequest)
+
+for (row in 1:nrow(catalogStatistics)) {
+  # get all the information
+  id <- catalogStatistics[row, "id"]
+  name <- catalogStatistics[row, "name"]
+  description <- catalogStatistics[row, "description"]
+  queriesOverTime <- catalogStatistics[row, "queriesOverTime"]
+  queriesOverTime <- queriesOverTime[[1]][[1]]
+  totalQueries <- catalogStatistics[row, "totalQueries"]
+  
+  # present the information
+  cat(paste(
+    "## ",
+    name,
+    " {.tabset}\n\n",
+    sep = "",
+    collapse = NULL
+  ))
+  
+  cat("### Overview\n\n")
+  cat(paste(
+    "Total Queries: ",
+    totalQueries,
+    "\n\n",
+    sep = "",
+    collapse = NULL
+  ))
+  cat(paste(description,
+            "\n\n",
+            sep = "",
+            collapse = NULL))
+  
+  g1 <-
+    ggplot(queriesOverTime, aes(as.Date(date), count, group = 1)) +  geom_point() + geom_line() +
+    scale_x_date(
+      date_breaks = "1 month",
+      date_minor_breaks = "1 week",
+      date_labels = "%b\n%Y"
+    ) + xlab("") + ylab("Views")
+  
+  grid.arrange(g1, nrow = 1)
+  cat("\n\n")
+  
+  # get each catalog overview
+  subCatalogRequest  <-
+    paste(host,
+          statsApi,
+          "/",
+          id,
+          "?format=amcharts",
+          sep = "",
+          collapse = NULL)
+  
+  subCatalogStatistics <- jsonlite::fromJSON(subCatalogRequest)
+  
+  for (row in 1:nrow(subCatalogStatistics)) {
+    # get all the information
+    subId <- subCatalogStatistics[row, "id"]
+    name <- subCatalogStatistics[row, "name"]
+    description <- subCatalogStatistics[row, "description"]
+    totalQueries <- subCatalogStatistics[row, "totalQueries"]
+    columnOverview <- subCatalogStatistics[row, "columnOverview"]
+    columnOverview <- columnOverview[[1]][[1]]
+    queryOverview <- subCatalogStatistics[row, "queryOverview"]
+    queryOverview <- queryOverview[[1]][[1]]
+    
+    # present the information
+    cat(paste(
+      "### ",
+      subId,
+      " {.tabset}\n\n",
+      sep = "",
+      collapse = NULL
+    ))
+    
+    cat("#### Overview\n\n")
+    
+    cat(paste(
+      "Total Queries: ",
+      totalQueries,
+      "\n\n",
+      sep = "",
+      collapse = NULL
+    ))
+    
+    g1 <-
+      ggplot(queryOverview, aes(as.Date(date), count, group = 1)) +  geom_point() + geom_line() +
+      scale_x_date(
+        date_breaks = "1 month",
+        date_minor_breaks = "1 week",
+        date_labels = "%b\n%Y"
+      ) + xlab("") + ylab("Views")
+    grid.arrange(g1, nrow = 1)
+    
+    cat("\n\n")
+    
+    productRequest  <-
+      paste(
+        host,
+        statsApi,
+        "/",
+        id,
+        "/",
+        subId,
+        "?format=amcharts",
+        sep = "",
+        collapse = NULL
+      )
+    productStatistics <- jsonlite::fromJSON(productRequest)
+    popularColumns <- productStatistics["popularColumns"][[1]]
+    
+    cat("#### Queried Variables {.tabset}\n\n")
+    
+    selectedColumns <- popularColumns["SELECT"][[1]][[1]]
+    fiveDaySelect <- selectedColumns["FIVE_DAY"][[1]][[1]]
+    if (length(fiveDaySelect) > 0) {
+      cat("##### Five Days\n\n")
+      plot <-
+        ggplot(fiveDaySelect, aes(reorder(column,-count), count)) + geom_bar(stat =
+                                                                               "identity", width = 0.5)
+      grid.arrange(plot, nrow = 1)
+      cat("\n\n")
+    }
+    
+    oneMonthSelect <- selectedColumns["ONE_MONTH"][[1]][[1]]
+    if (length(oneMonthSelect) > 0) {
+      cat("##### One Month\n\n")
+      plot <-
+        ggplot(oneMonthSelect, aes(reorder(column,-count), count)) + geom_bar(stat =
+                                                                                "identity", width = 0.5)
+      grid.arrange(plot, nrow = 1)
+      cat("\n\n")
+    }
+    
+    sixMonthSelect <- selectedColumns["SIX_MONTH"][[1]][[1]]
+    if (length(sixMonthSelect) > 0) {
+      cat("##### Six Months\n\n")
+      plot <-
+        ggplot(sixMonthSelect, aes(reorder(column,-count), count)) + geom_bar(stat =
+                                                                                "identity", width = 0.5)
+      grid.arrange(plot, nrow = 1)
+      cat("\n\n")
+    }
+    
+    oneYearSelect <- selectedColumns["ONE_YEAR"][[1]][[1]]
+    if (length(oneYearSelect) > 0) {
+      cat("##### One Year\n\n")
+      plot <-
+        ggplot(oneYearSelect, aes(reorder(column,-count), count)) + geom_bar(stat =
+                                                                               "identity", width = 0.5)
+      grid.arrange(plot, nrow = 1)
+      cat("\n\n")
+    }
+    
+    maxSelect <- selectedColumns["MAX"][[1]][[1]]
+    if (length(maxSelect) > 0) {
+      cat("##### Max\n\n")
+      plot <-
+        ggplot(maxSelect, aes(reorder(column,-count), count)) + geom_bar(stat =
+                                                                           "identity", width = 0.5)
+      grid.arrange(plot, nrow = 1)
+      cat("\n\n")
+    }
+    
+    cat("#### Tabulated Variables {.tabset}\n\n")
+    
+    tabulateColumns <- popularColumns["TABULATE"][[1]][[1]]
+    fiveDayTabulate <- tabulateColumns["FIVE_DAY"][[1]][[1]]
+    if (length(fiveDayTabulate) > 0) {
+      cat("##### Five Days\n\n")
+      plot <-
+        ggplot(fiveDayTabulate, aes(reorder(column,-count), count)) + geom_bar(stat =
+                                                                                 "identity", width = 0.5)
+      grid.arrange(plot, nrow = 1)
+      cat("\n\n")
+    }
+    
+    oneMonthTabulate <- tabulateColumns["ONE_MONTH"][[1]][[1]]
+    if (length(oneMonthTabulate) > 0) {
+      cat("##### One Month\n\n")
+      plot <-
+        ggplot(oneMonthTabulate, aes(reorder(column,-count), count)) + geom_bar(stat =
+                                                                                  "identity", width = 0.5)
+      grid.arrange(plot, nrow = 1)
+      cat("\n\n")
+    }
+    
+    sixMonthTabulate <- tabulateColumns["SIX_MONTH"][[1]][[1]]
+    if (length(sixMonthTabulate) > 0) {
+      cat("##### Six Months\n\n")
+      plot <-
+        ggplot(sixMonthTabulate, aes(reorder(column,-count), count)) + geom_bar(stat =
+                                                                                  "identity", width = 0.5)
+      grid.arrange(plot, nrow = 1)
+      cat("\n\n")
+    }
+    
+    oneYearTabulate <- tabulateColumns["ONE_YEAR"][[1]][[1]]
+    if (length(oneYearTabulate) > 0) {
+      cat("##### One Year\n\n")
+      plot <-
+        ggplot(oneYearTabulate, aes(reorder(column,-count), count)) + geom_bar(stat =
+                                                                                 "identity", width = 0.5)
+      grid.arrange(plot, nrow = 1)
+      cat("\n\n")
+    }
+    
+    maxTabulate <- tabulateColumns["MAX"][[1]][[1]]
+    if (length(maxTabulate) > 0) {
+      cat("##### Max\n\n")
+      plot <-
+        ggplot(maxTabulate, aes(reorder(column,-count), count)) + geom_bar(stat =
+                                                                             "identity", width = 0.5)
+      grid.arrange(plot, nrow = 1)
+      cat("\n\n")
+    }
+    
+    cat("#### Packaged Variables {.tabset}\n\n")
+    
+    packageColumns <- popularColumns["PACKAGE"][[1]][[1]]
+    fiveDayPackage <- packageColumns["FIVE_DAY"][[1]][[1]]
+    if (length(fiveDayPackage) > 0) {
+      cat("##### Five Days\n\n")
+      plot <-
+        ggplot(fiveDayPackage, aes(reorder(column,-count), count)) + geom_bar(stat =
+                                                                                "identity", width = 0.5)
+      grid.arrange(plot, nrow = 1)
+      cat("\n\n")
+    }
+    
+    oneMonthPackage <- packageColumns["ONE_MONTH"][[1]][[1]]
+    if (length(oneMonthPackage) > 0) {
+      cat("##### One Month\n\n")
+      plot <-
+        ggplot(oneMonthPackage, aes(reorder(column,-count), count)) + geom_bar(stat =
+                                                                                 "identity", width = 0.5)
+      grid.arrange(plot, nrow = 1)
+      cat("\n\n")
+    }
+    
+    sixMonthPackage <- packageColumns["SIX_MONTH"][[1]][[1]]
+    if (length(sixMonthPackage) > 0) {
+      cat("##### Six Months\n\n")
+      plot <-
+        ggplot(sixMonthPackage, aes(reorder(column,-count), count)) + geom_bar(stat =
+                                                                                 "identity", width = 0.5)
+      grid.arrange(plot, nrow = 1)
+      cat("\n\n")
+    }
+    
+    oneYearPackage <- packageColumns["ONE_YEAR"][[1]][[1]]
+    if (length(oneYearPackage) > 0) {
+      cat("##### One Year\n\n")
+      plot <-
+        ggplot(oneYearPackage, aes(reorder(column,-count), count)) + geom_bar(stat =
+                                                                                "identity", width = 0.5)
+      grid.arrange(plot, nrow = 1)
+      cat("\n\n")
+    }
+    
+    maxPackage <- packageColumns["MAX"][[1]][[1]]
+    if (length(maxPackage) > 0) {
+      cat("##### Max\n\n")
+      plot <-
+        ggplot(maxPackage, aes(reorder(column,-count), count)) + geom_bar(stat =
+                                                                            "identity", width = 0.5)
+      grid.arrange(plot, nrow = 1)
+      cat("\n\n")
+    }
+  }
+}
+```
