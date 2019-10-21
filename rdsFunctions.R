@@ -454,7 +454,7 @@ selectPage <- function(url,catalog,dataProduct,inject=FALSE,cols=NULL,where=NULL
   data <- data.frame(json$records)
   dataList <- json$records
   #put all of the variable names in a list and assign them to the columns.
-  
+
   
   variableNames <- list();
   variableDf <- data.frame();
@@ -470,13 +470,13 @@ selectPage <- function(url,catalog,dataProduct,inject=FALSE,cols=NULL,where=NULL
     rownames(variableDf)<variableNames
   }
   
-  
+ 
   # format the info as a data.frame
-  #convert info list to dataframe, with properties as the headers.
+ #convert info list to dataframe, with properties as the headers.
   info <- data.frame(t(json$info[-1]))
-  
+
   if(!is.null(json$variables)){
-    # variables <- rds.r::variablesFromList(json$variables)
+   # variables <- rds.r::variablesFromList(json$variables)
   }
   dataSet <- new("rds.dataset", variables = variableDf, data = data, info = info)
   
@@ -562,13 +562,13 @@ tabulate <- function(url, catalog, dataProduct, dimensions=NULL, inject=FALSE, k
       id    <- variableDf[row, "id"]
       variableNames <- c(variableNames, id)
     }
-    colnames(data)<-variableNames
-  }
+  colnames(data)<-variableNames
+}
   # format the info as a data.frame
   info <- data.frame(t(json$info[-1]))
   variables<-data.frame()
   if(!is.null(json$variables)){
-    # variables <- rds.r::variablesFromList(json$variables)
+   # variables <- rds.r::variablesFromList(json$variables)
   }
   dataSet <- new("rds.dataset", variables = variableDf, data = data, info = info)
   return(dataSet)
