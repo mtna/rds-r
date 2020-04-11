@@ -4,16 +4,16 @@
 \alias{get.variable}
 \title{Get Variable Function}
 \usage{
-get.variable(url, collection, view, key = NULL, var.id = NULL)
+get.variable(url, catalog, dataProduct, key = NULL, var.id = NULL)
 }
 \arguments{
 \item{url}{The base URL of the RDS server}
 
-\item{collection}{The collection ID}
+\item{catalog}{The catalog ID}
 
-\item{view}{The view ID}
+\item{dataProduct}{The dataProduct ID}
 
-\item{key}{API key for views that require a key.}
+\item{key}{API key for dataProducts that require a key.}
 
 \item{var.id}{The variable ID to select}
 }
@@ -21,7 +21,6 @@ get.variable(url, collection, view, key = NULL, var.id = NULL)
 This function allows you to select the metadata for a single variable based off its ID.
 }
 \examples{
-get.variable("http://localhost:8080/rds/api/catalog/","myCollection","myView","myVariable") 
+get.variable("http://localhost:8080/rds/api/catalog/","myCatalog","myDataProduct","myVariable") 
 }
 \keyword{variable}
-

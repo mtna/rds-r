@@ -4,24 +4,35 @@
 \alias{tabulate}
 \title{Tabulate Function}
 \usage{
-tabulate(url, collection, view, dimensions = NULL, inject = FALSE,
-  key = NULL, limit = NULL, measures = NULL, offset = NULL,
-  orderby = NULL, where = NULL)
+tabulate(
+  url,
+  catalog,
+  dataProduct,
+  dimensions = NULL,
+  inject = FALSE,
+  key = NULL,
+  rowLimit = NULL,
+  measures = NULL,
+  offset = NULL,
+  orderby = NULL,
+  where = NULL,
+  metadata = FALSE
+)
 }
 \arguments{
 \item{url}{The base URL of the server RDS is running on}
 
-\item{collection}{The collection ID}
+\item{catalog}{The catalog ID}
 
-\item{view}{The view ID}
+\item{dataProduct}{The dataProduct ID}
 
 \item{dimensions}{The names of the variables that should be used as dimensions}
 
 \item{inject}{Specifies if metadata should be injected into the data frame. If true and there are classifications available the columns codes will be replaced with code values. Defaults to FALSE}
 
-\item{key}{API key for views that require a key.}
+\item{key}{API key for dataProducts that require a key.}
 
-\item{limit}{Specifies the number of records to return}
+\item{rowLimit}{Specifies the number of records to return}
 
 \item{measures}{The variables that should be used as a measure, will be the count by default}
 
@@ -35,9 +46,8 @@ tabulate(url, collection, view, dimensions = NULL, inject = FALSE,
 This function allows you to use the tabulate function of RDS.
 }
 \examples{
-tabulate("http://localhost:8080/rds/api/catalog/","myCollection","myView",dimensions="var1,var2") 
-tabulate("http://localhost:8080/rds/api/catalog/","myCollection","myView",dimensions="var1,var2",measures="AVG(var3)")
-tabulate("http://localhost:8080/rds/api/catalog/","myCollection","myView",dimensions="var1,var2",measures="AVG(var3)",where="var1!=5",inject=TRUE) 
+tabulate("http://localhost:8080/rds/api/catalog/","myCatalog","myDataProduct",dimensions="var1,var2") 
+tabulate("http://localhost:8080/rds/api/catalog/","myCatalog","myDataProduct",dimensions="var1,var2",measures="AVG(var3)")
+tabulate("http://localhost:8080/rds/api/catalog/","myCatalog","myDataProduct",dimensions="var1,var2",measures="AVG(var3)",where="var1!=5",inject=TRUE) 
 }
 \keyword{tabulate}
-

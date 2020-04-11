@@ -1,0 +1,64 @@
+---
+title: "RDS Server Examples"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{RDS Server Examples}
+  %\VignetteEngine{knitr::rmarkdown}
+  \usepackage[utf8]{inputenc}
+---
+
+<style>
+   table {
+    width: 100%;
+  }
+</style>
+
+## Connecting to the RDS Server
+
+Setting up the connection to the RDS server is the starting point to interacting with the RDS API through R. It provides an entry point to the API and will facilitate the handling of API calls for catalogs and data products. 
+
+```{r, message=FALSE, warning=FALSE}
+library("rds.r")
+library("knitr")
+
+# set up the host / domain name of the RDS instance
+host = "192.168.1.3"
+
+# If needed you can also specify an optional port that the instance is running on
+port = 8080
+
+# connect to the server
+rds <- get.rds(host, port = port)
+```
+
+The server will come with some basic information about it.
+```{r}
+  properties <- c("Name", "Version", "Base URL", "Disclaimer")
+  df <- data.frame(rds@name, rds@version, rds@baseUrl, rds@disclaimer)
+  names(df) <- properties
+  kable(df)
+```
+
+## Retrieving the Catalogs
+
+The server provides an entry point for users to view the catalog. We can get all the catalogs at once or a specific catalog by passing in the catalog id.
+
+### Get all Catalogs
+
+```{r}
+catalogs <- rds.r::getCatalogs(rds)
+catalogDf <- data.frame()
+for(catalog in catalogs){
+  df <- data.frame(catalog@id, catalog@name, catalog@label, catalog@description, catalog@dataProductCount)
+  catalogDf <- rbind(catalogDf, df)
+} 
+names(catalogDf) <- c("ID", "Name", "Label","Description","# Data Products")
+
+kable(catalogDf)
+```
+
+### Get specific Catalog
+
+```{r}
+anes <- rds.r::getCatalog(rds, "anes")
+```

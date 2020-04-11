@@ -4,20 +4,43 @@
 \alias{select}
 \title{Select Function}
 \usage{
-select(url, collection, view, autoPage = TRUE, classLimit = NULL,
-  classOffset = NULL, codeEquals = NULL, codeLimit = NULL,
-  codeOffset = NULL, cols = NULL, colLimit = NULL, colOffset = NULL,
-  count = FALSE, distinct = FALSE, facts = FALSE, freqs = FALSE,
-  inject = FALSE, key = NULL, limit = NULL, offset = NULL,
-  orderby = NULL, sleep = 0.2, stats = FALSE, varProperties = NULL,
-  where = NULL)
+select(
+  url,
+  catalog,
+  dataProduct,
+  inject = FALSE,
+  autoPage = TRUE,
+  classLimit = NULL,
+  classOffset = NULL,
+  codeEquals = NULL,
+  codeLimit = NULL,
+  codeOffset = NULL,
+  cols = NULL,
+  colLimit = NULL,
+  colOffset = NULL,
+  count = FALSE,
+  distinct = FALSE,
+  facts = FALSE,
+  freqs = FALSE,
+  key = NULL,
+  rowLimit = NULL,
+  offset = NULL,
+  orderby = NULL,
+  sleep = 0.2,
+  stats = FALSE,
+  where = NULL,
+  metadata = FALSE,
+  cellLimit = 10000
+)
 }
 \arguments{
 \item{url}{The base URL of the RDS server}
 
-\item{collection}{The collection ID}
+\item{catalog}{The catalog ID}
 
-\item{view}{The view ID}
+\item{dataProduct}{The dataProduct ID}
+
+\item{inject}{Specifies if metadata should be injected into the data frame. If true and there are classifications available the columns codes will be replaced with code values. Defaults to FALSE}
 
 \item{autoPage}{If set to true multiple queries will be sent to the RDS server in order to compile the complete data set}
 
@@ -35,7 +58,7 @@ select(url, collection, view, autoPage = TRUE, classLimit = NULL,
 
 \item{colOffset}{Specifies the starting index of the classifications to be returned}
 
-\item{count}{Specifies that the total count of records in the view should be included in the info section}
+\item{count}{Specifies that the total count of records in the dataProduct should be included in the info section}
 
 \item{distinct}{Specifies that only distinct values should be returned}
 
@@ -43,11 +66,9 @@ select(url, collection, view, autoPage = TRUE, classLimit = NULL,
 
 \item{freqs}{Specifies that any frequencies available should be included in the returned metadata}
 
-\item{inject}{Specifies if metadata should be injected into the data frame. If true and there are classifications available the columns codes will be replaced with code values. Defaults to FALSE}
+\item{key}{API key for dataProducts that require a key.}
 
-\item{key}{API key for views that require a key.}
-
-\item{limit}{Specifies the number of records to return}
+\item{rowLimit}{Specifies the number of records to return}
 
 \item{offset}{Specifies the starting index of the records}
 
@@ -57,9 +78,9 @@ select(url, collection, view, autoPage = TRUE, classLimit = NULL,
 
 \item{stats}{Specifies that any summary statistics available should be included in the returned}
 
-\item{varProperties}{Specifies the variable properties to include / exclude from the returned variable metadata. Can be a regex or property names.}
-
 \item{where}{Describes how to subset the records}
+
+\item{cellLimit}{Specifies maximum number of cells that can be returned - defaults to 10,000}
 }
 \description{
 This function allows you to use the select function of RDS. RDS typically gives out a limited amount of 
@@ -67,11 +88,10 @@ data to keep the service quick and efficient. This select function will query RD
 to compile and return the entire data set to the R user.
 }
 \examples{
-select("http://localhost:8080/rds/api/catalog/","myCollection","myView",cols="var1,var2") 
-select("http://localhost:8080/rds/api/catalog/","myCollection","myView",cols="var1,var2",where="var1<1 AND var2>=3") 
-select("http://localhost:8080/rds/api/catalog/","myCollection","myView",cols="var1,var2",orderby="var1 DESC,var2 ASC") 
-select("http://localhost:8080/rds/api/catalog/","myCollection","myView",cols="var1,var2",distinct=TRUE,limit=100,offset=100,count=TRUE) 
-select("http://localhost:8080/rds/api/catalog/","myCollection","myView",cols="$demographics",inject=TRUE) 
+select("http://localhost:8080/rds/api/catalog/","myCatalog","myDataProduct",cols="var1,var2") 
+select("http://localhost:8080/rds/api/catalog/","myCatalog","myDataProduct",cols="var1,var2",where="var1<1 AND var2>=3") 
+select("http://localhost:8080/rds/api/catalog/","myCatalog","myDataProduct",cols="var1,var2",orderby="var1 DESC,var2 ASC") 
+select("http://localhost:8080/rds/api/catalog/","myCatalog","myDataProduct",cols="var1,var2",distinct=TRUE,limit=100,offset=100,count=TRUE) 
+select("http://localhost:8080/rds/api/catalog/","myCatalog","myDataProduct",cols="$demographics",inject=TRUE) 
 }
 \keyword{select}
-

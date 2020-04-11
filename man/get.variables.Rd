@@ -4,25 +4,33 @@
 \alias{get.variables}
 \title{Get Variables Function}
 \usage{
-get.variables(url, collection, view, cols = NULL, key = NULL)
+get.variables(
+  url,
+  catalog,
+  dataProduct,
+  cols = NULL,
+  key = NULL,
+  columnLimit = NULL
+)
 }
 \arguments{
 \item{url}{The base URL of the RDS server}
 
-\item{collection}{The collection ID}
+\item{catalog}{The catalog ID}
 
-\item{view}{The view ID}
+\item{dataProduct}{The dataProduct ID}
 
 \item{cols}{The columns to select}
 
-\item{key}{API key for views that require a key.}
+\item{key}{API key for dataProducts that require a key.}
+
+\item{limit}{Limit the number of variables returned}
 }
 \description{
-This function allows you to select multiple variables metadata.
+This function allows you to select multiple variables metadata and returns them as a data frame
 }
 \examples{
-get.variables("http://localhost:8080/rds/api/catalog/","myCollection","myView",cols="var1,var2") 
-get.variables("http://localhost:8080/rds/api/catalog/","myCollection","myView",cols="$demographics") 
+get.variables("http://localhost:8080/rds/api/catalog/","myCatalog","myDataProduct",cols="var1,var2") 
+get.variables("http://localhost:8080/rds/api/catalog/","myCatalog","myDataProduct",cols="$demographics") 
 }
 \keyword{variable}
-

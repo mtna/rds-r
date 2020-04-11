@@ -4,16 +4,25 @@
 \alias{get.classifications}
 \title{Get Classifications Function}
 \usage{
-get.classifications(url, collection, view, codeLimit = NULL,
-  codeOffset = NULL, codeSort = NULL, key = NULL, limit = NULL,
-  offset = NULL, sort = NULL)
+get.classifications(
+  url,
+  catalog,
+  dataProduct,
+  codeLimit = NULL,
+  codeOffset = NULL,
+  codeSort = NULL,
+  key = NULL,
+  limit = NULL,
+  offset = NULL,
+  sort = NULL
+)
 }
 \arguments{
 \item{url}{The base URL of the RDS server}
 
-\item{collection}{The collection ID}
+\item{catalog}{The catalog ID}
 
-\item{view}{The view ID}
+\item{dataProduct}{The dataProduct ID}
 
 \item{codeLimit}{Specifies the number of codes to return in each classification}
 
@@ -21,7 +30,7 @@ get.classifications(url, collection, view, codeLimit = NULL,
 
 \item{codeSort}{Specifies how the codes should be sorted, options are ASC or DESC}
 
-\item{key}{API key for views that require a key.}
+\item{key}{API key for dataProducts that require a key.}
 
 \item{limit}{Specifies the number of classifications to return}
 
@@ -33,9 +42,8 @@ get.classifications(url, collection, view, codeLimit = NULL,
 This function allows you to use the select multiple classifications.
 }
 \examples{
-get.classifications("http://localhost:8080/rds/api/catalog/","myCollection","myView") 
-get.classifications("http://localhost:8080/rds/api/catalog/","myCollection","myView",limit=10,offset=10,sort="DESC") 
-get.classifications("http://localhost:8080/rds/api/catalog/","myCollection","myView",codeLimit=100,codeSort="DESC")  
+get.classifications("http://localhost:8080/rds/api/catalog/","myCatalog","myDataProduct") 
+get.classifications("http://localhost:8080/rds/api/catalog/","myCatalog","myDataProduct",limit=10,offset=10,sort="DESC") 
+get.classifications("http://localhost:8080/rds/api/catalog/","myCatalog","myDataProduct",codeLimit=100,codeSort="DESC")  
 }
 \keyword{variable}
-

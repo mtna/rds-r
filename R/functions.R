@@ -3,7 +3,62 @@ library(urltools)
 library (plyr)
 library(tidyverse)
 
-
+#' Get RDS Server
+#'
+#' This function uses the provided host, port, and protocol to build up an RDS server. This will create the base
+#' api paths that the server uses as well as pulling basis information about the server.
+#' 
+#' @param host The host or domain name of the server
+#' @param port The port the RDS server is running on if needed. This is NULL by default.
+#' @param protocol The protocol to use in the call, http by default. 
+#' @keywords server
+#' @export
+#' @examples 
+#' get.server(richdataservices.com)
+#' get.server(richdataservices.com, protocol="https")
+#' get.server(localhost, port=8080)
+get.rds <- function(host,
+                    port = NULL,
+                    protocol = "http") {
+  # Set up the URLs of the server
+  baseUrl <- protocol
+  if (!endsWith(protocol, "://")) {
+    baseUrl <- paste(baseUrl, "://", sep = "", collapse = NULL)
+  }
+  baseUrl <- paste(baseUrl, host, sep = "", collapse = NULL)
+  if (!is.null(port)) {
+    baseUrl <- paste(baseUrl, ":", port, sep = "", collapse = NULL)
+  }
+  baseUrl <- paste(baseUrl, "/rds", sep = "", collapse = NULL)
+  
+  # Get the server information
+  serverInfo <-
+    jsonlite::fromJSON(paste(baseUrl, "/info", sep = "", collapse = NULL))
+  serverName <- serverInfo[[1]][1]
+  serverVersion <- serverInfo[[2]][1]
+  
+  # Get the disclaimer if available, this may return null
+  disclaimer <-
+    tryCatch(
+      jsonlite::fromJSON(paste(
+        baseUrl, "/disclaimer", sep = "", collapse = NULL
+      )),
+      error = function(e) {
+        disclaimer <- ""
+      }
+    )
+  
+  # Set up and return the server
+  server <-
+    new(
+      "rds.server",
+      baseUrl = baseUrl,
+      name = serverName,
+      version = serverVersion,
+      disclaimer = disclaimer
+    )
+  return (server)
+}
 
 #' Get Classification Function
 #'

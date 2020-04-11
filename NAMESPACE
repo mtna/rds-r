@@ -2,14 +2,16 @@
 
 export(get.classification)
 export(get.classifications)
+export(get.rds)
 export(get.variable)
 export(get.variables)
-
 export(select)
 export(tabulate)
-
-exportMethods(variablesFromList)
-exportMethods(variable)
-exportMethods(classification)
+exportClasses(rds.catalog)
+exportClasses(rds.dataProduct)
 exportClasses(rds.dataset)
-
+exportClasses(rds.server)
+exportMethods(getCatalog)
+exportMethods(getCatalogs)
+exportMethods(getDataProduct)
+exportMethods(getDataProducts)
