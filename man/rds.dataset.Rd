@@ -12,9 +12,9 @@ A data set contains the three main sections of an RDS query, metadata, data, and
 \describe{
 \item{\code{variables}}{A data frame of the variable information of the variables included in the query}
 
-\item{\code{classifications}}{A data frame of the classification information for the classificaitons included in the query.}
+\item{\code{records}}{A data frame of the records returned.}
 
-\item{\code{data}}{A data frame of the records returned.}
+\item{\code{totals}}{A data frame of the totals returned (tabulation only).}
 
 \item{\code{info}}{A data frame of the query information.}
 }}

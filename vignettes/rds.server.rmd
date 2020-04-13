@@ -13,14 +13,15 @@ vignette: >
   }
 </style>
 
-## Connecting to the RDS Server
-
-Setting up the connection to the RDS server is the starting point to interacting with the RDS API through R. It provides an entry point to the API and will facilitate the handling of API calls for catalogs and data products. 
-
 ```{r, message=FALSE, warning=FALSE}
 library("rds.r")
 library("knitr")
+```
 
+## Connecting to the RDS Server
+
+Setting up the connection to the RDS server is the starting point to interacting with the RDS API through R. It provides an entry point to the API and will facilitate the handling of API calls for catalogs and data products. 
+```{r}
 # set up the host / domain name of the RDS instance
 host = "192.168.1.3"
 
@@ -57,8 +58,11 @@ names(catalogDf) <- c("ID", "Name", "Label","Description","# Data Products")
 kable(catalogDf)
 ```
 
-### Get specific Catalog
+### Get Specific Catalog
 
 ```{r}
 anes <- rds.r::getCatalog(rds, "anes")
+df <- data.frame(anes@id, anes@name, anes@label, anes@description, anes@dataProductCount)
+names(df) <- c("ID", "Name", "Label","Description","# Data Products")
+kable(df)
 ```

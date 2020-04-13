@@ -1,0 +1,52 @@
+---
+title: "RDS Server Examples"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{RDS Server Examples}
+  %\VignetteEngine{knitr::rmarkdown}
+  \usepackage[utf8]{inputenc}
+---
+
+<style>
+   table {
+    width: 100%;
+  }
+</style>
+
+## Browsing a Catalog
+
+Catalogs in RDS are simply collections of data products. A data product is the object in RDS that holds data and any documentation or metadata that surrounds the data. The catalog contains a list of data products and we can get all of them or a single product if desired.
+
+## Setup
+
+First we will set up the RDS server connection and get a catalog
+
+```{r, message=FALSE, warning=FALSE}
+library("rds.r")
+library("knitr")
+
+# set up the host / domain name of the RDS instance
+host = "192.168.1.3"
+
+# If needed you can also specify an optional port that the instance is running on
+port = 8080
+
+# connect to the server
+rds <- get.rds(host, port = port)
+
+# get a catalog
+anes <- rds.r::getCatalog(rds, "anes");
+```
+
+
+## Get all Data Products
+
+```{r, message=FALSE, warning=FALSE}
+dataProducts <- rds.r::getDataProducts(anes)
+```
+
+### Get Specific Data Product
+
+```{r}
+anes1948 <- rds.r::getDataProduct(anes, "anes1948")
+```
