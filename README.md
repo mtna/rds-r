@@ -29,7 +29,10 @@ Visit the RDS web site for detailed informtion on the platform capabilities or l
 ## Install
 
 This package can be installed through the use of devtools
-`devtools::install_github("mtna/rds-r")`
+```r
+devtools::install_github("mtna/rds-r")
+library(rds.r)
+```
 
 <a name="contribute"></a>
 ## Contribute
