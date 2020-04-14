@@ -5,18 +5,17 @@
 \alias{rds.dataset-class}
 \title{Rich Data Services Data Set}
 \description{
-A Data Set contains the three main sections of an RDS result, metadata, data, and info. 
-The metadata may or may not be present. If it is it will contain variable and classification metadata if available
-The data will contain the actual data values that are returned from the query.
-The info will contain information about the query ran including the any limits, whether or not more columns or rows are available, and a total row count if available.
+A data set contains the three main sections of an RDS query, metadata, data, and info. The metadata may or may not be present depending on what was requested in the query. If it is it will contain variable and classification metadata if available. The data will contain the actual data values that are returned from the query. The info will contain information about the query ran including the any limits, whether or not more columns or rows are available, and a total row count if available.
 }
-\details{
+\section{Slots}{
+
 \describe{
-   \item{metadata}{Variable and classification metadata to accompany the data returned.}
+\item{\code{variables}}{A data frame of the variable information of the variables included in the query}
 
-\item{data}{Data returned from a query.}
+\item{\code{records}}{A data frame of the records returned.}
 
-\item{info}{Information about the query ran.}
- }
-}
+\item{\code{totals}}{A data frame of the totals returned (tabulation only).}
+
+\item{\code{info}}{A data frame of the query information.}
+}}
 

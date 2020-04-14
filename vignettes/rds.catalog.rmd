@@ -1,0 +1,48 @@
+---
+title: "RDS Catalog Examples"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{RDS Server Examples}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+<style>
+   table {
+    width: 100%;
+  }
+</style>
+
+```{r, message=FALSE, warning=FALSE, echo=FALSE}
+library("rds.r")
+library("knitr")
+```
+
+## Browsing a Catalog
+
+Catalogs in RDS are simply collections of data products. A data product is the object in RDS that holds data and any documentation or metadata that surrounds the data. The catalog contains a list of data products and we can get all of them or a single product if desired.
+
+```{r}
+# set up the host / domain name of the RDS instance
+host = "http://dev.richdataservices.com"
+
+# connect to the server
+rds <- get.rds(host)
+
+# get a catalog
+census <- rds.r::getCatalog(rds, "uscensus")
+```
+
+
+### Get Specific Data Product
+We can get the 2010 Census Household / Person data product and display some of its information in the following section
+
+```{r}
+dataProduct <- rds.r::getDataProduct(census, "census2010-hp")
+```
+
+### `r dataProduct@name`
+
+
+
+`r dataProduct@description`
