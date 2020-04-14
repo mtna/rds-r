@@ -18,8 +18,6 @@ This function uses the provided host, port, and protocol to build up an RDS serv
 api paths that the server uses as well as pulling basis information about the server.
 }
 \examples{
-get.server(richdataservices.com)
-get.server(richdataservices.com, protocol="https")
-get.server(localhost, port=8080)
+get.rds("http://dev.richdataservices.com")
 }
 \keyword{server}

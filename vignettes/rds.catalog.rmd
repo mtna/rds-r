@@ -1,10 +1,10 @@
 ---
-title: "RDS Server Examples"
+title: "RDS Catalog Examples"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{RDS Server Examples}
   %\VignetteEngine{knitr::rmarkdown}
-  \usepackage[utf8]{inputenc}
+  %\VignetteEncoding{UTF-8}
 ---
 
 <style>
@@ -13,40 +13,36 @@ vignette: >
   }
 </style>
 
+```{r, message=FALSE, warning=FALSE, echo=FALSE}
+library("rds.r")
+library("knitr")
+```
+
 ## Browsing a Catalog
 
 Catalogs in RDS are simply collections of data products. A data product is the object in RDS that holds data and any documentation or metadata that surrounds the data. The catalog contains a list of data products and we can get all of them or a single product if desired.
 
-## Setup
-
-First we will set up the RDS server connection and get a catalog
-
-```{r, message=FALSE, warning=FALSE}
-library("rds.r")
-library("knitr")
-
+```{r}
 # set up the host / domain name of the RDS instance
-host = "192.168.1.3"
-
-# If needed you can also specify an optional port that the instance is running on
-port = 8080
+host = "http://dev.richdataservices.com"
 
 # connect to the server
-rds <- get.rds(host, port = port)
+rds <- get.rds(host)
 
 # get a catalog
-anes <- rds.r::getCatalog(rds, "anes");
+census <- rds.r::getCatalog(rds, "uscensus")
 ```
 
-
-## Get all Data Products
-
-```{r, message=FALSE, warning=FALSE}
-dataProducts <- rds.r::getDataProducts(anes)
-```
 
 ### Get Specific Data Product
+We can get the 2010 Census Household / Person data product and display some of its information in the following section
 
 ```{r}
-anes1948 <- rds.r::getDataProduct(anes, "anes1948")
+dataProduct <- rds.r::getDataProduct(census, "census2010-hp")
 ```
+
+### `r dataProduct@name`
+
+
+
+`r dataProduct@description`

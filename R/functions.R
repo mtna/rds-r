@@ -1,8 +1,3 @@
-library(jsonlite)
-library(urltools)
-library (plyr)
-library(tidyverse)
-
 #' Get RDS Server
 #'
 #' This function uses the provided host, port, and protocol to build up an RDS server. This will create the base
@@ -11,12 +6,11 @@ library(tidyverse)
 #' @param host The host or domain name of the server
 #' @param port The port the RDS server is running on if needed. This is NULL by default.
 #' @param protocol The protocol to use in the call, http by default.
+#' @import methods
 #' @keywords server
 #' @export
 #' @examples
-#' get.server(richdataservices.com)
-#' get.server(richdataservices.com, protocol="https")
-#' get.server(localhost, port=8080)
+#' get.rds("http://dev.richdataservices.com")
 get.rds <- function(host,
                     port = NULL,
                     protocol = "http") {

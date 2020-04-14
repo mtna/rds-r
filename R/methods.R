@@ -1,18 +1,20 @@
-library(jsonlite)
-
+#' Get Catalogs
+#'
+#' The getCatalogs(server) method can be used to get all the catalogs from the provided rds.server.
+#'
+#' @param server The server to query for the catalogs.
+#' @name getCatalogs
+#' @rdname getCatalogs
+#' @exportMethod getCatalogs
+setGeneric("getCatalogs", function(server)
+  standardGeneric("getCatalogs"))
 
 #' Get Catalogs
 #'
 #' The getCatalogs(server) method can be used to get all the catalogs from the provided rds.server.
 #'
-#' @slot server The server to query for the catalogs.
-#' @name getCatalogs
-#' @rdname rds.server
-#' @exportMethod getCatalogs
-setGeneric("getCatalogs", function(server)
-  standardGeneric("getCatalogs"))
-
-#' @exportMethod getCatalogs
+#' @import jsonlite
+#' @param server The server to query for the catalogs.
 setMethod("getCatalogs", signature("rds.server"), function(server) {
   # Query the server for all the catalogs
   catalogsUrl <-
@@ -46,15 +48,21 @@ setMethod("getCatalogs", signature("rds.server"), function(server) {
 #'
 #' The getCatalog(server, catalogId) method can be used to get the catalog with the provided ID from the provided rds.server.
 #'
-#' @slot server The server to query for the catalog.
-#' @slot catalogId The ID of the desired catalog.
+#' @param server The server to query for the catalog.
+#' @param catalogId The ID of the desired catalog.
 #' @name getCatalog
-#' @rdname rds.server
+#' @rdname getCatalog
 #' @exportMethod getCatalog
 setGeneric("getCatalog", function(server, catalogId)
   standardGeneric("getCatalog"))
 
-#' @exportMethod getCatalog
+#' Get Catalog
+#'
+#' The getCatalog(server, catalogId) method can be used to get the catalog with the provided ID from the provided rds.server.
+#' 
+#' @import jsonlite 
+#' @param server The server to query for the catalog.
+#' @param catalogId The ID of the desired catalog.
 setMethod("getCatalog", signature("rds.server", "character"), function(server, catalogId) {
   # Query the server for the specified catlog
   rdsCatalog <- NULL
@@ -102,15 +110,21 @@ setMethod("getCatalog", signature("rds.server", "character"), function(server, c
 #' Get Data Products
 #'
 #' The getDataProducts(catalog) method can be used to retrieve all the data products from the provided catalog.
-#'
-#' @slot catalog The catalog to query for the data products.
+#' 
+#' @import jsonlite 
+#' @param catalog The catalog to query for the data products.
 #' @name getDataProducts
-#' @rdname rds.catalog
+#' @rdname getDataProducts
 #' @exportMethod getDataProducts
 setGeneric("getDataProducts", function(catalog)
   standardGeneric("getDataProducts"))
 
-#' @exportMethod getDataProducts
+#' Get Data Products
+#'
+#' The getDataProducts(catalog) method can be used to retrieve all the data products from the provided catalog.
+#' 
+#' @import jsonlite 
+#' @param catalog The catalog to query for the data products.
 setMethod("getDataProducts", signature("rds.catalog"), function(catalog) {
   # Set up the request URL
   server <- catalog@server
@@ -137,7 +151,7 @@ setMethod("getDataProducts", signature("rds.catalog"), function(catalog) {
       lastUpdate = as.POSIXct(dataProducts[productIndex, "lastUpdate"], format = "%Y-%m-%dT%H:%M:%OSZ"),
       name = ifelse(is.null(dataProducts[productIndex, "name"]), "", dataProducts[productIndex, "name"]),
       note = ifelse(is.null(dataProducts[productIndex, "note"]), "", dataProducts[productIndex, "note"]),
-      provinence = ifelse(is.null(dataProducts[productIndex, "provinence"]), "", dataProducts[productIndex, "provinence"]),
+      provenance = ifelse(is.null(dataProducts[productIndex, "provenance"]), "", dataProducts[productIndex, "provenance"]),
       restriction = ifelse(is.null(dataProducts[productIndex, "restriction"]), "", dataProducts[productIndex, "restriction"])
     )
     rdsDataProducts <- append(rdsDataProducts, rdsProduct)
@@ -150,15 +164,21 @@ setMethod("getDataProducts", signature("rds.catalog"), function(catalog) {
 #'
 #' The getDataProduct(catalog, dataProductId) method can be used to get the data product with the provided ID from the provided rds.catalog.
 #'
-#' @slot catalog The catalog to query for the data product.
-#' @slot dataProductId The ID of the desired data product.
+#' @param catalog The catalog to query for the data product.
+#' @param dataProductId The ID of the desired data product.
 #' @name getDataProduct
-#' @rdname rds.catalog
+#' @rdname getDataProduct
 #' @exportMethod getDataProduct
 setGeneric("getDataProduct", function(catalog, dataProductId)
   standardGeneric("getDataProduct"))
 
-#' @exportMethod getDataProduct
+#' Get Data Product
+#'
+#' The getDataProduct(catalog, dataProductId) method can be used to get the data product with the provided ID from the provided rds.catalog.
+#' 
+#' @import jsonlite 
+#' @param catalog The catalog to query for the data product.
+#' @param dataProductId The ID of the desired data product.
 setMethod("getDataProduct", signature("rds.catalog", "character"), function(catalog, dataProductId) {
   # Get the server from the catalog
   server <- catalog@server
@@ -228,21 +248,28 @@ setMethod("getDataProduct", signature("rds.catalog", "character"), function(cata
 #'
 #' The getVariables(dataProduct) method can be used to get the variable summaries of all the with the provided ID from the provided rds.dataProduct.
 #'
-#' @slot dataProduct The rds.dataProduct to query for the variable.
-#' @slot cols An optional variable query following the RDS column syntax. If left NULL all the variable will be returned.
-#' @slot collimit An optional limit to the variables returned. If left NULL no limit will be applied.
-#' @slot coloffset An optional offset to the variables returned. If left NULL no offset will be applied
+#' @param dataProduct The rds.dataProduct to query for the variable.
+#' @param cols An optional variable query following the RDS column syntax. If left NULL all the variable will be returned.
+#' @param collimit An optional limit to the variables returned. If left NULL no limit will be applied.
+#' @param coloffset An optional offset to the variables returned. If left NULL no offset will be applied
 #' @name getVariables
-#' @rdname rds.dataProduct
+#' @rdname getVariables
 #' @exportMethod getVariables
 setGeneric("getVariables", function(dataProduct,
-                                    ...,
                                     cols = NULL,
                                     collimit = NULL,
                                     coloffset = NULL)
   standardGeneric("getVariables"))
 
-#' @exportMethod getVariables
+#' Get Variables
+#'
+#' The getVariables(dataProduct) method can be used to get the variable summaries of all the with the provided ID from the provided rds.dataProduct.
+#' 
+#' @import jsonlite 
+#' @param dataProduct The rds.dataProduct to query for the variable.
+#' @param cols An optional variable query following the RDS column syntax. If left NULL all the variable will be returned.
+#' @param collimit An optional limit to the variables returned. If left NULL no limit will be applied.
+#' @param coloffset An optional offset to the variables returned. If left NULL no offset will be applied
 setMethod("getVariables", signature("rds.dataProduct"), function(dataProduct,
                                                                  cols = NULL,
                                                                  collimit = NULL,
@@ -307,15 +334,21 @@ setMethod("getVariables", signature("rds.dataProduct"), function(dataProduct,
 #'
 #' The getVariable(dataProduct, variableId) method can be used to get the variable with the provided ID from the provided rds.dataProduct.
 #'
-#' @slot dataProduct The rds.dataProduct to query for the variable.
-#' @slot variableId The ID of the desired variable.
+#' @param dataProduct The rds.dataProduct to query for the variable.
+#' @param variableId The ID of the desired variable.
 #' @name getVariable
-#' @rdname rds.dataProduct
+#' @rdname getVariable
 #' @exportMethod getVariable
 setGeneric("getVariable", function(dataProduct, variableId)
   standardGeneric("getVariable"))
 
-#' @exportMethod getVariable
+#' Get Variable
+#'
+#' The getVariable(dataProduct, variableId) method can be used to get the variable with the provided ID from the provided rds.dataProduct.
+#' 
+#' @import jsonlite 
+#' @param dataProduct The rds.dataProduct to query for the variable.
+#' @param variableId The ID of the desired variable.
 setMethod("getVariable", signature("rds.dataProduct", "character"), function(dataProduct, variableId) {
   # Get the catalog from the data product
   catalog <- dataProduct@catalog
@@ -447,19 +480,25 @@ setMethod("getVariable", signature("rds.dataProduct", "character"), function(dat
 #'
 #' The getClassifications(dataProduct) method can be used to retrieve the descriptive information about all the classifications that are used in the data product.
 #'
-#' @slot dataProduct The rds.dataProduct to query for classifications.
-#' @slot limit Specifies the number of classifications to return.
-#' @slot offset Specifies the starting index of the classifications.
+#' @param dataProduct The rds.dataProduct to query for classifications.
+#' @param limit Specifies the number of classifications to return.
+#' @param offset Specifies the starting index of the classifications.
 #' @name getClassifications
-#' @rdname rds.dataProduct
+#' @rdname getClassifications
 #' @exportMethod getClassifications
 setGeneric("getClassifications", function(dataProduct,
-                                          ...,
                                           limit = NULL,
                                           offset = NULL)
   standardGeneric("getClassifications"))
 
-#' @exportMethod getClassifications
+#' Get Classifications
+#'
+#' The getClassifications(dataProduct) method can be used to retrieve the descriptive information about all the classifications that are used in the data product.
+#' 
+#' @import jsonlite 
+#' @param dataProduct The rds.dataProduct to query for classifications.
+#' @param limit Specifies the number of classifications to return.
+#' @param offset Specifies the starting index of the classifications.
 setMethod("getClassifications", signature("rds.dataProduct"), function(dataProduct,
                                                                        limit = NULL,
                                                                        offset = NULL) {
@@ -510,27 +549,32 @@ setMethod("getClassifications", signature("rds.dataProduct"), function(dataProdu
   return(classifications)
 })
 
-
-
-#' Get Variable
+#' Get Classification
 #'
 #' The getClassification(dataProduct, classificationId) method can be used to get the classification with the provided ID from the provided rds.dataProduct.
 #'
-#' @slot dataProduct The rds.dataProduct to query for the classification
-#' @slot classificationId The ID or URI of the desired classification
-#' @slot limit Specifies the number of codes to return.
-#' @slot offset Specifies the starting index of the codes.
+#' @param dataProduct The rds.dataProduct to query for the classification
+#' @param classificationId The ID or URI of the desired classification
+#' @param limit Specifies the number of codes to return.
+#' @param offset Specifies the starting index of the codes.
 #' @name getClassification
-#' @rdname rds.dataProduct
+#' @rdname getClassification
 #' @exportMethod getClassification
 setGeneric("getClassification", function(dataProduct,
                                          classificationId,
-                                         ...,
-                                         limit = 1000,
+                                                               limit = 1000,
                                          offset = 0)
   standardGeneric("getClassification"))
 
-#' @exportMethod getClassification
+#' Get Classification
+#'
+#' The getClassification(dataProduct, classificationId) method can be used to get the classification with the provided ID from the provided rds.dataProduct.
+#' 
+#' @import jsonlite 
+#' @param dataProduct The rds.dataProduct to query for the classification
+#' @param classificationId The ID or URI of the desired classification
+#' @param limit Specifies the number of codes to return.
+#' @param offset Specifies the starting index of the codes.
 setMethod("getClassification", signature("rds.dataProduct", "character"), function(dataProduct, classificationId, limit=1000, offset=0) {
 
   # Get the catalog from the data product
@@ -612,23 +656,21 @@ setMethod("getClassification", signature("rds.dataProduct", "character"), functi
 #'
 #' The select(dataProduct) method is used to access the record level data of the data product. In the explorer and through the API the total number of cells is limited to 10000 cells. This is done to keep a small and manageable amount of information going over the network. Be aware that by default the select method will perform numerous calls to build up a complete dataset. If this is not desired remember to set autoPage=FALSE.
 #'
-#' @slot dataProduct The dataProduct whose data is desired.
-#' @slot limit Specifies the number of records to return.
-#' @slot offset Specifies the starting index of the records.
-#' @slot cols The columns to select, these should be specified in the appropriate RDS syntax.
-#' @slot colLimit Specifies the limit of classifications that should be returned
-#' @slot colOffset Specifies the starting index of the classifications to be returned
-#' @slot count Specifies that the total count of records in the dataProduct should be included in the info section.
-#' @slot orderby Describes how the results should be ordered.
-#' @slot where Describes how to subset the records based on variable values.
-#' @slot inject Specifies if metadata should be injected into the data frame. If true and there are classifications available the columns codes will be replaced with code values. Defaults to FALSE
-#' @slot metadata Specifies if variable metadata should be included in the response.
-#' @slot autoPage If set to true multiple queries will be sent to the RDS server in order to compile the complete data set.
+#' @param dataProduct The dataProduct whose data is desired.
+#' @param limit Specifies the number of records to return.
+#' @param offset Specifies the starting index of the records.
+#' @param cols The columns to select, these should be specified in the appropriate RDS syntax.
+#' @param colLimit Specifies the limit of classifications that should be returned
+#' @param colOffset Specifies the starting index of the classifications to be returned
+#' @param count Specifies that the total count of records in the dataProduct should be included in the info section.
+#' @param orderby Describes how the results should be ordered.
+#' @param where Describes how to subset the records based on variable values.
+#' @param inject Specifies if metadata should be injected into the data frame. If true and there are classifications available the columns codes will be replaced with code values. Defaults to FALSE
+#' @param autoPage If set to true multiple queries will be sent to the RDS server in order to compile the complete data set.
 #' @name select
-#' @rdname rds.dataProduct
+#' @rdname select
 #' @exportMethod select
 setGeneric("select", function(dataProduct,
-                              ...,
                               limit = NULL,
                               offset = NULL,
                               cols = NULL,
@@ -638,11 +680,25 @@ setGeneric("select", function(dataProduct,
                               orderby = NULL,
                               where = NULL,
                               inject = FALSE,
-                              metadata = FALSE,
                               autoPage = TRUE)
            standardGeneric("select"))
 
-#' @exportMethod select
+#' Select
+#'
+#' The select(dataProduct) method is used to access the record level data of the data product. In the explorer and through the API the total number of cells is limited to 10000 cells. This is done to keep a small and manageable amount of information going over the network. Be aware that by default the select method will perform numerous calls to build up a complete dataset. If this is not desired remember to set autoPage=FALSE.
+#' 
+#' @import jsonlite urltools 
+#' @param dataProduct The dataProduct whose data is desired.
+#' @param limit Specifies the number of records to return.
+#' @param offset Specifies the starting index of the records.
+#' @param cols The columns to select, these should be specified in the appropriate RDS syntax.
+#' @param colLimit Specifies the limit of classifications that should be returned
+#' @param colOffset Specifies the starting index of the classifications to be returned
+#' @param count Specifies that the total count of records in the dataProduct should be included in the info section.
+#' @param orderby Describes how the results should be ordered.
+#' @param where Describes how to subset the records based on variable values.
+#' @param inject Specifies if metadata should be injected into the data frame. If true and there are classifications available the columns codes will be replaced with code values. Defaults to FALSE
+#' @param autoPage If set to true multiple queries will be sent to the RDS server in order to compile the complete data set.
 setMethod("select", signature("rds.dataProduct"), function(dataProduct,
                                                            limit = 20,
                                                            offset = 0,
@@ -653,10 +709,10 @@ setMethod("select", signature("rds.dataProduct"), function(dataProduct,
                                                            orderby = NULL,
                                                            where = NULL,
                                                            inject = FALSE,
-                                                           metadata = FALSE,
                                                            autoPage = TRUE) {
   # Flag indicating that we need to run another query
   query = TRUE
+  metadata = TRUE
   
   # Get the catalog from the data product
   catalog <- dataProduct@catalog
@@ -709,7 +765,7 @@ setMethod("select", signature("rds.dataProduct"), function(dataProduct,
       select <- paste(select,
                       paramPrefix,
                       "cols=",
-                      cols,
+                      url_encode(cols),
                       sep = "",
                       collapse = NULL)
       paramPrefix <- "&"
@@ -767,7 +823,7 @@ setMethod("select", signature("rds.dataProduct"), function(dataProduct,
       select <- paste(select,
                       paramPrefix,
                       "where=",
-                      where,
+                      url_encode(where),
                       sep = "",
                       collapse = NULL)
       paramPrefix <- "&"
@@ -823,11 +879,11 @@ setMethod("select", signature("rds.dataProduct"), function(dataProduct,
     # Format the info as a data.frame
     # Convert info list to dataframe, with properties as the headers. We always need to update the info so the query flag is updated correctly
     info <- data.frame(t(json$info[-1]))
-    
+
     # check if we should run the query again, if so, sleep for a short duration
     query = (autoPage && info$moreRows[[1]])
     if (query) {
-      metadata <- false
+      metadata <- FALSE
       offset <- offset + limit
       limit <- floor(10000 / length(variableNames))
       Sys.sleep(0.2)
@@ -854,22 +910,21 @@ setMethod("select", signature("rds.dataProduct"), function(dataProduct,
 #'
 #' The tabulate(dataProduct) method is used to create aggregated tables and perform analysis on a data product.
 #'
-#' @slot dataProduct The dataProduct whose data is being used in the tabulation.
-#' @slot dimensions The names of the variables that should be used as dimensions.
-#' @slot measures The variables that should be used as a measure, will be the count by default.
-#' @slot limit Specifies the number of records to return.
-#' @slot offset Specifies the starting index of the records.
-#' @slot orderby Describes how the results should be ordered.
-#' @slot where Describes the subset of records the tabulation should run on.
-#' @slot totals Specifies if totals should be included. Totals are used to provide roll up information about the counts of dimensions at different levels.
-#' @slot inject Specifies if metadata should be injected into the data frame. If true and there are classifications available the columns codes will be replaced with code values. Defaults to FALSE
-#' @slot metadata Specifies if variable metadata should be included in the response.
+#' @param dataProduct The dataProduct whose data is being used in the tabulation.
+#' @param dimensions The names of the variables that should be used as dimensions.
+#' @param measures The variables that should be used as a measure, will be the count by default.
+#' @param limit Specifies the number of records to return.
+#' @param offset Specifies the starting index of the records.
+#' @param orderby Describes how the results should be ordered.
+#' @param where Describes the subset of records the tabulation should run on.
+#' @param totals Specifies if totals should be included. Totals are used to provide roll up information about the counts of dimensions at different levels.
+#' @param inject Specifies if metadata should be injected into the data frame. If true and there are classifications available the columns codes will be replaced with code values. Defaults to FALSE
+#' @param metadata Specifies if variable metadata should be included in the response.
 #' @name tabulate
-#' @rdname rds.dataProduct
+#' @rdname tabulate
 #' @exportMethod tabulate
 setGeneric("tabulate", function(dataProduct,
                                 dimensions,
-                                ...,
                                 measures = NULL,
                                 limit = NULL,
                                 offset = NULL,
@@ -880,7 +935,21 @@ setGeneric("tabulate", function(dataProduct,
                                 metadata = FALSE)
   standardGeneric("tabulate"))
 
-#' @exportMethod tabulate
+#' Tabulate
+#'
+#' The tabulate(dataProduct) method is used to create aggregated tables and perform analysis on a data product.
+#' 
+#' @import jsonlite urltools
+#' @param dataProduct The dataProduct whose data is being used in the tabulation.
+#' @param dimensions The names of the variables that should be used as dimensions.
+#' @param measures The variables that should be used as a measure, will be the count by default.
+#' @param limit Specifies the number of records to return.
+#' @param offset Specifies the starting index of the records.
+#' @param orderby Describes how the results should be ordered.
+#' @param where Describes the subset of records the tabulation should run on.
+#' @param totals Specifies if totals should be included. Totals are used to provide roll up information about the counts of dimensions at different levels.
+#' @param inject Specifies if metadata should be injected into the data frame. If true and there are classifications available the columns codes will be replaced with code values. Defaults to FALSE
+#' @param metadata Specifies if variable metadata should be included in the response.
 setMethod("tabulate", signature("rds.dataProduct", "character"), function(dataProduct,
                                                                           dimensions,
                                                                           measures = NULL,
@@ -943,7 +1012,7 @@ setMethod("tabulate", signature("rds.dataProduct", "character"), function(dataPr
     tabulate <- paste(tabulate,
                       paramPrefix,
                       "dims=",
-                      dimensions,
+                      url_encode(dimensions),
                       sep = "",
                       collapse = NULL)
     paramPrefix <- "&"
@@ -954,7 +1023,7 @@ setMethod("tabulate", signature("rds.dataProduct", "character"), function(dataPr
       tabulate,
       paramPrefix,
       "measures=",
-      measures,
+      url_encode(measures),
       sep = "",
       collapse = NULL
     )
@@ -965,8 +1034,8 @@ setMethod("tabulate", signature("rds.dataProduct", "character"), function(dataPr
     tabulate <- paste(
       tabulate,
       paramPrefix,
-      "rowLimit=",
-      rowLimit,
+      "limit=",
+      limit,
       sep = "",
       collapse = NULL
     )

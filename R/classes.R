@@ -6,8 +6,8 @@
 #' @slot name The name of the RDS server.
 #' @slot version The version of the RDS server.
 #' @slot disclaimer If there is any system wide disclaimer about the data stored in this RDS server there may be a disclaimer that relates to the data. This will be an empty string if there is no disclaimer.
-#' @name rds.server
-#' @rdname rds.server
+#' @name rds.server-class
+#' @rdname rds.server-class
 #' @exportClass rds.server
 setClass(
   "rds.server",
@@ -30,8 +30,8 @@ setClass(
 #' @slot label The catalog label.
 #' @slot name The catalog name.
 #' @slot dataProductCount The number of data products stored in the catalog
-#' @name rds.catalog
-#' @rdname rds.catalog
+#' @name rds.catalog-class
+#' @rdname rds.catalog-class
 #' @exportClass rds.catalog
 setClass(
   "rds.catalog",
@@ -60,8 +60,8 @@ setClass(
 #' @slot note Additional information or notes about the data product. This may contain embedded HTML.
 #' @slot provenance Information about where the data product originated from or who owns it. This may contain embedded HTML.
 #' @slot restriction Information about any restrictions that may apply to the data of this data product. This may contain embedded HTML.
-#' @name rds.dataProduct
-#' @rdname rds.dataProduct
+#' @name rds.dataProduct-class
+#' @rdname rds.dataProduct-class
 #' @exportClass rds.dataProduct
 setClass(
   "rds.dataProduct",
@@ -82,8 +82,8 @@ setClass(
 #' Rich Data Services Frequencies 
 #' 
 #'
-#' @name rds.frequency
-#' @rdname rds.frequency
+#' @name rds.frequency-class
+#' @rdname rds.frequency-class
 #' @exportClass rds.frequency
 setClass(
   "rds.frequency",
@@ -117,8 +117,9 @@ setClass(
 #' @slot isMeasure Indicates if the variable can be used as a measure or not in tabulations.
 #' @slot isRequired Indicates if the variable should always be included in the results or not.
 #' @slot isWeight Indicates if the variable can be used as a weight.
-#' @name rds.variable
-#' @rdname rds.variable
+#' @slot frequencies A list of rds.frequency objects that potentially contains weighted or non weighted frequencies of the variables values.
+#' @name rds.variable-class
+#' @rdname rds.variable-class
 #' @exportClass rds.variable
 setClass(
   "rds.variable",
@@ -145,11 +146,12 @@ setClass(
     frequencies ="list"
   )
 )
+
 #' Rich Data Services Statistics
 #' 
 #' 
-#' @name rds.statistics
-#' @rdname rds.statistics
+#' @name rds.statistics-class
+#' @rdname rds.statistics-class
 #' @exportClass rds.statistics
 setClass(
   "rds.statistics",
@@ -168,8 +170,8 @@ setClass(
 #' @slot records A data frame of the records returned.
 #' @slot totals A data frame of the totals returned (tabulation only).
 #' @slot info A data frame of the query information.
-#' @name rds.dataset
-#' @rdname rds.dataset
+#' @name rds.dataset-class
+#' @rdname rds.dataset-class
 #' @exportClass rds.dataset
 setClass(
   "rds.dataset",
