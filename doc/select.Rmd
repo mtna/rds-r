@@ -1,8 +1,8 @@
 ---
-title: "RDS Select Examples"
+title: "Select"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{select}
+  %\VignetteIndexEntry{Select}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

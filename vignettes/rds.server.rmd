@@ -1,8 +1,8 @@
 ---
-title: "RDS Server Examples"
+title: "RDS Server"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{rds.server}
+  %\VignetteIndexEntry{RDS Server}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

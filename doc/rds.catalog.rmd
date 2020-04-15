@@ -1,8 +1,8 @@
 ---
-title: "RDS Catalog Examples"
+title: "RDS Catalog"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{rds.catalog}
+  %\VignetteIndexEntry{RDS Catalog}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
