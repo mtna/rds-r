@@ -1,0 +1,1050 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+
+
+<title>RDS Select Examples</title>
+
+
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css" data-origin="pandoc">
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource a.sourceLine
+  { position: relative; left: -4em; }
+pre.numberSource a.sourceLine::before
+  { content: attr(data-line-number);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  }
+@media screen {
+a.sourceLine::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    for (var j = 0; j < rules.length; j++) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') continue;
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">RDS Select Examples</h1>
+
+
+
+<style>
+   table {
+    width: 100%;
+  }
+</style>
+<div id="overview" class="section level3">
+<h3>Overview</h3>
+<p>The select method queries a data product for record level data using the parameters defined in the RDS API. The RDS API will limit any call to 20 records, or 10000 cells by default. This is to ensure that large amounts of data are not being thoughtless passed over the network.</p>
+<p>R users would typically be an exception to this rule. The R library is designed to automatically page through the data and build up a complete data set for the R user to work with. <strong>The following examples will turn this off (autoPage = FALSE) in order to demonstrate the different fuctions of the select query.</strong></p>
+</div>
+<div id="getting-the-data-product" class="section level3">
+<h3>Getting the Data Product</h3>
+<p>The first thing we need to do is set up a connection to the RDS server and get the data product we want to use.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1">rds &lt;-<span class="st"> </span><span class="kw">get.rds</span>(<span class="st">&quot;http://dev.richdataservices.com&quot;</span>)</a>
+<a class="sourceLine" id="cb1-2" data-line-number="2">catalog &lt;-<span class="st"> </span>rds.r<span class="op">::</span><span class="kw">getCatalog</span>(rds, <span class="st">&quot;uscensus&quot;</span>)</a>
+<a class="sourceLine" id="cb1-3" data-line-number="3">dataProduct &lt;-<span class="st"> </span>rds.r<span class="op">::</span><span class="kw">getDataProduct</span>(catalog, <span class="st">&quot;census2010-hp&quot;</span>)</a></code></pre></div>
+</div>
+<div id="basic-select" class="section level3">
+<h3>Basic Select</h3>
+<div id="getting-the-data" class="section level4">
+<h4>Getting the Data</h4>
+<p>Now that we have the data product we can access its data through the select method. The simplest select command will return raw data regardless of if there are any codes associated with the variables.</p>
+<p>This will print out the API calls it makes to build up the data set so the user is informed of where in the process the select method is.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="co"># Set autoPage = FALSE for example so we don't have the entire data set.</span></a>
+<a class="sourceLine" id="cb2-2" data-line-number="2"><span class="co"># We will also limit the columns to 9 and rows to 10 so that the table looks OK in the HTML.</span></a>
+<a class="sourceLine" id="cb2-3" data-line-number="3">dataSet &lt;-<span class="st"> </span>rds.r<span class="op">::</span><span class="kw">select</span>(dataProduct, <span class="dt">colLimit =</span> <span class="dv">9</span>, <span class="dt">limit =</span><span class="dv">10</span>, <span class="dt">autoPage =</span> <span class="ot">FALSE</span>)</a></code></pre></div>
+<pre><code>## [1] &quot;http://dev.richdataservices.com/rds/api/query/uscensus/census2010-hp/select?limit=10&amp;offset=0&amp;colLimit=9&amp;metadata=TRUE&quot;</code></pre>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" data-line-number="1"><span class="kw">kable</span>(dataSet<span class="op">@</span>records)</a></code></pre></div>
+<table>
+<thead>
+<tr class="header">
+<th align="left">SERIALNO</th>
+<th align="left">STATE</th>
+<th align="left">REGION</th>
+<th align="left">DIVISION</th>
+<th align="left">PUMA</th>
+<th align="left">TOTAREA</th>
+<th align="left">LANDAREA</th>
+<th align="left">SUBSAMPL</th>
+<th align="left">HWEIGHT</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">1</td>
+<td align="left">11</td>
+<td align="left">3</td>
+<td align="left">5</td>
+<td align="left">00101</td>
+<td align="left">38961472</td>
+<td align="left">36805772</td>
+<td align="left">73</td>
+<td align="left">10</td>
+</tr>
+<tr class="even">
+<td align="left">2</td>
+<td align="left">11</td>
+<td align="left">3</td>
+<td align="left">5</td>
+<td align="left">00101</td>
+<td align="left">38961472</td>
+<td align="left">36805772</td>
+<td align="left">54</td>
+<td align="left">10</td>
+</tr>
+<tr class="odd">
+<td align="left">2</td>
+<td align="left">11</td>
+<td align="left">3</td>
+<td align="left">5</td>
+<td align="left">00101</td>
+<td align="left">38961472</td>
+<td align="left">36805772</td>
+<td align="left">54</td>
+<td align="left">10</td>
+</tr>
+<tr class="even">
+<td align="left">3</td>
+<td align="left">11</td>
+<td align="left">3</td>
+<td align="left">5</td>
+<td align="left">00101</td>
+<td align="left">38961472</td>
+<td align="left">36805772</td>
+<td align="left">62</td>
+<td align="left">10</td>
+</tr>
+<tr class="odd">
+<td align="left">4</td>
+<td align="left">11</td>
+<td align="left">3</td>
+<td align="left">5</td>
+<td align="left">00101</td>
+<td align="left">38961472</td>
+<td align="left">36805772</td>
+<td align="left">50</td>
+<td align="left">10</td>
+</tr>
+<tr class="even">
+<td align="left">7</td>
+<td align="left">11</td>
+<td align="left">3</td>
+<td align="left">5</td>
+<td align="left">00101</td>
+<td align="left">38961472</td>
+<td align="left">36805772</td>
+<td align="left">26</td>
+<td align="left">10</td>
+</tr>
+<tr class="odd">
+<td align="left">8</td>
+<td align="left">11</td>
+<td align="left">3</td>
+<td align="left">5</td>
+<td align="left">00101</td>
+<td align="left">38961472</td>
+<td align="left">36805772</td>
+<td align="left">80</td>
+<td align="left">10</td>
+</tr>
+<tr class="even">
+<td align="left">9</td>
+<td align="left">11</td>
+<td align="left">3</td>
+<td align="left">5</td>
+<td align="left">00101</td>
+<td align="left">38961472</td>
+<td align="left">36805772</td>
+<td align="left">84</td>
+<td align="left">10</td>
+</tr>
+<tr class="odd">
+<td align="left">9</td>
+<td align="left">11</td>
+<td align="left">3</td>
+<td align="left">5</td>
+<td align="left">00101</td>
+<td align="left">38961472</td>
+<td align="left">36805772</td>
+<td align="left">84</td>
+<td align="left">10</td>
+</tr>
+<tr class="even">
+<td align="left">10</td>
+<td align="left">11</td>
+<td align="left">3</td>
+<td align="left">5</td>
+<td align="left">00101</td>
+<td align="left">38961472</td>
+<td align="left">36805772</td>
+<td align="left">66</td>
+<td align="left">10</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="getting-the-metadata" class="section level4">
+<h4>Getting the Metadata</h4>
+<p>In addition to the records, every data set returned by the select method will include any variable metadata that is associated with the data set.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1"><span class="co"># Showing just 6 columns for the sake of space.</span></a>
+<a class="sourceLine" id="cb5-2" data-line-number="2"><span class="kw">kable</span>(dataSet<span class="op">@</span>variables[<span class="kw">c</span>(<span class="dv">4</span>,<span class="dv">3</span>,<span class="dv">7</span>,<span class="dv">6</span>,<span class="dv">1</span>,<span class="dv">13</span>)])</a></code></pre></div>
+<table>
+<thead>
+<tr class="header">
+<th align="right">index</th>
+<th align="left">id</th>
+<th align="left">name</th>
+<th align="left">label</th>
+<th align="left">dataType</th>
+<th align="left">classificationUri</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">1</td>
+<td align="left">SERIALNO</td>
+<td align="left">SERIALNO</td>
+<td align="left">Housing/Group Quarters (GQ) Unit Serial Number</td>
+<td align="left">TEXT</td>
+<td align="left">NA</td>
+</tr>
+<tr class="even">
+<td align="right">2</td>
+<td align="left">STATE</td>
+<td align="left">STATE</td>
+<td align="left">FIPS State Code</td>
+<td align="left">TEXT</td>
+<td align="left">362de6e2-1cc7-4e84-93f0-5b1c7031b6cf</td>
+</tr>
+<tr class="odd">
+<td align="right">3</td>
+<td align="left">REGION</td>
+<td align="left">REGION</td>
+<td align="left">Region Code</td>
+<td align="left">TEXT</td>
+<td align="left">78cdd740-bbf1-4ae1-977d-630b3b700232</td>
+</tr>
+<tr class="even">
+<td align="right">4</td>
+<td align="left">DIVISION</td>
+<td align="left">DIVISION</td>
+<td align="left">Division Code</td>
+<td align="left">TEXT</td>
+<td align="left">d00d6c42-feb9-4c77-bee3-6a64bba2821c</td>
+</tr>
+<tr class="odd">
+<td align="right">5</td>
+<td align="left">PUMA</td>
+<td align="left">PUMA</td>
+<td align="left">Public Use Microdata Area Code (PUMA)</td>
+<td align="left">TEXT</td>
+<td align="left">NA</td>
+</tr>
+<tr class="even">
+<td align="right">6</td>
+<td align="left">TOTAREA</td>
+<td align="left">TOTAREA</td>
+<td align="left">Total Area of PUMA</td>
+<td align="left">TEXT</td>
+<td align="left">NA</td>
+</tr>
+<tr class="odd">
+<td align="right">7</td>
+<td align="left">LANDAREA</td>
+<td align="left">LANDAREA</td>
+<td align="left">Land Area of PUMA</td>
+<td align="left">TEXT</td>
+<td align="left">NA</td>
+</tr>
+<tr class="even">
+<td align="right">8</td>
+<td align="left">SUBSAMPL</td>
+<td align="left">SUBSAMPL</td>
+<td align="left">Subsample number</td>
+<td align="left">TEXT</td>
+<td align="left">NA</td>
+</tr>
+<tr class="odd">
+<td align="right">9</td>
+<td align="left">HWEIGHT</td>
+<td align="left">HWEIGHT</td>
+<td align="left">Housing unit weight</td>
+<td align="left">TEXT</td>
+<td align="left">NA</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="injecting-metadata" class="section level3">
+<h3>Injecting Metadata</h3>
+<p>In the case that the values of a variable are coded variables and the codes are documented in RDS we can inject these into the returned records with the <code>inject</code> parameter. <strong>Notice that the state, region, and division variables have had their numeric codes replaced with the code label.</strong></p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" data-line-number="1"><span class="co"># Set autoPage = FALSE for example so we don't have the entire data set.</span></a>
+<a class="sourceLine" id="cb6-2" data-line-number="2"><span class="co"># We will also limit the columns to 9 and rows to 10 so that the table looks OK in the HTML.</span></a>
+<a class="sourceLine" id="cb6-3" data-line-number="3">dataSet &lt;-<span class="st"> </span>rds.r<span class="op">::</span><span class="kw">select</span>(dataProduct, <span class="dt">colLimit =</span> <span class="dv">9</span>, <span class="dt">limit =</span> <span class="dv">10</span>, <span class="dt">autoPage =</span> <span class="ot">FALSE</span>, <span class="dt">inject =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
+<pre><code>## [1] &quot;http://dev.richdataservices.com/rds/api/query/uscensus/census2010-hp/select?limit=10&amp;offset=0&amp;colLimit=9&amp;inject=TRUE&amp;metadata=TRUE&quot;</code></pre>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" data-line-number="1"><span class="kw">kable</span>(dataSet<span class="op">@</span>records)</a></code></pre></div>
+<table>
+<thead>
+<tr class="header">
+<th align="left">SERIALNO</th>
+<th align="left">STATE</th>
+<th align="left">REGION</th>
+<th align="left">DIVISION</th>
+<th align="left">PUMA</th>
+<th align="left">TOTAREA</th>
+<th align="left">LANDAREA</th>
+<th align="left">SUBSAMPL</th>
+<th align="left">HWEIGHT</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">1</td>
+<td align="left">District of Columbia</td>
+<td align="left">South</td>
+<td align="left">South Atlantic</td>
+<td align="left">00101</td>
+<td align="left">38961472</td>
+<td align="left">36805772</td>
+<td align="left">73</td>
+<td align="left">10</td>
+</tr>
+<tr class="even">
+<td align="left">2</td>
+<td align="left">District of Columbia</td>
+<td align="left">South</td>
+<td align="left">South Atlantic</td>
+<td align="left">00101</td>
+<td align="left">38961472</td>
+<td align="left">36805772</td>
+<td align="left">54</td>
+<td align="left">10</td>
+</tr>
+<tr class="odd">
+<td align="left">2</td>
+<td align="left">District of Columbia</td>
+<td align="left">South</td>
+<td align="left">South Atlantic</td>
+<td align="left">00101</td>
+<td align="left">38961472</td>
+<td align="left">36805772</td>
+<td align="left">54</td>
+<td align="left">10</td>
+</tr>
+<tr class="even">
+<td align="left">3</td>
+<td align="left">District of Columbia</td>
+<td align="left">South</td>
+<td align="left">South Atlantic</td>
+<td align="left">00101</td>
+<td align="left">38961472</td>
+<td align="left">36805772</td>
+<td align="left">62</td>
+<td align="left">10</td>
+</tr>
+<tr class="odd">
+<td align="left">4</td>
+<td align="left">District of Columbia</td>
+<td align="left">South</td>
+<td align="left">South Atlantic</td>
+<td align="left">00101</td>
+<td align="left">38961472</td>
+<td align="left">36805772</td>
+<td align="left">50</td>
+<td align="left">10</td>
+</tr>
+<tr class="even">
+<td align="left">7</td>
+<td align="left">District of Columbia</td>
+<td align="left">South</td>
+<td align="left">South Atlantic</td>
+<td align="left">00101</td>
+<td align="left">38961472</td>
+<td align="left">36805772</td>
+<td align="left">26</td>
+<td align="left">10</td>
+</tr>
+<tr class="odd">
+<td align="left">8</td>
+<td align="left">District of Columbia</td>
+<td align="left">South</td>
+<td align="left">South Atlantic</td>
+<td align="left">00101</td>
+<td align="left">38961472</td>
+<td align="left">36805772</td>
+<td align="left">80</td>
+<td align="left">10</td>
+</tr>
+<tr class="even">
+<td align="left">9</td>
+<td align="left">District of Columbia</td>
+<td align="left">South</td>
+<td align="left">South Atlantic</td>
+<td align="left">00101</td>
+<td align="left">38961472</td>
+<td align="left">36805772</td>
+<td align="left">84</td>
+<td align="left">10</td>
+</tr>
+<tr class="odd">
+<td align="left">9</td>
+<td align="left">District of Columbia</td>
+<td align="left">South</td>
+<td align="left">South Atlantic</td>
+<td align="left">00101</td>
+<td align="left">38961472</td>
+<td align="left">36805772</td>
+<td align="left">84</td>
+<td align="left">10</td>
+</tr>
+<tr class="even">
+<td align="left">10</td>
+<td align="left">District of Columbia</td>
+<td align="left">South</td>
+<td align="left">South Atlantic</td>
+<td align="left">00101</td>
+<td align="left">38961472</td>
+<td align="left">36805772</td>
+<td align="left">66</td>
+<td align="left">10</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="selecting-columns" class="section level3">
+<h3>Selecting Columns</h3>
+<p>RDS allows for a number of different ways to search for variable data. Users can provide the name, a regex, or keyword to search on.</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" data-line-number="1"><span class="co"># We will search for SerialNO directly, anything that starts with P (regex)</span></a>
+<a class="sourceLine" id="cb9-2" data-line-number="2">dataSet &lt;-<span class="st"> </span>rds.r<span class="op">::</span><span class="kw">select</span>(dataProduct, <span class="dt">cols=</span><span class="st">&quot;serialno,p.*&quot;</span>, <span class="dt">limit =</span> <span class="dv">10</span>, <span class="dt">autoPage =</span> <span class="ot">FALSE</span>, <span class="dt">inject =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
+<pre><code>## [1] &quot;http://dev.richdataservices.com/rds/api/query/uscensus/census2010-hp/select?limit=10&amp;offset=0&amp;cols=serialno%2cp.%2a&amp;inject=TRUE&amp;metadata=TRUE&quot;</code></pre>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" data-line-number="1"><span class="kw">kable</span>(dataSet<span class="op">@</span>records)</a></code></pre></div>
+<table>
+<thead>
+<tr class="header">
+<th align="left">SERIALNO</th>
+<th align="left">PUMA</th>
+<th align="left">PERSONS</th>
+<th align="left">P60</th>
+<th align="left">P65</th>
+<th align="left">P18</th>
+<th align="left">PAOC</th>
+<th align="left">PARC</th>
+<th align="left">PNUM</th>
+<th align="left">PSUB</th>
+<th align="left">PWEIGHT</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">1</td>
+<td align="left">00101</td>
+<td align="left">2</td>
+<td align="left">1</td>
+<td align="left">0</td>
+<td align="left">0</td>
+<td align="left">No own children under 18 years</td>
+<td align="left">No related children under 18 years</td>
+<td align="left">2</td>
+<td align="left">No</td>
+<td align="left">10</td>
+</tr>
+<tr class="even">
+<td align="left">2</td>
+<td align="left">00101</td>
+<td align="left">2</td>
+<td align="left">0</td>
+<td align="left">0</td>
+<td align="left">0</td>
+<td align="left">No own children under 18 years</td>
+<td align="left">No related children under 18 years</td>
+<td align="left">1</td>
+<td align="left">No</td>
+<td align="left">10</td>
+</tr>
+<tr class="odd">
+<td align="left">2</td>
+<td align="left">00101</td>
+<td align="left">2</td>
+<td align="left">0</td>
+<td align="left">0</td>
+<td align="left">0</td>
+<td align="left">No own children under 18 years</td>
+<td align="left">No related children under 18 years</td>
+<td align="left">2</td>
+<td align="left">No</td>
+<td align="left">10</td>
+</tr>
+<tr class="even">
+<td align="left">3</td>
+<td align="left">00101</td>
+<td align="left">1</td>
+<td align="left">1</td>
+<td align="left">0</td>
+<td align="left">0</td>
+<td align="left">No own children under 18 years</td>
+<td align="left">No related children under 18 years</td>
+<td align="left">1</td>
+<td align="left">No</td>
+<td align="left">10</td>
+</tr>
+<tr class="odd">
+<td align="left">4</td>
+<td align="left">00101</td>
+<td align="left">1</td>
+<td align="left">1</td>
+<td align="left">1</td>
+<td align="left">0</td>
+<td align="left">No own children under 18 years</td>
+<td align="left">No related children under 18 years</td>
+<td align="left">1</td>
+<td align="left">No</td>
+<td align="left">10</td>
+</tr>
+<tr class="even">
+<td align="left">7</td>
+<td align="left">00101</td>
+<td align="left">1</td>
+<td align="left">0</td>
+<td align="left">0</td>
+<td align="left">0</td>
+<td align="left">No own children under 18 years</td>
+<td align="left">No related children under 18 years</td>
+<td align="left">1</td>
+<td align="left">Yes</td>
+<td align="left">10</td>
+</tr>
+<tr class="odd">
+<td align="left">8</td>
+<td align="left">00101</td>
+<td align="left">1</td>
+<td align="left">1</td>
+<td align="left">1</td>
+<td align="left">0</td>
+<td align="left">No own children under 18 years</td>
+<td align="left">No related children under 18 years</td>
+<td align="left">1</td>
+<td align="left">No</td>
+<td align="left">10</td>
+</tr>
+<tr class="even">
+<td align="left">9</td>
+<td align="left">00101</td>
+<td align="left">2</td>
+<td align="left">0</td>
+<td align="left">0</td>
+<td align="left">0</td>
+<td align="left">No own children under 18 years</td>
+<td align="left">No related children under 18 years</td>
+<td align="left">1</td>
+<td align="left">No</td>
+<td align="left">10</td>
+</tr>
+<tr class="odd">
+<td align="left">9</td>
+<td align="left">00101</td>
+<td align="left">2</td>
+<td align="left">0</td>
+<td align="left">0</td>
+<td align="left">0</td>
+<td align="left">No own children under 18 years</td>
+<td align="left">No related children under 18 years</td>
+<td align="left">2</td>
+<td align="left">No</td>
+<td align="left">10</td>
+</tr>
+<tr class="even">
+<td align="left">10</td>
+<td align="left">00101</td>
+<td align="left">2</td>
+<td align="left">2</td>
+<td align="left">2</td>
+<td align="left">0</td>
+<td align="left">No own children under 18 years</td>
+<td align="left">No related children under 18 years</td>
+<td align="left">1</td>
+<td align="left">No</td>
+<td align="left">10</td>
+</tr>
+</tbody>
+</table>
+<p>Users can also get variables by keyword. By prefixing the column name with <code>$</code> users can specify the keyword to search on. RDS will search variable metadata (names, labels, descriptions, etc) to find variables with the keyword in it and return them</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb12-1" data-line-number="1"><span class="co"># We will search with the keyword of code</span></a>
+<a class="sourceLine" id="cb12-2" data-line-number="2">dataSet &lt;-<span class="st"> </span>rds.r<span class="op">::</span><span class="kw">select</span>(dataProduct, <span class="dt">cols=</span><span class="st">&quot;$code&quot;</span>, <span class="dt">limit =</span> <span class="dv">10</span>, <span class="dt">autoPage =</span> <span class="ot">FALSE</span>, <span class="dt">inject =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
+<pre><code>## [1] &quot;http://dev.richdataservices.com/rds/api/query/uscensus/census2010-hp/select?limit=10&amp;offset=0&amp;cols=%24code&amp;inject=TRUE&amp;metadata=TRUE&quot;</code></pre>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb14-1" data-line-number="1"><span class="kw">kable</span>(dataSet<span class="op">@</span>records)</a></code></pre></div>
+<table>
+<thead>
+<tr class="header">
+<th align="left">STATE</th>
+<th align="left">REGION</th>
+<th align="left">DIVISION</th>
+<th align="left">PUMA</th>
+<th align="left">WHITE</th>
+<th align="left">BLACK</th>
+<th align="left">AIAN</th>
+<th align="left">ASIAN</th>
+<th align="left">NHAW</th>
+<th align="left">OPI</th>
+<th align="left">OTHER</th>
+<th align="left">RACESHORT</th>
+<th align="left">RACEDET</th>
+<th align="left">RACECHKBX</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">District of Columbia</td>
+<td align="left">South</td>
+<td align="left">South Atlantic</td>
+<td align="left">00101</td>
+<td align="left">Yes</td>
+<td align="left">No</td>
+<td align="left">No</td>
+<td align="left">No</td>
+<td align="left">No</td>
+<td align="left">No</td>
+<td align="left">No</td>
+<td align="left">White alone</td>
+<td align="left">White alone</td>
+<td align="left">White alone</td>
+</tr>
+<tr class="even">
+<td align="left">District of Columbia</td>
+<td align="left">South</td>
+<td align="left">South Atlantic</td>
+<td align="left">00101</td>
+<td align="left">Yes</td>
+<td align="left">No</td>
+<td align="left">No</td>
+<td align="left">No</td>
+<td align="left">No</td>
+<td align="left">No</td>
+<td align="left">No</td>
+<td align="left">White alone</td>
+<td align="left">White alone</td>
+<td align="left">White alone</td>
+</tr>
+<tr class="odd">
+<td align="left">District of Columbia</td>
+<td align="left">South</td>
+<td align="left">South Atlantic</td>
+<td align="left">00101</td>
+<td align="left">Yes</td>
+<td align="left">No</td>
+<td align="left">No</td>
+<td align="left">No</td>
+<td align="left">No</td>
+<td align="left">No</td>
+<td align="left">No</td>
+<td align="left">White alone</td>
+<td align="left">White alone</td>
+<td align="left">White alone</td>
+</tr>
+<tr class="even">
+<td align="left">District of Columbia</td>
+<td align="left">South</td>
+<td align="left">South Atlantic</td>
+<td align="left">00101</td>
+<td align="left">Yes</td>
+<td align="left">No</td>
+<td align="left">No</td>
+<td align="left">No</td>
+<td align="left">No</td>
+<td align="left">No</td>
+<td align="left">No</td>
+<td align="left">White alone</td>
+<td align="left">White alone</td>
+<td align="left">White alone</td>
+</tr>
+<tr class="odd">
+<td align="left">District of Columbia</td>
+<td align="left">South</td>
+<td align="left">South Atlantic</td>
+<td align="left">00101</td>
+<td align="left">Yes</td>
+<td align="left">No</td>
+<td align="left">No</td>
+<td align="left">No</td>
+<td align="left">No</td>
+<td align="left">No</td>
+<td align="left">No</td>
+<td align="left">White alone</td>
+<td align="left">White alone</td>
+<td align="left">White alone</td>
+</tr>
+<tr class="even">
+<td align="left">District of Columbia</td>
+<td align="left">South</td>
+<td align="left">South Atlantic</td>
+<td align="left">00101</td>
+<td align="left">Yes</td>
+<td align="left">No</td>
+<td align="left">No</td>
+<td align="left">No</td>
+<td align="left">No</td>
+<td align="left">No</td>
+<td align="left">No</td>
+<td align="left">White alone</td>
+<td align="left">White alone</td>
+<td align="left">White alone</td>
+</tr>
+<tr class="odd">
+<td align="left">District of Columbia</td>
+<td align="left">South</td>
+<td align="left">South Atlantic</td>
+<td align="left">00101</td>
+<td align="left">Yes</td>
+<td align="left">No</td>
+<td align="left">No</td>
+<td align="left">No</td>
+<td align="left">No</td>
+<td align="left">No</td>
+<td align="left">No</td>
+<td align="left">White alone</td>
+<td align="left">White alone</td>
+<td align="left">White alone</td>
+</tr>
+<tr class="even">
+<td align="left">District of Columbia</td>
+<td align="left">South</td>
+<td align="left">South Atlantic</td>
+<td align="left">00101</td>
+<td align="left">Yes</td>
+<td align="left">No</td>
+<td align="left">No</td>
+<td align="left">No</td>
+<td align="left">No</td>
+<td align="left">No</td>
+<td align="left">No</td>
+<td align="left">White alone</td>
+<td align="left">White alone</td>
+<td align="left">White alone</td>
+</tr>
+<tr class="odd">
+<td align="left">District of Columbia</td>
+<td align="left">South</td>
+<td align="left">South Atlantic</td>
+<td align="left">00101</td>
+<td align="left">Yes</td>
+<td align="left">No</td>
+<td align="left">No</td>
+<td align="left">No</td>
+<td align="left">No</td>
+<td align="left">No</td>
+<td align="left">No</td>
+<td align="left">White alone</td>
+<td align="left">White alone</td>
+<td align="left">White alone</td>
+</tr>
+<tr class="even">
+<td align="left">District of Columbia</td>
+<td align="left">South</td>
+<td align="left">South Atlantic</td>
+<td align="left">00101</td>
+<td align="left">Yes</td>
+<td align="left">No</td>
+<td align="left">No</td>
+<td align="left">No</td>
+<td align="left">No</td>
+<td align="left">No</td>
+<td align="left">No</td>
+<td align="left">White alone</td>
+<td align="left">White alone</td>
+<td align="left">White alone</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

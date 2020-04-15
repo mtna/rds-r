@@ -1,0 +1,19 @@
+---
+title: "RDS Data Product Examples"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{dataProduct}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(rds.r)
+```
