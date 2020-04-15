@@ -34,7 +34,7 @@ get.rds <- function(host,
   
   # Get the server information
   serverInfo <-
-    jsonlite::fromJSON(paste(baseUrl, "/info", sep = "", collapse = NULL))
+    jsonlite::fromJSON(paste(baseUrl, "/api/server/info", sep = "", collapse = NULL))
   serverName <- serverInfo[[1]][1]
   serverVersion <- serverInfo[[2]][1]
   
@@ -42,7 +42,7 @@ get.rds <- function(host,
   disclaimer <-
     tryCatch(
       jsonlite::fromJSON(paste(
-        baseUrl, "/disclaimer", sep = "", collapse = NULL
+        baseUrl, "/api/server/disclaimer", sep = "", collapse = NULL
       )),
       error = function(e) {
         disclaimer <- ""
