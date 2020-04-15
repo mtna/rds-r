@@ -1,8 +1,8 @@
 ---
-title: "RDS Data Product Examples"
+title: "RDS Variable Examples"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{dataProduct}
+  %\VignetteIndexEntry{rds.variable}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
