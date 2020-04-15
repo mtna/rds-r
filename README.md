@@ -30,8 +30,8 @@ Visit the RDS web site for detailed informtion on the platform capabilities or l
 
 This package can be installed through the use of devtools
 ```r
-devtools::install_github("mtna/rds-r")
-library(rds.r)
+devtools::install_github("mtna/rds-r", build_vignettes = TRUE)
+browseVignettes(package="rds.r")
 ```
 
 <a name="contribute"></a>
