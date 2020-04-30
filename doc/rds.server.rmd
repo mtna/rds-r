@@ -31,10 +31,11 @@ rds <- get.rds(host)
 
 The server will come with some basic information about it.
 ```{r}
-  properties <- c("Name", "Version", "Base URL", "Disclaimer")
-  df <- data.frame(rds@name, rds@version, rds@baseUrl, rds@disclaimer)
-  names(df) <- properties
-  kable(df)
+properties <- c("Name", "Version", "Base URL", "Disclaimer")
+df <-
+  data.frame(rds@name, rds@version, rds@baseUrl, rds@disclaimer)
+names(df) <- properties
+kable(df)
 ```
 
 ## Retrieving the Catalogs
@@ -46,11 +47,19 @@ The server provides an entry point for users to view the catalog. We can get all
 ```{r}
 catalogs <- rds.r::getCatalogs(rds)
 catalogDf <- data.frame()
-for(catalog in catalogs){
-  df <- data.frame(catalog@id, catalog@name, catalog@label, catalog@description, catalog@dataProductCount)
+for (catalog in catalogs) {
+  df <-
+    data.frame(
+      catalog@id,
+      catalog@name,
+      catalog@label,
+      catalog@description,
+      catalog@dataProductCount
+    )
   catalogDf <- rbind(catalogDf, df)
-} 
-names(catalogDf) <- c("ID", "Name", "Label","Description","# Data Products")
+}
+names(catalogDf) <-
+  c("ID", "Name", "Label", "Description", "# Data Products")
 
 kable(catalogDf)
 ```
@@ -59,7 +68,15 @@ kable(catalogDf)
 
 ```{r}
 catalog <- rds.r::getCatalog(rds, "uscensus")
-df <- data.frame(catalog@id, catalog@name, catalog@label, catalog@description, catalog@dataProductCount)
-names(df) <- c("ID", "Name", "Label","Description","# Data Products")
+df <-
+  data.frame(
+    catalog@id,
+    catalog@name,
+    catalog@label,
+    catalog@description,
+    catalog@dataProductCount
+  )
+names(df) <-
+  c("ID", "Name", "Label", "Description", "# Data Products")
 kable(df)
 ```

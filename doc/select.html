@@ -14,6 +14,1277 @@
 
 <title>Select</title>
 
+<style type="text/css">.pagedtable {
+overflow: auto;
+padding-left: 8px;
+padding-right: 8px;
+}
+.pagedtable-wrapper {
+border: 1px solid #ccc;
+border-radius: 4px;
+margin-bottom: 10px;
+}
+.pagedtable table {
+width: 100%;
+max-width: 100%;
+margin: 0;
+}
+.pagedtable th {
+padding: 0 5px 0 5px;
+border: none;
+border-bottom: 2px solid #dddddd;
+min-width: 45px;
+}
+.pagedtable-empty th {
+display: none;
+}
+.pagedtable td {
+padding: 0 4px 0 4px;
+}
+.pagedtable .even {
+background-color: rgba(140, 140, 140, 0.1);
+}
+.pagedtable-padding-col {
+display: none;
+}
+.pagedtable a {
+-webkit-touch-callout: none;
+-webkit-user-select: none;
+-khtml-user-select: none;
+-moz-user-select: none;
+-ms-user-select: none;
+user-select: none;
+}
+.pagedtable-index-nav {
+cursor: pointer;
+padding: 0 5px 0 5px;
+float: right;
+border: 0;
+}
+.pagedtable-index-nav-disabled {
+cursor: default;
+text-decoration: none;
+color: #999;
+}
+a.pagedtable-index-nav-disabled:hover {
+text-decoration: none;
+color: #999;
+}
+.pagedtable-indexes {
+cursor: pointer;
+float: right;
+border: 0;
+}
+.pagedtable-index-current {
+cursor: default;
+text-decoration: none;
+font-weight: bold;
+color: #333;
+border: 0;
+}
+a.pagedtable-index-current:hover {
+text-decoration: none;
+font-weight: bold;
+color: #333;
+}
+.pagedtable-index {
+width: 30px;
+display: inline-block;
+text-align: center;
+border: 0;
+}
+.pagedtable-index-separator-left {
+display: inline-block;
+color: #333;
+font-size: 9px;
+padding: 0 0 0 0;
+cursor: default;
+}
+.pagedtable-index-separator-right {
+display: inline-block;
+color: #333;
+font-size: 9px;
+padding: 0 4px 0 0;
+cursor: default;
+}
+.pagedtable-footer {
+padding-top: 4px;
+padding-bottom: 5px;
+}
+.pagedtable-not-empty .pagedtable-footer {
+border-top: 2px solid #dddddd;
+}
+.pagedtable-info {
+overflow: hidden;
+color: #999;
+white-space: nowrap;
+text-overflow: ellipsis;
+}
+.pagedtable-header-name {
+overflow: hidden;
+text-overflow: ellipsis;
+}
+.pagedtable-header-type {
+color: #999;
+font-weight: 400;
+}
+.pagedtable-na-cell {
+font-style: italic;
+opacity: 0.3;
+}
+</style>
+<script>// Production steps of ECMA-262, Edition 5, 15.4.4.18
+// Reference: http://es5.github.io/#x15.4.4.18
+if (!Array.prototype.forEach) {
+
+  Array.prototype.forEach = function(callback, thisArg) {
+
+    var T, k;
+
+    if (this === null) {
+      throw new TypeError(' this is null or not defined');
+    }
+
+    // 1. Let O be the result of calling toObject() passing the
+    // |this| value as the argument.
+    var O = Object(this);
+
+    // 2. Let lenValue be the result of calling the Get() internal
+    // method of O with the argument "length".
+    // 3. Let len be toUint32(lenValue).
+    var len = O.length >>> 0;
+
+    // 4. If isCallable(callback) is false, throw a TypeError exception.
+    // See: http://es5.github.com/#x9.11
+    if (typeof callback !== "function") {
+      throw new TypeError(callback + ' is not a function');
+    }
+
+    // 5. If thisArg was supplied, let T be thisArg; else let
+    // T be undefined.
+    if (arguments.length > 1) {
+      T = thisArg;
+    }
+
+    // 6. Let k be 0
+    k = 0;
+
+    // 7. Repeat, while k < len
+    while (k < len) {
+
+      var kValue;
+
+      // a. Let Pk be ToString(k).
+      //    This is implicit for LHS operands of the in operator
+      // b. Let kPresent be the result of calling the HasProperty
+      //    internal method of O with argument Pk.
+      //    This step can be combined with c
+      // c. If kPresent is true, then
+      if (k in O) {
+
+        // i. Let kValue be the result of calling the Get internal
+        // method of O with argument Pk.
+        kValue = O[k];
+
+        // ii. Call the Call internal method of callback with T as
+        // the this value and argument list containing kValue, k, and O.
+        callback.call(T, kValue, k, O);
+      }
+      // d. Increase k by 1.
+      k++;
+    }
+    // 8. return undefined
+  };
+}
+
+// Production steps of ECMA-262, Edition 5, 15.4.4.19
+// Reference: http://es5.github.io/#x15.4.4.19
+if (!Array.prototype.map) {
+
+  Array.prototype.map = function(callback, thisArg) {
+
+    var T, A, k;
+
+    if (this == null) {
+      throw new TypeError(' this is null or not defined');
+    }
+
+    // 1. Let O be the result of calling ToObject passing the |this|
+    //    value as the argument.
+    var O = Object(this);
+
+    // 2. Let lenValue be the result of calling the Get internal
+    //    method of O with the argument "length".
+    // 3. Let len be ToUint32(lenValue).
+    var len = O.length >>> 0;
+
+    // 4. If IsCallable(callback) is false, throw a TypeError exception.
+    // See: http://es5.github.com/#x9.11
+    if (typeof callback !== 'function') {
+      throw new TypeError(callback + ' is not a function');
+    }
+
+    // 5. If thisArg was supplied, let T be thisArg; else let T be undefined.
+    if (arguments.length > 1) {
+      T = thisArg;
+    }
+
+    // 6. Let A be a new array created as if by the expression new Array(len)
+    //    where Array is the standard built-in constructor with that name and
+    //    len is the value of len.
+    A = new Array(len);
+
+    // 7. Let k be 0
+    k = 0;
+
+    // 8. Repeat, while k < len
+    while (k < len) {
+
+      var kValue, mappedValue;
+
+      // a. Let Pk be ToString(k).
+      //   This is implicit for LHS operands of the in operator
+      // b. Let kPresent be the result of calling the HasProperty internal
+      //    method of O with argument Pk.
+      //   This step can be combined with c
+      // c. If kPresent is true, then
+      if (k in O) {
+
+        // i. Let kValue be the result of calling the Get internal
+        //    method of O with argument Pk.
+        kValue = O[k];
+
+        // ii. Let mappedValue be the result of calling the Call internal
+        //     method of callback with T as the this value and argument
+        //     list containing kValue, k, and O.
+        mappedValue = callback.call(T, kValue, k, O);
+
+        // iii. Call the DefineOwnProperty internal method of A with arguments
+        // Pk, Property Descriptor
+        // { Value: mappedValue,
+        //   Writable: true,
+        //   Enumerable: true,
+        //   Configurable: true },
+        // and false.
+
+        // In browsers that support Object.defineProperty, use the following:
+        // Object.defineProperty(A, k, {
+        //   value: mappedValue,
+        //   writable: true,
+        //   enumerable: true,
+        //   configurable: true
+        // });
+
+        // For best browser support, use the following:
+        A[k] = mappedValue;
+      }
+      // d. Increase k by 1.
+      k++;
+    }
+
+    // 9. return A
+    return A;
+  };
+}
+
+var PagedTable = function (pagedTable) {
+  var me = this;
+
+  var source = function(pagedTable) {
+    var sourceElems = [].slice.call(pagedTable.children).filter(function(e) {
+      return e.hasAttribute("data-pagedtable-source");
+    });
+
+    if (sourceElems === null || sourceElems.length !== 1) {
+      throw("A single data-pagedtable-source was not found");
+    }
+
+    return JSON.parse(sourceElems[0].innerHTML);
+  }(pagedTable);
+
+  var options = function(source) {
+    var options = typeof(source.options) !== "undefined" &&
+      source.options !== null ? source.options : {};
+
+    var columns = typeof(options.columns) !== "undefined" ? options.columns : {};
+    var rows = typeof(options.rows) !== "undefined" ? options.rows : {};
+
+    var positiveIntOrNull = function(value) {
+      return parseInt(value) >= 0 ? parseInt(value) : null;
+    };
+
+    return {
+      pages: positiveIntOrNull(options.pages),
+      rows: {
+        min: positiveIntOrNull(rows.min),
+        max: positiveIntOrNull(rows.max),
+        total: positiveIntOrNull(rows.total)
+      },
+      columns: {
+        min: positiveIntOrNull(columns.min),
+        max: positiveIntOrNull(columns.max),
+        total: positiveIntOrNull(columns.total)
+      }
+    };
+  }(source);
+
+  var Measurer = function() {
+
+    // set some default initial values that will get adjusted in runtime
+    me.measures = {
+      padding: 12,
+      character: 8,
+      height: 15,
+      defaults: true
+    };
+
+    me.calculate = function(measuresCell) {
+      if (!me.measures.defaults)
+        return;
+
+      var measuresCellStyle = window.getComputedStyle(measuresCell, null);
+
+      var newPadding = parsePadding(measuresCellStyle.paddingLeft) +
+            parsePadding(measuresCellStyle.paddingRight);
+
+      var sampleString = "ABCDEFGHIJ0123456789";
+      var newCharacter = Math.ceil(measuresCell.clientWidth / sampleString.length);
+
+      if (newPadding <= 0 || newCharacter <= 0)
+        return;
+
+      me.measures.padding = newPadding;
+      me.measures.character = newCharacter;
+      me.measures.height = measuresCell.clientHeight;
+      me.measures.defaults = false;
+    };
+
+    return me;
+  };
+
+  var Page = function(data, options) {
+    var me = this;
+
+    var defaults = {
+      max: 7,
+      rows: 10
+    };
+
+    var totalPages = function() {
+      return Math.ceil(data.length / me.rows);
+    };
+
+    me.number = 0;
+    me.max = options.pages !== null ? options.pages : defaults.max;
+    me.visible = me.max;
+    me.rows = options.rows.min !== null ? options.rows.min : defaults.rows;
+    me.total = totalPages();
+
+    me.setRows = function(newRows) {
+      me.rows = newRows;
+      me.total = totalPages();
+    };
+
+    me.setPageNumber = function(newPageNumber) {
+      if (newPageNumber < 0) newPageNumber = 0;
+      if (newPageNumber >= me.total) newPageNumber = me.total - 1;
+
+      me.number = newPageNumber;
+    };
+
+    me.setVisiblePages = function(visiblePages) {
+      me.visible = Math.min(me.max, visiblePages);
+      me.setPageNumber(me.number);
+    };
+
+    me.getVisiblePageRange = function() {
+      var start = me.number - Math.max(Math.floor((me.visible - 1) / 2), 0);
+      var end = me.number + Math.floor(me.visible / 2) + 1;
+      var pageCount = me.total;
+
+      if (start < 0) {
+        var diffToStart = 0 - start;
+        start += diffToStart;
+        end += diffToStart;
+      }
+
+      if (end > pageCount) {
+        var diffToEnd = end - pageCount;
+        start -= diffToEnd;
+        end -= diffToEnd;
+      }
+
+      start = start < 0 ? 0 : start;
+      end = end >= pageCount ? pageCount : end;
+
+      var first = false;
+      var last = false;
+
+      if (start > 0 && me.visible > 1) {
+        start = start + 1;
+        first = true;
+      }
+
+      if (end < pageCount && me.visible > 2) {
+        end = end - 1;
+        last = true;
+      }
+
+      return {
+        first: first,
+        start: start,
+        end: end,
+        last: last
+      };
+    };
+
+    me.getRowStart = function() {
+      var rowStart = page.number * page.rows;
+      if (rowStart < 0)
+        rowStart = 0;
+
+      return rowStart;
+    };
+
+    me.getRowEnd = function() {
+      var rowStart = me.getRowStart();
+      return Math.min(rowStart + me.rows, data.length);
+    };
+
+    me.getPaddingRows = function() {
+      var rowStart = me.getRowStart();
+      var rowEnd = me.getRowEnd();
+      return data.length > me.rows ? me.rows - (rowEnd - rowStart) : 0;
+    };
+  };
+
+  var Columns = function(data, columns, options) {
+    var me = this;
+
+    me.defaults = {
+      min: 5
+    };
+
+    me.number = 0;
+    me.visible = 0;
+    me.total = columns.length;
+    me.subset = [];
+    me.padding = 0;
+    me.min = options.columns.min !== null ? options.columns.min : me.defaults.min;
+    me.max = options.columns.max !== null ? options.columns.max : null;
+    me.widths = {};
+
+    var widthsLookAhead = Math.max(100, options.rows.min);
+    var paddingColChars = 10;
+
+    me.emptyNames = function() {
+      columns.forEach(function(column) {
+        if (columns.label !== null && columns.label !== "")
+          return false;
+      });
+
+      return true;
+    };
+
+    var parsePadding = function(value) {
+      return parseInt(value) >= 0 ? parseInt(value) : 0;
+    };
+
+    me.calculateWidths = function(measures) {
+      columns.forEach(function(column) {
+        var maxChars = Math.max(
+          column.label.toString().length,
+          column.type.toString().length
+        );
+
+        for (var idxRow = 0; idxRow < Math.min(widthsLookAhead, data.length); idxRow++) {
+          maxChars = Math.max(maxChars, data[idxRow][column.name.toString()].length);
+        }
+
+        me.widths[column.name] = {
+          // width in characters
+          chars: maxChars,
+          // width for the inner html columns
+          inner: maxChars * measures.character,
+          // width adding outer styles like padding
+          outer: maxChars * measures.character + measures.padding
+        };
+      });
+    };
+
+    me.getWidth = function() {
+      var widthOuter = 0;
+      for (var idxCol = 0; idxCol < me.subset.length; idxCol++) {
+        var columnName = me.subset[idxCol].name;
+        widthOuter = widthOuter + me.widths[columnName].outer;
+      }
+
+      widthOuter = widthOuter + me.padding * paddingColChars * measurer.measures.character;
+
+      if (me.hasMoreLeftColumns()) {
+        widthOuter = widthOuter + columnNavigationWidthPX + measurer.measures.padding;
+      }
+
+      if (me.hasMoreRightColumns()) {
+        widthOuter = widthOuter + columnNavigationWidthPX + measurer.measures.padding;
+      }
+
+      return widthOuter;
+    };
+
+    me.updateSlice = function() {
+      if (me.number + me.visible >= me.total)
+        me.number = me.total - me.visible;
+
+      if (me.number < 0) me.number = 0;
+
+      me.subset = columns.slice(me.number, Math.min(me.number + me.visible, me.total));
+
+      me.subset = me.subset.map(function(column) {
+        Object.keys(column).forEach(function(colKey) {
+          column[colKey] = column[colKey] === null ? "" : column[colKey].toString();
+        });
+
+        column.width = null;
+        return column;
+      });
+    };
+
+    me.setVisibleColumns = function(columnNumber, newVisibleColumns, paddingCount) {
+      me.number = columnNumber;
+      me.visible = newVisibleColumns;
+      me.padding = paddingCount;
+
+      me.updateSlice();
+    };
+
+    me.incColumnNumber = function(increment) {
+      me.number = me.number + increment;
+    };
+
+    me.setColumnNumber = function(newNumber) {
+      me.number = newNumber;
+    };
+
+    me.setPaddingCount = function(newPadding) {
+      me.padding = newPadding;
+    };
+
+    me.getPaddingCount = function() {
+      return me.padding;
+    };
+
+    me.hasMoreLeftColumns = function() {
+      return me.number > 0;
+    };
+
+    me.hasMoreRightColumns = function() {
+      return me.number + me.visible < me.total;
+    };
+
+    me.updateSlice(0);
+    return me;
+  };
+
+  var data = source.data;
+  var page = new Page(data, options);
+  var measurer = new Measurer(data, options);
+  var columns = new Columns(data, source.columns, options);
+
+  var table = null;
+  var tableDiv = null;
+  var header = null;
+  var footer = null;
+  var tbody = null;
+
+  // Caches pagedTable.clientWidth, specially for webkit
+  var cachedPagedTableClientWidth = null;
+
+  var onChangeCallbacks = [];
+
+  var clearSelection = function() {
+    if(document.selection && document.selection.empty) {
+      document.selection.empty();
+    } else if(window.getSelection) {
+      var sel = window.getSelection();
+      sel.removeAllRanges();
+    }
+  };
+
+  var columnNavigationWidthPX = 5;
+
+  var renderColumnNavigation = function(increment, backwards) {
+    var arrow = document.createElement("div");
+    arrow.setAttribute("style",
+      "border-top: " + columnNavigationWidthPX + "px solid transparent;" +
+      "border-bottom: " + columnNavigationWidthPX + "px solid transparent;" +
+      "border-" + (backwards ? "right" : "left") + ": " + columnNavigationWidthPX + "px solid;");
+
+    var header = document.createElement("th");
+    header.appendChild(arrow);
+    header.setAttribute("style",
+      "cursor: pointer;" +
+      "vertical-align: middle;" +
+      "min-width: " + columnNavigationWidthPX + "px;" +
+      "width: " + columnNavigationWidthPX + "px;");
+
+    header.onclick = function() {
+      columns.incColumnNumber(backwards ? -1 : increment);
+
+      me.animateColumns(backwards);
+      renderFooter();
+
+      clearSelection();
+      triggerOnChange();
+    };
+
+    return header;
+  };
+
+  var maxColumnWidth = function(width) {
+    var padding = 80;
+    var columnMax = Math.max(cachedPagedTableClientWidth - padding, 0);
+
+    return parseInt(width) > 0 ?
+      Math.min(columnMax, parseInt(width)) + "px" :
+      columnMax + "px";
+  };
+
+  var clearHeader = function() {
+    var thead = pagedTable.querySelectorAll("thead")[0];
+    thead.innerHTML = "";
+  };
+
+  var renderHeader = function(clear) {
+    cachedPagedTableClientWidth = pagedTable.clientWidth;
+
+    var fragment = document.createDocumentFragment();
+
+    header = document.createElement("tr");
+    fragment.appendChild(header);
+
+    if (columns.number > 0)
+      header.appendChild(renderColumnNavigation(-columns.visible, true));
+
+    columns.subset = columns.subset.map(function(columnData) {
+      var column = document.createElement("th");
+      column.setAttribute("align", columnData.align);
+      column.style.textAlign = columnData.align;
+
+      column.style.maxWidth = maxColumnWidth(null);
+      if (columnData.width) {
+        column.style.minWidth =
+          column.style.maxWidth = maxColumnWidth(columnData.width);
+      }
+
+      var columnName = document.createElement("div");
+      columnName.setAttribute("class", "pagedtable-header-name");
+      if (columnData.label === "") {
+        columnName.innerHTML = "&nbsp;";
+      }
+      else {
+        columnName.appendChild(document.createTextNode(columnData.label));
+      }
+      column.appendChild(columnName);
+
+      var columnType = document.createElement("div");
+      columnType.setAttribute("class", "pagedtable-header-type");
+      if (columnData.type === "") {
+        columnType.innerHTML = "&nbsp;";
+      }
+      else {
+        columnType.appendChild(document.createTextNode("<" + columnData.type + ">"));
+      }
+      column.appendChild(columnType);
+
+      header.appendChild(column);
+
+      columnData.element = column;
+
+      return columnData;
+    });
+
+    for (var idx = 0; idx < columns.getPaddingCount(); idx++) {
+      var paddingCol = document.createElement("th");
+      paddingCol.setAttribute("class", "pagedtable-padding-col");
+      header.appendChild(paddingCol);
+    }
+
+    if (columns.number + columns.visible < columns.total)
+      header.appendChild(renderColumnNavigation(columns.visible, false));
+
+    if (typeof(clear) == "undefined" || clear) clearHeader();
+    var thead = pagedTable.querySelectorAll("thead")[0];
+    thead.appendChild(fragment);
+  };
+
+  me.animateColumns = function(backwards) {
+    var thead = pagedTable.querySelectorAll("thead")[0];
+
+    var headerOld = thead.querySelectorAll("tr")[0];
+    var tbodyOld = table.querySelectorAll("tbody")[0];
+
+    me.fitColumns(backwards);
+
+    renderHeader(false);
+
+    header.style.opacity = "0";
+    header.style.transform = backwards ? "translateX(-30px)" : "translateX(30px)";
+    header.style.transition = "transform 200ms linear, opacity 200ms";
+    header.style.transitionDelay = "0";
+
+    renderBody(false);
+
+    if (headerOld) {
+      headerOld.style.position = "absolute";
+      headerOld.style.transform = "translateX(0px)";
+      headerOld.style.opacity = "1";
+      headerOld.style.transition = "transform 100ms linear, opacity 100ms";
+      headerOld.setAttribute("class", "pagedtable-remove-head");
+      if (headerOld.style.transitionEnd) {
+        headerOld.addEventListener("transitionend", function() {
+          var headerOldByClass = thead.querySelector(".pagedtable-remove-head");
+          if (headerOldByClass) thead.removeChild(headerOldByClass);
+        });
+      }
+      else {
+        thead.removeChild(headerOld);
+      }
+    }
+
+    if (tbodyOld) table.removeChild(tbodyOld);
+
+    tbody.style.opacity = "0";
+    tbody.style.transition = "transform 200ms linear, opacity 200ms";
+    tbody.style.transitionDelay = "0ms";
+
+    // force relayout
+    window.getComputedStyle(header).opacity;
+    window.getComputedStyle(tbody).opacity;
+
+    if (headerOld) {
+      headerOld.style.transform = backwards ? "translateX(20px)" : "translateX(-30px)";
+      headerOld.style.opacity = "0";
+    }
+
+    header.style.transform = "translateX(0px)";
+    header.style.opacity = "1";
+
+    tbody.style.opacity = "1";
+  }
+
+  me.onChange = function(callback) {
+    onChangeCallbacks.push(callback);
+  };
+
+  var triggerOnChange = function() {
+    onChangeCallbacks.forEach(function(onChange) {
+      onChange();
+    });
+  };
+
+  var clearBody = function() {
+    if (tbody) {
+      table.removeChild(tbody);
+      tbody = null;
+    }
+  };
+
+  var renderBody = function(clear) {
+    cachedPagedTableClientWidth = pagedTable.clientWidth
+
+    var fragment = document.createDocumentFragment();
+
+    var pageData = data.slice(page.getRowStart(), page.getRowEnd());
+
+    pageData.forEach(function(dataRow, idxRow) {
+      var htmlRow = document.createElement("tr");
+      htmlRow.setAttribute("class", (idxRow % 2 !==0) ? "even" : "odd");
+
+      if (columns.hasMoreLeftColumns())
+        htmlRow.appendChild(document.createElement("td"));
+
+      columns.subset.forEach(function(columnData) {
+        var cellName = columnData.name;
+        var dataCell = dataRow[cellName];
+        var htmlCell = document.createElement("td");
+
+        if (dataCell === "NA") htmlCell.setAttribute("class", "pagedtable-na-cell");
+        if (dataCell === "__NA__") dataCell = "NA";
+
+        var cellText = document.createTextNode(dataCell);
+        htmlCell.appendChild(cellText);
+        if (dataCell.length > 50) {
+          htmlCell.setAttribute("title", dataCell);
+        }
+        htmlCell.setAttribute("align", columnData.align);
+        htmlCell.style.textAlign = columnData.align;
+        htmlCell.style.maxWidth = maxColumnWidth(null);
+        if (columnData.width) {
+          htmlCell.style.minWidth = htmlCell.style.maxWidth = maxColumnWidth(columnData.width);
+        }
+        htmlRow.appendChild(htmlCell);
+      });
+
+      for (var idx = 0; idx < columns.getPaddingCount(); idx++) {
+        var paddingCol = document.createElement("td");
+        paddingCol.setAttribute("class", "pagedtable-padding-col");
+        htmlRow.appendChild(paddingCol);
+      }
+
+      if (columns.hasMoreRightColumns())
+        htmlRow.appendChild(document.createElement("td"));
+
+      fragment.appendChild(htmlRow);
+    });
+
+    for (var idxPadding = 0; idxPadding < page.getPaddingRows(); idxPadding++) {
+      var paddingRow = document.createElement("tr");
+
+      var paddingCellRow = document.createElement("td");
+      paddingCellRow.innerHTML = "&nbsp;";
+      paddingCellRow.setAttribute("colspan", "100%");
+      paddingRow.appendChild(paddingCellRow);
+
+      fragment.appendChild(paddingRow);
+    }
+
+    if (typeof(clear) == "undefined" || clear) clearBody();
+    tbody = document.createElement("tbody");
+    tbody.appendChild(fragment);
+
+    table.appendChild(tbody);
+  };
+
+  var getLabelInfo = function() {
+    var pageStart = page.getRowStart();
+    var pageEnd = page.getRowEnd();
+    var totalRows = data.length;
+
+    var totalRowsLabel = options.rows.total ? options.rows.total : totalRows;
+    var totalRowsLabelFormat = totalRowsLabel.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1,');
+
+    var infoText = (pageStart + 1) + "-" + pageEnd + " of " + totalRowsLabelFormat + " rows";
+    if (totalRows < page.rows) {
+      infoText = totalRowsLabel + " row" + (totalRows != 1 ? "s" : "");
+    }
+    if (columns.total > columns.visible) {
+      var totalColumnsLabel = options.columns.total ? options.columns.total : columns.total;
+
+      infoText = infoText + " | " + (columns.number + 1) + "-" +
+        (Math.min(columns.number + columns.visible, columns.total)) +
+        " of " + totalColumnsLabel + " columns";
+    }
+
+    return infoText;
+  };
+
+  var clearFooter = function() {
+    footer = pagedTable.querySelectorAll("div.pagedtable-footer")[0];
+    footer.innerHTML = "";
+
+    return footer;
+  };
+
+  var createPageLink = function(idxPage) {
+    var pageLink = document.createElement("a");
+    pageLinkClass = idxPage === page.number ? "pagedtable-index pagedtable-index-current" : "pagedtable-index";
+    pageLink.setAttribute("class", pageLinkClass);
+    pageLink.setAttribute("data-page-index", idxPage);
+    pageLink.onclick = function() {
+      page.setPageNumber(parseInt(this.getAttribute("data-page-index")));
+      renderBody();
+      renderFooter();
+
+      triggerOnChange();
+    };
+
+    pageLink.appendChild(document.createTextNode(idxPage + 1));
+
+    return pageLink;
+  }
+
+  var renderFooter = function() {
+    footer = clearFooter();
+
+    var next = document.createElement("a");
+    next.appendChild(document.createTextNode("Next"));
+    next.onclick = function() {
+      page.setPageNumber(page.number + 1);
+      renderBody();
+      renderFooter();
+
+      triggerOnChange();
+    };
+    if (data.length > page.rows) footer.appendChild(next);
+
+    var pageNumbers = document.createElement("div");
+    pageNumbers.setAttribute("class", "pagedtable-indexes");
+
+    var pageRange = page.getVisiblePageRange();
+
+    if (pageRange.first) {
+      var pageLink = createPageLink(0);
+      pageNumbers.appendChild(pageLink);
+
+      var pageSeparator = document.createElement("div");
+      pageSeparator.setAttribute("class", "pagedtable-index-separator-left");
+      pageSeparator.appendChild(document.createTextNode("..."))
+      pageNumbers.appendChild(pageSeparator);
+    }
+
+    for (var idxPage = pageRange.start; idxPage < pageRange.end; idxPage++) {
+      var pageLink = createPageLink(idxPage);
+
+      pageNumbers.appendChild(pageLink);
+    }
+
+    if (pageRange.last) {
+      var pageSeparator = document.createElement("div");
+      pageSeparator.setAttribute("class", "pagedtable-index-separator-right");
+      pageSeparator.appendChild(document.createTextNode("..."))
+      pageNumbers.appendChild(pageSeparator);
+
+      var pageLink = createPageLink(page.total - 1);
+      pageNumbers.appendChild(pageLink);
+    }
+
+    if (data.length > page.rows) footer.appendChild(pageNumbers);
+
+    var previous = document.createElement("a");
+    previous.appendChild(document.createTextNode("Previous"));
+    previous.onclick = function() {
+      page.setPageNumber(page.number - 1);
+      renderBody();
+      renderFooter();
+
+      triggerOnChange();
+    };
+    if (data.length > page.rows) footer.appendChild(previous);
+
+    var infoLabel = document.createElement("div");
+    infoLabel.setAttribute("class", "pagedtable-info");
+    infoLabel.setAttribute("title", getLabelInfo());
+    infoLabel.appendChild(document.createTextNode(getLabelInfo()));
+    footer.appendChild(infoLabel);
+
+    var enabledClass = "pagedtable-index-nav";
+    var disabledClass = "pagedtable-index-nav pagedtable-index-nav-disabled";
+    previous.setAttribute("class", page.number <= 0 ? disabledClass : enabledClass);
+    next.setAttribute("class", (page.number + 1) * page.rows >= data.length ? disabledClass : enabledClass);
+  };
+
+  var measuresCell = null;
+
+  var renderMeasures = function() {
+    var measuresTable = document.createElement("table");
+    measuresTable.style.visibility = "hidden";
+    measuresTable.style.position = "absolute";
+    measuresTable.style.whiteSpace = "nowrap";
+    measuresTable.style.height = "auto";
+    measuresTable.style.width = "auto";
+
+    var measuresRow = document.createElement("tr");
+    measuresTable.appendChild(measuresRow);
+
+    measuresCell = document.createElement("td");
+    var sampleString = "ABCDEFGHIJ0123456789";
+    measuresCell.appendChild(document.createTextNode(sampleString));
+
+    measuresRow.appendChild(measuresCell);
+
+    tableDiv.appendChild(measuresTable);
+  }
+
+  me.init = function() {
+    tableDiv = document.createElement("div");
+    pagedTable.appendChild(tableDiv);
+    var pagedTableClass = data.length > 0 ?
+      "pagedtable pagedtable-not-empty" :
+      "pagedtable pagedtable-empty";
+
+    if (columns.total == 0 || (columns.emptyNames() && data.length == 0)) {
+      pagedTableClass = pagedTableClass + " pagedtable-empty-columns";
+    }
+
+    tableDiv.setAttribute("class", pagedTableClass);
+
+    renderMeasures();
+    measurer.calculate(measuresCell);
+    columns.calculateWidths(measurer.measures);
+
+    table = document.createElement("table");
+    table.setAttribute("cellspacing", "0");
+    table.setAttribute("class", "table table-condensed");
+    tableDiv.appendChild(table);
+
+    table.appendChild(document.createElement("thead"));
+
+    var footerDiv = document.createElement("div");
+    footerDiv.setAttribute("class", "pagedtable-footer");
+    tableDiv.appendChild(footerDiv);
+
+    // if the host has not yet provided horizontal space, render hidden
+    if (tableDiv.clientWidth <= 0) {
+      tableDiv.style.opacity = "0";
+    }
+
+    me.render();
+
+    // retry seizing columns later if the host has not provided space
+    function retryFit() {
+      if (tableDiv.clientWidth <= 0) {
+        setTimeout(retryFit, 100);
+      } else {
+        me.render();
+        triggerOnChange();
+      }
+    }
+    if (tableDiv.clientWidth <= 0) {
+      retryFit();
+    }
+  };
+
+  var registerWidths = function() {
+    columns.subset = columns.subset.map(function(column) {
+      column.width = columns.widths[column.name].inner;
+      return column;
+    });
+  };
+
+  var parsePadding = function(value) {
+    return parseInt(value) >= 0 ? parseInt(value) : 0;
+  };
+
+  me.fixedHeight = function() {
+    return options.rows.max != null;
+  }
+
+  me.fitRows = function() {
+    if (me.fixedHeight())
+      return;
+
+    measurer.calculate(measuresCell);
+
+    var rows = options.rows.min !== null ? options.rows.min : 0;
+    var headerHeight = header !== null && header.offsetHeight > 0 ? header.offsetHeight : 0;
+    var footerHeight = footer !== null && footer.offsetHeight > 0 ? footer.offsetHeight : 0;
+
+    if (pagedTable.offsetHeight > 0) {
+      var availableHeight = pagedTable.offsetHeight - headerHeight - footerHeight;
+      rows = Math.floor((availableHeight) / measurer.measures.height);
+    }
+
+    rows = options.rows.min !== null ? Math.max(options.rows.min, rows) : rows;
+
+    page.setRows(rows);
+  }
+
+  // The goal of this function is to add as many columns as possible
+  // starting from left-to-right, when the right most limit is reached
+  // it tries to add columns from the left as well.
+  //
+  // When startBackwards is true columns are added from right-to-left
+  me.fitColumns = function(startBackwards) {
+    measurer.calculate(measuresCell);
+    columns.calculateWidths(measurer.measures);
+
+    if (tableDiv.clientWidth > 0) {
+      tableDiv.style.opacity = 1;
+    }
+
+    var visibleColumns = tableDiv.clientWidth <= 0 ? Math.max(columns.min, 1) : 1;
+    var columnNumber = columns.number;
+    var paddingCount = 0;
+
+    // track a list of added columns as we build the visible ones to allow us
+    // to remove columns when they don't fit anymore.
+    var columnHistory = [];
+
+    var lastTableHeight = 0;
+    var backwards = startBackwards;
+
+    var tableDivStyle = window.getComputedStyle(tableDiv, null);
+    var tableDivPadding = parsePadding(tableDivStyle.paddingLeft) +
+      parsePadding(tableDivStyle.paddingRight);
+
+    var addPaddingCol = false;
+    var currentWidth = 0;
+
+    while (true) {
+      columns.setVisibleColumns(columnNumber, visibleColumns, paddingCount);
+      currentWidth = columns.getWidth();
+
+      if (tableDiv.clientWidth - tableDivPadding < currentWidth) {
+        break;
+      }
+
+      columnHistory.push({
+        columnNumber: columnNumber,
+        visibleColumns: visibleColumns,
+        paddingCount: paddingCount
+      });
+
+      if (columnHistory.length > 100) {
+        console.error("More than 100 tries to fit columns, aborting");
+        break;
+      }
+
+      if (columns.max !== null &&
+        columns.visible + columns.getPaddingCount() >= columns.max) {
+        break;
+      }
+
+      // if we run out of right-columns
+      if (!backwards && columnNumber + columns.visible >= columns.total) {
+        // if we started adding right-columns, try adding left-columns
+        if (!startBackwards && columnNumber > 0) {
+          backwards = true;
+        }
+        else if (columns.min === null || visibleColumns + columns.getPaddingCount() >= columns.min) {
+          break;
+        }
+        else {
+          paddingCount = paddingCount + 1;
+        }
+      }
+
+      // if we run out of left-columns
+      if (backwards && columnNumber == 0) {
+        // if we started adding left-columns, try adding right-columns
+        if (startBackwards && columnNumber + columns.visible < columns.total) {
+          backwards = false;
+        }
+        else if (columns.min === null || visibleColumns + columns.getPaddingCount() >= columns.min) {
+          break;
+        }
+        else {
+          paddingCount = paddingCount + 1;
+        }
+      }
+
+      // when moving backwards try fitting left columns first
+      if (backwards && columnNumber > 0) {
+        columnNumber = columnNumber - 1;
+      }
+
+      if (columnNumber + visibleColumns < columns.total) {
+        visibleColumns = visibleColumns + 1;
+      }
+    }
+
+    var lastRenderableColumn = {
+        columnNumber: columnNumber,
+        visibleColumns: visibleColumns,
+        paddingCount: paddingCount
+    };
+
+    if (columnHistory.length > 0) {
+      lastRenderableColumn = columnHistory[columnHistory.length - 1];
+    }
+
+    columns.setVisibleColumns(
+      lastRenderableColumn.columnNumber,
+      lastRenderableColumn.visibleColumns,
+      lastRenderableColumn.paddingCount);
+
+    if (pagedTable.offsetWidth > 0) {
+      page.setVisiblePages(Math.max(Math.ceil(1.0 * (pagedTable.offsetWidth - 250) / 40), 2));
+    }
+
+    registerWidths();
+  };
+
+  me.fit = function(startBackwards) {
+    me.fitRows();
+    me.fitColumns(startBackwards);
+  }
+
+  me.render = function() {
+    me.fitColumns(false);
+
+    // render header/footer to measure height accurately
+    renderHeader();
+    renderFooter();
+
+    me.fitRows();
+    renderBody();
+
+    // re-render footer to match new rows
+    renderFooter();
+  }
+
+  var resizeLastWidth = -1;
+  var resizeLastHeight = -1;
+  var resizeNewWidth = -1;
+  var resizeNewHeight = -1;
+  var resizePending = false;
+
+  me.resize = function(newWidth, newHeight) {
+
+    function resizeDelayed() {
+      resizePending = false;
+
+      if (
+        (resizeNewWidth !== resizeLastWidth) ||
+        (!me.fixedHeight() && resizeNewHeight !== resizeLastHeight)
+      ) {
+        resizeLastWidth = resizeNewWidth;
+        resizeLastHeight = resizeNewHeight;
+
+        setTimeout(resizeDelayed, 200);
+        resizePending = true;
+      } else {
+        me.render();
+        triggerOnChange();
+
+        resizeLastWidth = -1;
+        resizeLastHeight = -1;
+      }
+    }
+
+    resizeNewWidth = newWidth;
+    resizeNewHeight = newHeight;
+
+    if (!resizePending) resizeDelayed();
+  };
+};
+
+var PagedTableDoc;
+(function (PagedTableDoc) {
+  var allPagedTables = [];
+
+  PagedTableDoc.initAll = function() {
+    allPagedTables = [];
+
+    var pagedTables = [].slice.call(document.querySelectorAll('[data-pagedtable="false"],[data-pagedtable=""]'));
+    pagedTables.forEach(function(pagedTable, idx) {
+      pagedTable.setAttribute("data-pagedtable", "true");
+      pagedTable.setAttribute("pagedtable-page", 0);
+      pagedTable.setAttribute("class", "pagedtable-wrapper");
+
+      var pagedTableInstance = new PagedTable(pagedTable);
+      pagedTableInstance.init();
+
+      allPagedTables.push(pagedTableInstance);
+    });
+  };
+
+  PagedTableDoc.resizeAll = function() {
+    allPagedTables.forEach(function(pagedTable) {
+      pagedTable.render();
+    });
+  };
+
+  window.addEventListener("resize", PagedTableDoc.resizeAll);
+
+  return PagedTableDoc;
+})(PagedTableDoc || (PagedTableDoc = {}));
+
+window.onload = function() {
+  PagedTableDoc.initAll();
+};
+</script>
 
 
 <style type="text/css">code{white-space: pre;}</style>
@@ -302,8 +1573,12 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 
 
 <style>
-   table {
-    width: 100%;
+  table {
+     width: 100%;
+  }
+  
+  th, td {
+    font-size: 8pt;
   }
 </style>
 <div id="overview" class="section level3">
@@ -326,7 +1601,11 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <p>This will print out the API calls it makes to build up the data set so the user is informed of where in the process the select method is.</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="co"># Set autoPage = FALSE for example so we don't have the entire data set.</span></a>
 <a class="sourceLine" id="cb2-2" data-line-number="2"><span class="co"># We will also limit the columns to 9 and rows to 10 so that the table looks OK in the HTML.</span></a>
-<a class="sourceLine" id="cb2-3" data-line-number="3">dataSet &lt;-<span class="st"> </span>rds.r<span class="op">::</span><span class="kw">select</span>(dataProduct, <span class="dt">colLimit =</span> <span class="dv">9</span>, <span class="dt">limit =</span><span class="dv">10</span>, <span class="dt">autoPage =</span> <span class="ot">FALSE</span>)</a></code></pre></div>
+<a class="sourceLine" id="cb2-3" data-line-number="3">dataSet &lt;-</a>
+<a class="sourceLine" id="cb2-4" data-line-number="4"><span class="st">  </span>rds.r<span class="op">::</span><span class="kw">select</span>(dataProduct,</a>
+<a class="sourceLine" id="cb2-5" data-line-number="5">                <span class="dt">colLimit =</span> <span class="dv">9</span>,</a>
+<a class="sourceLine" id="cb2-6" data-line-number="6">                <span class="dt">limit =</span> <span class="dv">10</span>,</a>
+<a class="sourceLine" id="cb2-7" data-line-number="7">                <span class="dt">autoPage =</span> <span class="ot">FALSE</span>)</a></code></pre></div>
 <pre><code>## [1] &quot;http://dev.richdataservices.com/rds/api/query/uscensus/census2010-hp/select?limit=10&amp;offset=0&amp;colLimit=9&amp;metadata=TRUE&quot;</code></pre>
 <div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" data-line-number="1"><span class="kw">kable</span>(dataSet<span class="op">@</span>records)</a></code></pre></div>
 <table>
@@ -461,90 +1740,90 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <h4>Getting the Metadata</h4>
 <p>In addition to the records, every data set returned by the select method will include any variable metadata that is associated with the data set.</p>
 <div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1"><span class="co"># Showing just 6 columns for the sake of space.</span></a>
-<a class="sourceLine" id="cb5-2" data-line-number="2"><span class="kw">kable</span>(dataSet<span class="op">@</span>variables[<span class="kw">c</span>(<span class="dv">4</span>,<span class="dv">3</span>,<span class="dv">7</span>,<span class="dv">6</span>,<span class="dv">1</span>,<span class="dv">13</span>)])</a></code></pre></div>
+<a class="sourceLine" id="cb5-2" data-line-number="2"><span class="kw">kable</span>(dataSet<span class="op">@</span>variables[<span class="kw">c</span>(<span class="dv">4</span>, <span class="dv">3</span>, <span class="dv">7</span>, <span class="dv">6</span>, <span class="dv">1</span>, <span class="dv">13</span>)])</a></code></pre></div>
 <table>
 <thead>
 <tr class="header">
-<th align="right">index</th>
 <th align="left">id</th>
-<th align="left">name</th>
+<th align="right">fixedStorageWidth</th>
 <th align="left">label</th>
+<th align="left">isPrivate</th>
 <th align="left">dataType</th>
-<th align="left">classificationUri</th>
+<th align="left">uri</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td align="right">1</td>
 <td align="left">SERIALNO</td>
-<td align="left">SERIALNO</td>
-<td align="left">Housing/Group Quarters (GQ) Unit Serial Number</td>
-<td align="left">TEXT</td>
-<td align="left">NA</td>
-</tr>
-<tr class="even">
-<td align="right">2</td>
-<td align="left">STATE</td>
-<td align="left">STATE</td>
-<td align="left">FIPS State Code</td>
-<td align="left">TEXT</td>
-<td align="left">362de6e2-1cc7-4e84-93f0-5b1c7031b6cf</td>
-</tr>
-<tr class="odd">
-<td align="right">3</td>
-<td align="left">REGION</td>
-<td align="left">REGION</td>
-<td align="left">Region Code</td>
-<td align="left">TEXT</td>
-<td align="left">78cdd740-bbf1-4ae1-977d-630b3b700232</td>
-</tr>
-<tr class="even">
-<td align="right">4</td>
-<td align="left">DIVISION</td>
-<td align="left">DIVISION</td>
-<td align="left">Division Code</td>
-<td align="left">TEXT</td>
-<td align="left">d00d6c42-feb9-4c77-bee3-6a64bba2821c</td>
-</tr>
-<tr class="odd">
-<td align="right">5</td>
-<td align="left">PUMA</td>
-<td align="left">PUMA</td>
-<td align="left">Public Use Microdata Area Code (PUMA)</td>
-<td align="left">TEXT</td>
-<td align="left">NA</td>
-</tr>
-<tr class="even">
-<td align="right">6</td>
-<td align="left">TOTAREA</td>
-<td align="left">TOTAREA</td>
-<td align="left">Total Area of PUMA</td>
-<td align="left">TEXT</td>
-<td align="left">NA</td>
-</tr>
-<tr class="odd">
 <td align="right">7</td>
-<td align="left">LANDAREA</td>
-<td align="left">LANDAREA</td>
-<td align="left">Land Area of PUMA</td>
-<td align="left">TEXT</td>
-<td align="left">NA</td>
+<td align="left">Housing/Group Quarters (GQ) Unit Serial Number</td>
+<td align="left">FALSE</td>
+<td align="left">NUMERIC</td>
+<td align="left">89c21b39-0ed6-4f0f-b6a3-eb89677e2a8e</td>
 </tr>
 <tr class="even">
-<td align="right">8</td>
-<td align="left">SUBSAMPL</td>
-<td align="left">SUBSAMPL</td>
-<td align="left">Subsample number</td>
+<td align="left">STATE</td>
+<td align="right">2</td>
+<td align="left">FIPS State Code</td>
+<td align="left">FALSE</td>
 <td align="left">TEXT</td>
-<td align="left">NA</td>
+<td align="left">2cbe454f-b136-4cd1-8455-8ce07d5e7336</td>
 </tr>
 <tr class="odd">
-<td align="right">9</td>
-<td align="left">HWEIGHT</td>
-<td align="left">HWEIGHT</td>
-<td align="left">Housing unit weight</td>
+<td align="left">REGION</td>
+<td align="right">1</td>
+<td align="left">Region Code</td>
+<td align="left">FALSE</td>
 <td align="left">TEXT</td>
-<td align="left">NA</td>
+<td align="left">c77f66d4-e1f5-4553-a828-4df90a8f241d</td>
+</tr>
+<tr class="even">
+<td align="left">DIVISION</td>
+<td align="right">1</td>
+<td align="left">Division Code</td>
+<td align="left">FALSE</td>
+<td align="left">TEXT</td>
+<td align="left">575fdbaf-a51c-41a4-9eeb-067466864072</td>
+</tr>
+<tr class="odd">
+<td align="left">PUMA</td>
+<td align="right">5</td>
+<td align="left">Public Use Microdata Area Code (PUMA)</td>
+<td align="left">FALSE</td>
+<td align="left">TEXT</td>
+<td align="left">509b8a46-1a31-433e-9815-8b236cbd144e</td>
+</tr>
+<tr class="even">
+<td align="left">TOTAREA</td>
+<td align="right">14</td>
+<td align="left">Total Area of PUMA</td>
+<td align="left">FALSE</td>
+<td align="left">NUMERIC</td>
+<td align="left">c4a7d02d-2fc3-4140-8612-10413c271afc</td>
+</tr>
+<tr class="odd">
+<td align="left">LANDAREA</td>
+<td align="right">14</td>
+<td align="left">Land Area of PUMA</td>
+<td align="left">FALSE</td>
+<td align="left">NUMERIC</td>
+<td align="left">bb879cfe-023d-4cfc-b322-0bfb846705ef</td>
+</tr>
+<tr class="even">
+<td align="left">SUBSAMPL</td>
+<td align="right">2</td>
+<td align="left">Subsample number</td>
+<td align="left">FALSE</td>
+<td align="left">NUMERIC</td>
+<td align="left">a489ec9a-9d8b-4c7b-b796-d1afbf8d9a90</td>
+</tr>
+<tr class="odd">
+<td align="left">HWEIGHT</td>
+<td align="right">2</td>
+<td align="left">Housing unit weight</td>
+<td align="left">FALSE</td>
+<td align="left">NUMERIC</td>
+<td align="left">08b62029-67b5-4d60-9ef2-05c9b4a5ebe1</td>
 </tr>
 </tbody>
 </table>
@@ -554,144 +1833,33 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <h3>Injecting Metadata</h3>
 <p>In the case that the values of a variable are coded variables and the codes are documented in RDS we can inject these into the returned records with the <code>inject</code> parameter. <strong>Notice that the state, region, and division variables have had their numeric codes replaced with the code label.</strong></p>
 <div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" data-line-number="1"><span class="co"># Set autoPage = FALSE for example so we don't have the entire data set.</span></a>
-<a class="sourceLine" id="cb6-2" data-line-number="2"><span class="co"># We will also limit the columns to 9 and rows to 10 so that the table looks OK in the HTML.</span></a>
-<a class="sourceLine" id="cb6-3" data-line-number="3">dataSet &lt;-<span class="st"> </span>rds.r<span class="op">::</span><span class="kw">select</span>(dataProduct, <span class="dt">colLimit =</span> <span class="dv">9</span>, <span class="dt">limit =</span> <span class="dv">10</span>, <span class="dt">autoPage =</span> <span class="ot">FALSE</span>, <span class="dt">inject =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
-<pre><code>## [1] &quot;http://dev.richdataservices.com/rds/api/query/uscensus/census2010-hp/select?limit=10&amp;offset=0&amp;colLimit=9&amp;inject=TRUE&amp;metadata=TRUE&quot;</code></pre>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" data-line-number="1"><span class="kw">kable</span>(dataSet<span class="op">@</span>records)</a></code></pre></div>
-<table>
-<thead>
-<tr class="header">
-<th align="left">SERIALNO</th>
-<th align="left">STATE</th>
-<th align="left">REGION</th>
-<th align="left">DIVISION</th>
-<th align="left">PUMA</th>
-<th align="left">TOTAREA</th>
-<th align="left">LANDAREA</th>
-<th align="left">SUBSAMPL</th>
-<th align="left">HWEIGHT</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td align="left">1</td>
-<td align="left">District of Columbia</td>
-<td align="left">South</td>
-<td align="left">South Atlantic</td>
-<td align="left">00101</td>
-<td align="left">38961472</td>
-<td align="left">36805772</td>
-<td align="left">73</td>
-<td align="left">10</td>
-</tr>
-<tr class="even">
-<td align="left">2</td>
-<td align="left">District of Columbia</td>
-<td align="left">South</td>
-<td align="left">South Atlantic</td>
-<td align="left">00101</td>
-<td align="left">38961472</td>
-<td align="left">36805772</td>
-<td align="left">54</td>
-<td align="left">10</td>
-</tr>
-<tr class="odd">
-<td align="left">2</td>
-<td align="left">District of Columbia</td>
-<td align="left">South</td>
-<td align="left">South Atlantic</td>
-<td align="left">00101</td>
-<td align="left">38961472</td>
-<td align="left">36805772</td>
-<td align="left">54</td>
-<td align="left">10</td>
-</tr>
-<tr class="even">
-<td align="left">3</td>
-<td align="left">District of Columbia</td>
-<td align="left">South</td>
-<td align="left">South Atlantic</td>
-<td align="left">00101</td>
-<td align="left">38961472</td>
-<td align="left">36805772</td>
-<td align="left">62</td>
-<td align="left">10</td>
-</tr>
-<tr class="odd">
-<td align="left">4</td>
-<td align="left">District of Columbia</td>
-<td align="left">South</td>
-<td align="left">South Atlantic</td>
-<td align="left">00101</td>
-<td align="left">38961472</td>
-<td align="left">36805772</td>
-<td align="left">50</td>
-<td align="left">10</td>
-</tr>
-<tr class="even">
-<td align="left">7</td>
-<td align="left">District of Columbia</td>
-<td align="left">South</td>
-<td align="left">South Atlantic</td>
-<td align="left">00101</td>
-<td align="left">38961472</td>
-<td align="left">36805772</td>
-<td align="left">26</td>
-<td align="left">10</td>
-</tr>
-<tr class="odd">
-<td align="left">8</td>
-<td align="left">District of Columbia</td>
-<td align="left">South</td>
-<td align="left">South Atlantic</td>
-<td align="left">00101</td>
-<td align="left">38961472</td>
-<td align="left">36805772</td>
-<td align="left">80</td>
-<td align="left">10</td>
-</tr>
-<tr class="even">
-<td align="left">9</td>
-<td align="left">District of Columbia</td>
-<td align="left">South</td>
-<td align="left">South Atlantic</td>
-<td align="left">00101</td>
-<td align="left">38961472</td>
-<td align="left">36805772</td>
-<td align="left">84</td>
-<td align="left">10</td>
-</tr>
-<tr class="odd">
-<td align="left">9</td>
-<td align="left">District of Columbia</td>
-<td align="left">South</td>
-<td align="left">South Atlantic</td>
-<td align="left">00101</td>
-<td align="left">38961472</td>
-<td align="left">36805772</td>
-<td align="left">84</td>
-<td align="left">10</td>
-</tr>
-<tr class="even">
-<td align="left">10</td>
-<td align="left">District of Columbia</td>
-<td align="left">South</td>
-<td align="left">South Atlantic</td>
-<td align="left">00101</td>
-<td align="left">38961472</td>
-<td align="left">36805772</td>
-<td align="left">66</td>
-<td align="left">10</td>
-</tr>
-</tbody>
-</table>
+<a class="sourceLine" id="cb6-2" data-line-number="2"><span class="co"># We will also limit the rows to 5 so that the table looks OK in the HTML.</span></a>
+<a class="sourceLine" id="cb6-3" data-line-number="3">dataSet &lt;-</a>
+<a class="sourceLine" id="cb6-4" data-line-number="4"><span class="st">  </span>rds.r<span class="op">::</span><span class="kw">select</span>(dataProduct,</a>
+<a class="sourceLine" id="cb6-5" data-line-number="5">                <span class="dt">limit =</span> <span class="dv">5</span>,</a>
+<a class="sourceLine" id="cb6-6" data-line-number="6">                <span class="dt">autoPage =</span> <span class="ot">FALSE</span>,</a>
+<a class="sourceLine" id="cb6-7" data-line-number="7">                <span class="dt">inject =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
+<pre><code>## [1] &quot;http://dev.richdataservices.com/rds/api/query/uscensus/census2010-hp/select?limit=5&amp;offset=0&amp;inject=TRUE&amp;metadata=TRUE&quot;</code></pre>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" data-line-number="1"><span class="kw">paged_table</span>(dataSet<span class="op">@</span>records)</a></code></pre></div>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["SERIALNO"],"name":[1],"type":["fctr"],"align":["left"]},{"label":["STATE"],"name":[2],"type":["fctr"],"align":["left"]},{"label":["REGION"],"name":[3],"type":["fctr"],"align":["left"]},{"label":["DIVISION"],"name":[4],"type":["fctr"],"align":["left"]},{"label":["PUMA"],"name":[5],"type":["fctr"],"align":["left"]},{"label":["TOTAREA"],"name":[6],"type":["fctr"],"align":["left"]},{"label":["LANDAREA"],"name":[7],"type":["fctr"],"align":["left"]},{"label":["SUBSAMPL"],"name":[8],"type":["fctr"],"align":["left"]},{"label":["HWEIGHT"],"name":[9],"type":["fctr"],"align":["left"]},{"label":["PERSONS"],"name":[10],"type":["fctr"],"align":["left"]},{"label":["UNITTYPE"],"name":[11],"type":["fctr"],"align":["left"]},{"label":["HSUBFLG"],"name":[12],"type":["fctr"],"align":["left"]},{"label":["VACS"],"name":[13],"type":["fctr"],"align":["left"]},{"label":["VACSA"],"name":[14],"type":["fctr"],"align":["left"]},{"label":["TENURE"],"name":[15],"type":["fctr"],"align":["left"]},{"label":["TENUREA"],"name":[16],"type":["fctr"],"align":["left"]},{"label":["HHT"],"name":[17],"type":["fctr"],"align":["left"]},{"label":["P60"],"name":[18],"type":["fctr"],"align":["left"]},{"label":["P65"],"name":[19],"type":["fctr"],"align":["left"]},{"label":["P18"],"name":[20],"type":["fctr"],"align":["left"]},{"label":["NPF"],"name":[21],"type":["fctr"],"align":["left"]},{"label":["NOCH"],"name":[22],"type":["fctr"],"align":["left"]},{"label":["NRCH"],"name":[23],"type":["fctr"],"align":["left"]},{"label":["PAOC"],"name":[24],"type":["fctr"],"align":["left"]},{"label":["PARC"],"name":[25],"type":["fctr"],"align":["left"]},{"label":["UPART"],"name":[26],"type":["fctr"],"align":["left"]},{"label":["MULTG"],"name":[27],"type":["fctr"],"align":["left"]},{"label":["PNUM"],"name":[28],"type":["fctr"],"align":["left"]},{"label":["PSUB"],"name":[29],"type":["fctr"],"align":["left"]},{"label":["PWEIGHT"],"name":[30],"type":["fctr"],"align":["left"]},{"label":["RELATE"],"name":[31],"type":["fctr"],"align":["left"]},{"label":["RELATEA"],"name":[32],"type":["fctr"],"align":["left"]},{"label":["OC"],"name":[33],"type":["fctr"],"align":["left"]},{"label":["RC"],"name":[34],"type":["fctr"],"align":["left"]},{"label":["SEX"],"name":[35],"type":["fctr"],"align":["left"]},{"label":["SEXA"],"name":[36],"type":["fctr"],"align":["left"]},{"label":["SSPA"],"name":[37],"type":["fctr"],"align":["left"]},{"label":["AGE"],"name":[38],"type":["fctr"],"align":["left"]},{"label":["AGEA"],"name":[39],"type":["fctr"],"align":["left"]},{"label":["QTRBIR"],"name":[40],"type":["fctr"],"align":["left"]},{"label":["HISPAN"],"name":[41],"type":["fctr"],"align":["left"]},{"label":["HISPANA"],"name":[42],"type":["fctr"],"align":["left"]},{"label":["NUMRACE"],"name":[43],"type":["fctr"],"align":["left"]},{"label":["WHITE"],"name":[44],"type":["fctr"],"align":["left"]},{"label":["BLACK"],"name":[45],"type":["fctr"],"align":["left"]},{"label":["AIAN"],"name":[46],"type":["fctr"],"align":["left"]},{"label":["ASIAN"],"name":[47],"type":["fctr"],"align":["left"]},{"label":["NHAW"],"name":[48],"type":["fctr"],"align":["left"]},{"label":["OPI"],"name":[49],"type":["fctr"],"align":["left"]},{"label":["OTHER"],"name":[50],"type":["fctr"],"align":["left"]},{"label":["RACESHORT"],"name":[51],"type":["fctr"],"align":["left"]},{"label":["RACEDET"],"name":[52],"type":["fctr"],"align":["left"]},{"label":["RACECHKBX"],"name":[53],"type":["fctr"],"align":["left"]},{"label":["RACEA"],"name":[54],"type":["fctr"],"align":["left"]},{"label":["GQTYP"],"name":[55],"type":["fctr"],"align":["left"]},{"label":["GQTYPA"],"name":[56],"type":["fctr"],"align":["left"]}],"data":[{"1":"1","2":"District of Columbia","3":"South","4":"South Atlantic","5":"00101","6":"38961472","7":"36805772","8":"73","9":"10","10":"2","11":"Housing unit","12":"No","13":"Not in universe (occupied or GQ)","14":"0","15":"Owned by you or someone in this household with a mortgage or loan","16":"0","17":"Husband-wife family household","18":"1","19":"0","20":"0","21":"2","22":"0","23":"0","24":"No own children under 18 years","25":"No related children under 18 years","26":"All other households","27":"Not a multigenerational household","28":"2","29":"No","30":"10","31":"Husband/wife","32":"No","33":"0","34":"0","35":"Female","36":"No","37":"No","38":"58","39":"No","40":"Q2","41":"Not Hispanic or Latino","42":"No","43":"1","44":"Yes","45":"No","46":"No","47":"No","48":"No","49":"No","50":"No","51":"White alone","52":"White alone","53":"White alone","54":"No","55":"Not in a GQ","56":"No"},{"1":"2","2":"District of Columbia","3":"South","4":"South Atlantic","5":"00101","6":"38961472","7":"36805772","8":"54","9":"10","10":"2","11":"Housing unit","12":"No","13":"Not in universe (occupied or GQ)","14":"0","15":"Rented","16":"0","17":"Husband-wife family household","18":"0","19":"0","20":"0","21":"2","22":"0","23":"0","24":"No own children under 18 years","25":"No related children under 18 years","26":"All other households","27":"Not a multigenerational household","28":"1","29":"No","30":"10","31":"Householder","32":"No","33":"0","34":"0","35":"Male","36":"No","37":"No","38":"49","39":"No","40":"Q1","41":"Not Hispanic or Latino","42":"No","43":"1","44":"Yes","45":"No","46":"No","47":"No","48":"No","49":"No","50":"No","51":"White alone","52":"White alone","53":"White alone","54":"No","55":"Not in a GQ","56":"No"},{"1":"2","2":"District of Columbia","3":"South","4":"South Atlantic","5":"00101","6":"38961472","7":"36805772","8":"54","9":"10","10":"2","11":"Housing unit","12":"No","13":"Not in universe (occupied or GQ)","14":"0","15":"Rented","16":"0","17":"Husband-wife family household","18":"0","19":"0","20":"0","21":"2","22":"0","23":"0","24":"No own children under 18 years","25":"No related children under 18 years","26":"All other households","27":"Not a multigenerational household","28":"2","29":"No","30":"10","31":"Husband/wife","32":"No","33":"0","34":"0","35":"Female","36":"No","37":"No","38":"41","39":"No","40":"Q1","41":"Not Hispanic or Latino","42":"No","43":"1","44":"Yes","45":"No","46":"No","47":"No","48":"No","49":"No","50":"No","51":"White alone","52":"White alone","53":"White alone","54":"No","55":"Not in a GQ","56":"No"},{"1":"3","2":"District of Columbia","3":"South","4":"South Atlantic","5":"00101","6":"38961472","7":"36805772","8":"62","9":"10","10":"1","11":"Housing unit","12":"No","13":"Not in universe (occupied or GQ)","14":"0","15":"Owned by you or someone in this household with a mortgage or loan","16":"0","17":"Nonfamily household:  Female householder, living alone","18":"1","19":"0","20":"0","21":"0","22":"0","23":"0","24":"No own children under 18 years","25":"No related children under 18 years","26":"All other households","27":"Not a multigenerational household","28":"1","29":"No","30":"10","31":"Householder","32":"No","33":"0","34":"0","35":"Female","36":"No","37":"No","38":"63","39":"No","40":"Q2","41":"Not Hispanic or Latino","42":"No","43":"1","44":"Yes","45":"No","46":"No","47":"No","48":"No","49":"No","50":"No","51":"White alone","52":"White alone","53":"White alone","54":"No","55":"Not in a GQ","56":"No"},{"1":"4","2":"District of Columbia","3":"South","4":"South Atlantic","5":"00101","6":"38961472","7":"36805772","8":"50","9":"10","10":"1","11":"Housing unit","12":"No","13":"Not in universe (occupied or GQ)","14":"0","15":"Owned by you or someone in this household free and clear (without a mortgage or loan)","16":"0","17":"Nonfamily household:  Female householder, living alone","18":"1","19":"1","20":"0","21":"0","22":"0","23":"0","24":"No own children under 18 years","25":"No related children under 18 years","26":"All other households","27":"Not a multigenerational household","28":"1","29":"No","30":"10","31":"Householder","32":"No","33":"0","34":"0","35":"Female","36":"No","37":"No","38":"66","39":"No","40":"Q2","41":"Not Hispanic or Latino","42":"No","43":"1","44":"Yes","45":"No","46":"No","47":"No","48":"No","49":"No","50":"No","51":"White alone","52":"White alone","53":"White alone","54":"No","55":"Not in a GQ","56":"No"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
 </div>
 <div id="selecting-columns" class="section level3">
 <h3>Selecting Columns</h3>
 <p>RDS allows for a number of different ways to search for variable data. Users can provide the name, a regex, or keyword to search on.</p>
 <div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" data-line-number="1"><span class="co"># We will search for SerialNO directly, anything that starts with P (regex)</span></a>
-<a class="sourceLine" id="cb9-2" data-line-number="2">dataSet &lt;-<span class="st"> </span>rds.r<span class="op">::</span><span class="kw">select</span>(dataProduct, <span class="dt">cols=</span><span class="st">&quot;serialno,p.*&quot;</span>, <span class="dt">limit =</span> <span class="dv">10</span>, <span class="dt">autoPage =</span> <span class="ot">FALSE</span>, <span class="dt">inject =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
-<pre><code>## [1] &quot;http://dev.richdataservices.com/rds/api/query/uscensus/census2010-hp/select?limit=10&amp;offset=0&amp;cols=serialno%2cp.%2a&amp;inject=TRUE&amp;metadata=TRUE&quot;</code></pre>
+<a class="sourceLine" id="cb9-2" data-line-number="2">dataSet &lt;-</a>
+<a class="sourceLine" id="cb9-3" data-line-number="3"><span class="st">  </span>rds.r<span class="op">::</span><span class="kw">select</span>(</a>
+<a class="sourceLine" id="cb9-4" data-line-number="4">    dataProduct,</a>
+<a class="sourceLine" id="cb9-5" data-line-number="5">    <span class="dt">cols =</span> <span class="st">&quot;serialno,p.*&quot;</span>,</a>
+<a class="sourceLine" id="cb9-6" data-line-number="6">    <span class="dt">limit =</span> <span class="dv">5</span>,</a>
+<a class="sourceLine" id="cb9-7" data-line-number="7">    <span class="dt">autoPage =</span> <span class="ot">FALSE</span>,</a>
+<a class="sourceLine" id="cb9-8" data-line-number="8">    <span class="dt">inject =</span> <span class="ot">TRUE</span></a>
+<a class="sourceLine" id="cb9-9" data-line-number="9">  )</a></code></pre></div>
+<pre><code>## [1] &quot;http://dev.richdataservices.com/rds/api/query/uscensus/census2010-hp/select?limit=5&amp;offset=0&amp;cols=serialno%2cp.%2a&amp;inject=TRUE&amp;metadata=TRUE&quot;</code></pre>
 <div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" data-line-number="1"><span class="kw">kable</span>(dataSet<span class="op">@</span>records)</a></code></pre></div>
 <table>
 <thead>
@@ -775,77 +1943,19 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <td align="left">No</td>
 <td align="left">10</td>
 </tr>
-<tr class="even">
-<td align="left">7</td>
-<td align="left">00101</td>
-<td align="left">1</td>
-<td align="left">0</td>
-<td align="left">0</td>
-<td align="left">0</td>
-<td align="left">No own children under 18 years</td>
-<td align="left">No related children under 18 years</td>
-<td align="left">1</td>
-<td align="left">Yes</td>
-<td align="left">10</td>
-</tr>
-<tr class="odd">
-<td align="left">8</td>
-<td align="left">00101</td>
-<td align="left">1</td>
-<td align="left">1</td>
-<td align="left">1</td>
-<td align="left">0</td>
-<td align="left">No own children under 18 years</td>
-<td align="left">No related children under 18 years</td>
-<td align="left">1</td>
-<td align="left">No</td>
-<td align="left">10</td>
-</tr>
-<tr class="even">
-<td align="left">9</td>
-<td align="left">00101</td>
-<td align="left">2</td>
-<td align="left">0</td>
-<td align="left">0</td>
-<td align="left">0</td>
-<td align="left">No own children under 18 years</td>
-<td align="left">No related children under 18 years</td>
-<td align="left">1</td>
-<td align="left">No</td>
-<td align="left">10</td>
-</tr>
-<tr class="odd">
-<td align="left">9</td>
-<td align="left">00101</td>
-<td align="left">2</td>
-<td align="left">0</td>
-<td align="left">0</td>
-<td align="left">0</td>
-<td align="left">No own children under 18 years</td>
-<td align="left">No related children under 18 years</td>
-<td align="left">2</td>
-<td align="left">No</td>
-<td align="left">10</td>
-</tr>
-<tr class="even">
-<td align="left">10</td>
-<td align="left">00101</td>
-<td align="left">2</td>
-<td align="left">2</td>
-<td align="left">2</td>
-<td align="left">0</td>
-<td align="left">No own children under 18 years</td>
-<td align="left">No related children under 18 years</td>
-<td align="left">1</td>
-<td align="left">No</td>
-<td align="left">10</td>
-</tr>
 </tbody>
 </table>
 <p>Users can also get variables by keyword. By prefixing the column name with <code>$</code> users can specify the keyword to search on. RDS will search variable metadata (names, labels, descriptions, etc) to find variables with the keyword in it and return them</p>
 <div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb12-1" data-line-number="1"><span class="co"># We will search with the keyword of code</span></a>
-<a class="sourceLine" id="cb12-2" data-line-number="2">dataSet &lt;-<span class="st"> </span>rds.r<span class="op">::</span><span class="kw">select</span>(dataProduct, <span class="dt">cols=</span><span class="st">&quot;$code&quot;</span>, <span class="dt">limit =</span> <span class="dv">10</span>, <span class="dt">autoPage =</span> <span class="ot">FALSE</span>, <span class="dt">inject =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
-<pre><code>## [1] &quot;http://dev.richdataservices.com/rds/api/query/uscensus/census2010-hp/select?limit=10&amp;offset=0&amp;cols=%24code&amp;inject=TRUE&amp;metadata=TRUE&quot;</code></pre>
+<a class="sourceLine" id="cb12-2" data-line-number="2">dataSet &lt;-</a>
+<a class="sourceLine" id="cb12-3" data-line-number="3"><span class="st">  </span>rds.r<span class="op">::</span><span class="kw">select</span>(</a>
+<a class="sourceLine" id="cb12-4" data-line-number="4">    dataProduct,</a>
+<a class="sourceLine" id="cb12-5" data-line-number="5">    <span class="dt">cols =</span> <span class="st">&quot;$code&quot;</span>,</a>
+<a class="sourceLine" id="cb12-6" data-line-number="6">    <span class="dt">limit =</span> <span class="dv">5</span>,</a>
+<a class="sourceLine" id="cb12-7" data-line-number="7">    <span class="dt">autoPage =</span> <span class="ot">FALSE</span>,</a>
+<a class="sourceLine" id="cb12-8" data-line-number="8">    <span class="dt">inject =</span> <span class="ot">TRUE</span></a>
+<a class="sourceLine" id="cb12-9" data-line-number="9">  )</a></code></pre></div>
+<pre><code>## [1] &quot;http://dev.richdataservices.com/rds/api/query/uscensus/census2010-hp/select?limit=5&amp;offset=0&amp;cols=%24code&amp;inject=TRUE&amp;metadata=TRUE&quot;</code></pre>
 <div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb14-1" data-line-number="1"><span class="kw">kable</span>(dataSet<span class="op">@</span>records)</a></code></pre></div>
 <table>
 <thead>
@@ -932,86 +2042,6 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <td align="left">White alone</td>
 </tr>
 <tr class="odd">
-<td align="left">District of Columbia</td>
-<td align="left">South</td>
-<td align="left">South Atlantic</td>
-<td align="left">00101</td>
-<td align="left">Yes</td>
-<td align="left">No</td>
-<td align="left">No</td>
-<td align="left">No</td>
-<td align="left">No</td>
-<td align="left">No</td>
-<td align="left">No</td>
-<td align="left">White alone</td>
-<td align="left">White alone</td>
-<td align="left">White alone</td>
-</tr>
-<tr class="even">
-<td align="left">District of Columbia</td>
-<td align="left">South</td>
-<td align="left">South Atlantic</td>
-<td align="left">00101</td>
-<td align="left">Yes</td>
-<td align="left">No</td>
-<td align="left">No</td>
-<td align="left">No</td>
-<td align="left">No</td>
-<td align="left">No</td>
-<td align="left">No</td>
-<td align="left">White alone</td>
-<td align="left">White alone</td>
-<td align="left">White alone</td>
-</tr>
-<tr class="odd">
-<td align="left">District of Columbia</td>
-<td align="left">South</td>
-<td align="left">South Atlantic</td>
-<td align="left">00101</td>
-<td align="left">Yes</td>
-<td align="left">No</td>
-<td align="left">No</td>
-<td align="left">No</td>
-<td align="left">No</td>
-<td align="left">No</td>
-<td align="left">No</td>
-<td align="left">White alone</td>
-<td align="left">White alone</td>
-<td align="left">White alone</td>
-</tr>
-<tr class="even">
-<td align="left">District of Columbia</td>
-<td align="left">South</td>
-<td align="left">South Atlantic</td>
-<td align="left">00101</td>
-<td align="left">Yes</td>
-<td align="left">No</td>
-<td align="left">No</td>
-<td align="left">No</td>
-<td align="left">No</td>
-<td align="left">No</td>
-<td align="left">No</td>
-<td align="left">White alone</td>
-<td align="left">White alone</td>
-<td align="left">White alone</td>
-</tr>
-<tr class="odd">
-<td align="left">District of Columbia</td>
-<td align="left">South</td>
-<td align="left">South Atlantic</td>
-<td align="left">00101</td>
-<td align="left">Yes</td>
-<td align="left">No</td>
-<td align="left">No</td>
-<td align="left">No</td>
-<td align="left">No</td>
-<td align="left">No</td>
-<td align="left">No</td>
-<td align="left">White alone</td>
-<td align="left">White alone</td>
-<td align="left">White alone</td>
-</tr>
-<tr class="even">
 <td align="left">District of Columbia</td>
 <td align="left">South</td>
 <td align="left">South Atlantic</td>

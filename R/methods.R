@@ -919,7 +919,6 @@ setMethod("select", signature("rds.dataProduct"), function(dataProduct,
 #' @param where Describes the subset of records the tabulation should run on.
 #' @param totals Specifies if totals should be included. Totals are used to provide roll up information about the counts of dimensions at different levels.
 #' @param inject Specifies if metadata should be injected into the data frame. If true and there are classifications available the columns codes will be replaced with code values. Defaults to FALSE
-#' @param metadata Specifies if variable metadata should be included in the response.
 #' @name tabulate
 #' @rdname tabulate
 #' @exportMethod tabulate
@@ -931,8 +930,7 @@ setGeneric("tabulate", function(dataProduct,
                                 orderby = NULL,
                                 where = NULL,
                                 totals = TRUE,
-                                inject = FALSE,
-                                metadata = FALSE)
+                                inject = FALSE)
   standardGeneric("tabulate"))
 
 #' Tabulate
@@ -949,7 +947,6 @@ setGeneric("tabulate", function(dataProduct,
 #' @param where Describes the subset of records the tabulation should run on.
 #' @param totals Specifies if totals should be included. Totals are used to provide roll up information about the counts of dimensions at different levels.
 #' @param inject Specifies if metadata should be injected into the data frame. If true and there are classifications available the columns codes will be replaced with code values. Defaults to FALSE
-#' @param metadata Specifies if variable metadata should be included in the response.
 setMethod("tabulate", signature("rds.dataProduct", "character"), function(dataProduct,
                                                                           dimensions,
                                                                           measures = NULL,
@@ -958,8 +955,7 @@ setMethod("tabulate", signature("rds.dataProduct", "character"), function(dataPr
                                                                           orderby = NULL,
                                                                           where = NULL,
                                                                           totals = TRUE,
-                                                                          inject = FALSE,
-                                                                          metadata = FALSE) {
+                                                                          inject = FALSE) {
   # Get the catalog from the data product
   catalog <- dataProduct@catalog
   
@@ -981,14 +977,12 @@ setMethod("tabulate", signature("rds.dataProduct", "character"), function(dataPr
   
   # Append any filled out options to the request
   paramPrefix <- "?"
-  if (metadata) {
     tabulate <- paste(tabulate,
                       paramPrefix,
                       "metadata=true",
                       sep = "",
                       collapse = NULL)
     paramPrefix <- "&"
-  }
   
   if (inject) {
     tabulate <- paste(tabulate,
@@ -1022,7 +1016,7 @@ setMethod("tabulate", signature("rds.dataProduct", "character"), function(dataPr
     tabulate <- paste(
       tabulate,
       paramPrefix,
-      "measures=",
+      "measure=",
       url_encode(measures),
       sep = "",
       collapse = NULL
