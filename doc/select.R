@@ -17,10 +17,10 @@ dataSet <-
                 limit = 10,
                 autoPage = FALSE)
 kable(dataSet@records)
+dataSet@variables
 
 ## -----------------------------------------------------------------------------
-# Showing just 6 columns for the sake of space.
-kable(dataSet@variables[c(4, 3, 7, 6, 1, 13)])
+dataSet@variables
 
 ## -----------------------------------------------------------------------------
 # Set autoPage = FALSE for example so we don't have the entire data set.

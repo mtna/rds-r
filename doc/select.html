@@ -1735,112 +1735,146 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 </tr>
 </tbody>
 </table>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1">dataSet<span class="op">@</span>variables</a></code></pre></div>
+<pre><code>##   dataType decimals fixedStorageWidth       id index isMeasure isPrivate
+## 1  NUMERIC        0                 7 SERIALNO     1      TRUE     FALSE
+## 2     TEXT       NA                 2    STATE     2        NA     FALSE
+## 3     TEXT       NA                 1   REGION     3        NA     FALSE
+## 4     TEXT       NA                 1 DIVISION     4        NA     FALSE
+## 5     TEXT       NA                 5     PUMA     5        NA     FALSE
+## 6  NUMERIC        0                14  TOTAREA     6      TRUE     FALSE
+## 7  NUMERIC        0                14 LANDAREA     7      TRUE     FALSE
+## 8  NUMERIC        0                 2 SUBSAMPL     8      TRUE     FALSE
+## 9  NUMERIC        0                 2  HWEIGHT     9      TRUE     FALSE
+##                                            label     name reference
+## 1 Housing/Group Quarters (GQ) Unit Serial Number SERIALNO     FALSE
+## 2                                FIPS State Code    STATE     FALSE
+## 3                                   Region  Code   REGION     FALSE
+## 4                                  Division Code DIVISION     FALSE
+## 5          Public Use Microdata Area Code (PUMA)     PUMA     FALSE
+## 6                             Total Area of PUMA  TOTAREA     FALSE
+## 7                              Land Area of PUMA LANDAREA     FALSE
+## 8                               Subsample number SUBSAMPL     FALSE
+## 9                            Housing unit weight  HWEIGHT     FALSE
+##   revisionNumber storageType
+## 1              0         INT
+## 2              0     VARCHAR
+## 3              0     VARCHAR
+## 4              0     VARCHAR
+## 5              0     VARCHAR
+## 6              0      BIGINT
+## 7              0      BIGINT
+## 8              0         INT
+## 9              0         INT
+##                                                                                               sets
+## 1                                           352775.0, 360477.0, 147006.2, 1.0, 0.0, 1527918.0, 0.0
+## 2                                                                                 4, 0, 1527918, 0
+## 3                                                                                 1, 0, 1527918, 0
+## 4                                                                                 1, 0, 1527918, 0
+## 5                                                                               106, 0, 1527918, 0
+## 6                                            111, 12690575056, 1606421846, 24885462, 0, 1527918, 0
+## 7                                            111, 12466104738, 1421662085, 24689542, 0, 1527918, 0
+## 8 1.000000e+02, 9.900000e+01, 4.948978e+01, 0.000000e+00, 0.000000e+00, 1.527918e+06, 0.000000e+00
+## 9 2.000000e+00, 1.000000e+01, 9.710299e+00, 0.000000e+00, 0.000000e+00, 1.527918e+06, 0.000000e+00
+##                                    uri                    classificationUri
+## 1 89c21b39-0ed6-4f0f-b6a3-eb89677e2a8e                                 &lt;NA&gt;
+## 2 2cbe454f-b136-4cd1-8455-8ce07d5e7336 19e3c532-ef52-4ea5-b45a-bf910ea9098a
+## 3 c77f66d4-e1f5-4553-a828-4df90a8f241d 3d76e2c6-6407-41d4-bb0f-e84252c27819
+## 4 575fdbaf-a51c-41a4-9eeb-067466864072 c47b1156-5d46-492f-81b6-f0e8eb5c72c6
+## 5 509b8a46-1a31-433e-9815-8b236cbd144e                                 &lt;NA&gt;
+## 6 c4a7d02d-2fc3-4140-8612-10413c271afc                                 &lt;NA&gt;
+## 7 bb879cfe-023d-4cfc-b322-0bfb846705ef                                 &lt;NA&gt;
+## 8 a489ec9a-9d8b-4c7b-b796-d1afbf8d9a90                                 &lt;NA&gt;
+## 9 08b62029-67b5-4d60-9ef2-05c9b4a5ebe1                                 &lt;NA&gt;
+##                              sets isDimension isWeight
+## 1                            NULL          NA       NA
+## 2 800755, 577036, 89923, 60204, 0        TRUE       NA
+## 3                      1527918, 0        TRUE       NA
+## 4                      1527918, 0        TRUE       NA
+## 5                            NULL          NA       NA
+## 6                            NULL          NA       NA
+## 7                            NULL          NA       NA
+## 8                            NULL          NA       NA
+## 9                            NULL          NA     TRUE</code></pre>
 </div>
 <div id="getting-the-metadata" class="section level4">
 <h4>Getting the Metadata</h4>
 <p>In addition to the records, every data set returned by the select method will include any variable metadata that is associated with the data set.</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1"><span class="co"># Showing just 6 columns for the sake of space.</span></a>
-<a class="sourceLine" id="cb5-2" data-line-number="2"><span class="kw">kable</span>(dataSet<span class="op">@</span>variables[<span class="kw">c</span>(<span class="dv">4</span>, <span class="dv">3</span>, <span class="dv">7</span>, <span class="dv">6</span>, <span class="dv">1</span>, <span class="dv">13</span>)])</a></code></pre></div>
-<table>
-<thead>
-<tr class="header">
-<th align="left">id</th>
-<th align="right">fixedStorageWidth</th>
-<th align="left">label</th>
-<th align="left">isPrivate</th>
-<th align="left">dataType</th>
-<th align="left">uri</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td align="left">SERIALNO</td>
-<td align="right">7</td>
-<td align="left">Housing/Group Quarters (GQ) Unit Serial Number</td>
-<td align="left">FALSE</td>
-<td align="left">NUMERIC</td>
-<td align="left">89c21b39-0ed6-4f0f-b6a3-eb89677e2a8e</td>
-</tr>
-<tr class="even">
-<td align="left">STATE</td>
-<td align="right">2</td>
-<td align="left">FIPS State Code</td>
-<td align="left">FALSE</td>
-<td align="left">TEXT</td>
-<td align="left">2cbe454f-b136-4cd1-8455-8ce07d5e7336</td>
-</tr>
-<tr class="odd">
-<td align="left">REGION</td>
-<td align="right">1</td>
-<td align="left">Region Code</td>
-<td align="left">FALSE</td>
-<td align="left">TEXT</td>
-<td align="left">c77f66d4-e1f5-4553-a828-4df90a8f241d</td>
-</tr>
-<tr class="even">
-<td align="left">DIVISION</td>
-<td align="right">1</td>
-<td align="left">Division Code</td>
-<td align="left">FALSE</td>
-<td align="left">TEXT</td>
-<td align="left">575fdbaf-a51c-41a4-9eeb-067466864072</td>
-</tr>
-<tr class="odd">
-<td align="left">PUMA</td>
-<td align="right">5</td>
-<td align="left">Public Use Microdata Area Code (PUMA)</td>
-<td align="left">FALSE</td>
-<td align="left">TEXT</td>
-<td align="left">509b8a46-1a31-433e-9815-8b236cbd144e</td>
-</tr>
-<tr class="even">
-<td align="left">TOTAREA</td>
-<td align="right">14</td>
-<td align="left">Total Area of PUMA</td>
-<td align="left">FALSE</td>
-<td align="left">NUMERIC</td>
-<td align="left">c4a7d02d-2fc3-4140-8612-10413c271afc</td>
-</tr>
-<tr class="odd">
-<td align="left">LANDAREA</td>
-<td align="right">14</td>
-<td align="left">Land Area of PUMA</td>
-<td align="left">FALSE</td>
-<td align="left">NUMERIC</td>
-<td align="left">bb879cfe-023d-4cfc-b322-0bfb846705ef</td>
-</tr>
-<tr class="even">
-<td align="left">SUBSAMPL</td>
-<td align="right">2</td>
-<td align="left">Subsample number</td>
-<td align="left">FALSE</td>
-<td align="left">NUMERIC</td>
-<td align="left">a489ec9a-9d8b-4c7b-b796-d1afbf8d9a90</td>
-</tr>
-<tr class="odd">
-<td align="left">HWEIGHT</td>
-<td align="right">2</td>
-<td align="left">Housing unit weight</td>
-<td align="left">FALSE</td>
-<td align="left">NUMERIC</td>
-<td align="left">08b62029-67b5-4d60-9ef2-05c9b4a5ebe1</td>
-</tr>
-</tbody>
-</table>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" data-line-number="1">dataSet<span class="op">@</span>variables</a></code></pre></div>
+<pre><code>##   dataType decimals fixedStorageWidth       id index isMeasure isPrivate
+## 1  NUMERIC        0                 7 SERIALNO     1      TRUE     FALSE
+## 2     TEXT       NA                 2    STATE     2        NA     FALSE
+## 3     TEXT       NA                 1   REGION     3        NA     FALSE
+## 4     TEXT       NA                 1 DIVISION     4        NA     FALSE
+## 5     TEXT       NA                 5     PUMA     5        NA     FALSE
+## 6  NUMERIC        0                14  TOTAREA     6      TRUE     FALSE
+## 7  NUMERIC        0                14 LANDAREA     7      TRUE     FALSE
+## 8  NUMERIC        0                 2 SUBSAMPL     8      TRUE     FALSE
+## 9  NUMERIC        0                 2  HWEIGHT     9      TRUE     FALSE
+##                                            label     name reference
+## 1 Housing/Group Quarters (GQ) Unit Serial Number SERIALNO     FALSE
+## 2                                FIPS State Code    STATE     FALSE
+## 3                                   Region  Code   REGION     FALSE
+## 4                                  Division Code DIVISION     FALSE
+## 5          Public Use Microdata Area Code (PUMA)     PUMA     FALSE
+## 6                             Total Area of PUMA  TOTAREA     FALSE
+## 7                              Land Area of PUMA LANDAREA     FALSE
+## 8                               Subsample number SUBSAMPL     FALSE
+## 9                            Housing unit weight  HWEIGHT     FALSE
+##   revisionNumber storageType
+## 1              0         INT
+## 2              0     VARCHAR
+## 3              0     VARCHAR
+## 4              0     VARCHAR
+## 5              0     VARCHAR
+## 6              0      BIGINT
+## 7              0      BIGINT
+## 8              0         INT
+## 9              0         INT
+##                                                                                               sets
+## 1                                           352775.0, 360477.0, 147006.2, 1.0, 0.0, 1527918.0, 0.0
+## 2                                                                                 4, 0, 1527918, 0
+## 3                                                                                 1, 0, 1527918, 0
+## 4                                                                                 1, 0, 1527918, 0
+## 5                                                                               106, 0, 1527918, 0
+## 6                                            111, 12690575056, 1606421846, 24885462, 0, 1527918, 0
+## 7                                            111, 12466104738, 1421662085, 24689542, 0, 1527918, 0
+## 8 1.000000e+02, 9.900000e+01, 4.948978e+01, 0.000000e+00, 0.000000e+00, 1.527918e+06, 0.000000e+00
+## 9 2.000000e+00, 1.000000e+01, 9.710299e+00, 0.000000e+00, 0.000000e+00, 1.527918e+06, 0.000000e+00
+##                                    uri                    classificationUri
+## 1 89c21b39-0ed6-4f0f-b6a3-eb89677e2a8e                                 &lt;NA&gt;
+## 2 2cbe454f-b136-4cd1-8455-8ce07d5e7336 19e3c532-ef52-4ea5-b45a-bf910ea9098a
+## 3 c77f66d4-e1f5-4553-a828-4df90a8f241d 3d76e2c6-6407-41d4-bb0f-e84252c27819
+## 4 575fdbaf-a51c-41a4-9eeb-067466864072 c47b1156-5d46-492f-81b6-f0e8eb5c72c6
+## 5 509b8a46-1a31-433e-9815-8b236cbd144e                                 &lt;NA&gt;
+## 6 c4a7d02d-2fc3-4140-8612-10413c271afc                                 &lt;NA&gt;
+## 7 bb879cfe-023d-4cfc-b322-0bfb846705ef                                 &lt;NA&gt;
+## 8 a489ec9a-9d8b-4c7b-b796-d1afbf8d9a90                                 &lt;NA&gt;
+## 9 08b62029-67b5-4d60-9ef2-05c9b4a5ebe1                                 &lt;NA&gt;
+##                              sets isDimension isWeight
+## 1                            NULL          NA       NA
+## 2 800755, 577036, 89923, 60204, 0        TRUE       NA
+## 3                      1527918, 0        TRUE       NA
+## 4                      1527918, 0        TRUE       NA
+## 5                            NULL          NA       NA
+## 6                            NULL          NA       NA
+## 7                            NULL          NA       NA
+## 8                            NULL          NA       NA
+## 9                            NULL          NA     TRUE</code></pre>
 </div>
 </div>
 <div id="injecting-metadata" class="section level3">
 <h3>Injecting Metadata</h3>
 <p>In the case that the values of a variable are coded variables and the codes are documented in RDS we can inject these into the returned records with the <code>inject</code> parameter. <strong>Notice that the state, region, and division variables have had their numeric codes replaced with the code label.</strong></p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" data-line-number="1"><span class="co"># Set autoPage = FALSE for example so we don't have the entire data set.</span></a>
-<a class="sourceLine" id="cb6-2" data-line-number="2"><span class="co"># We will also limit the rows to 5 so that the table looks OK in the HTML.</span></a>
-<a class="sourceLine" id="cb6-3" data-line-number="3">dataSet &lt;-</a>
-<a class="sourceLine" id="cb6-4" data-line-number="4"><span class="st">  </span>rds.r<span class="op">::</span><span class="kw">select</span>(dataProduct,</a>
-<a class="sourceLine" id="cb6-5" data-line-number="5">                <span class="dt">limit =</span> <span class="dv">5</span>,</a>
-<a class="sourceLine" id="cb6-6" data-line-number="6">                <span class="dt">autoPage =</span> <span class="ot">FALSE</span>,</a>
-<a class="sourceLine" id="cb6-7" data-line-number="7">                <span class="dt">inject =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" data-line-number="1"><span class="co"># Set autoPage = FALSE for example so we don't have the entire data set.</span></a>
+<a class="sourceLine" id="cb9-2" data-line-number="2"><span class="co"># We will also limit the rows to 5 so that the table looks OK in the HTML.</span></a>
+<a class="sourceLine" id="cb9-3" data-line-number="3">dataSet &lt;-</a>
+<a class="sourceLine" id="cb9-4" data-line-number="4"><span class="st">  </span>rds.r<span class="op">::</span><span class="kw">select</span>(dataProduct,</a>
+<a class="sourceLine" id="cb9-5" data-line-number="5">                <span class="dt">limit =</span> <span class="dv">5</span>,</a>
+<a class="sourceLine" id="cb9-6" data-line-number="6">                <span class="dt">autoPage =</span> <span class="ot">FALSE</span>,</a>
+<a class="sourceLine" id="cb9-7" data-line-number="7">                <span class="dt">inject =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
 <pre><code>## [1] &quot;http://dev.richdataservices.com/rds/api/query/uscensus/census2010-hp/select?limit=5&amp;offset=0&amp;inject=TRUE&amp;metadata=TRUE&quot;</code></pre>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" data-line-number="1"><span class="kw">paged_table</span>(dataSet<span class="op">@</span>records)</a></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" data-line-number="1"><span class="kw">paged_table</span>(dataSet<span class="op">@</span>records)</a></code></pre></div>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
 {"columns":[{"label":["SERIALNO"],"name":[1],"type":["fctr"],"align":["left"]},{"label":["STATE"],"name":[2],"type":["fctr"],"align":["left"]},{"label":["REGION"],"name":[3],"type":["fctr"],"align":["left"]},{"label":["DIVISION"],"name":[4],"type":["fctr"],"align":["left"]},{"label":["PUMA"],"name":[5],"type":["fctr"],"align":["left"]},{"label":["TOTAREA"],"name":[6],"type":["fctr"],"align":["left"]},{"label":["LANDAREA"],"name":[7],"type":["fctr"],"align":["left"]},{"label":["SUBSAMPL"],"name":[8],"type":["fctr"],"align":["left"]},{"label":["HWEIGHT"],"name":[9],"type":["fctr"],"align":["left"]},{"label":["PERSONS"],"name":[10],"type":["fctr"],"align":["left"]},{"label":["UNITTYPE"],"name":[11],"type":["fctr"],"align":["left"]},{"label":["HSUBFLG"],"name":[12],"type":["fctr"],"align":["left"]},{"label":["VACS"],"name":[13],"type":["fctr"],"align":["left"]},{"label":["VACSA"],"name":[14],"type":["fctr"],"align":["left"]},{"label":["TENURE"],"name":[15],"type":["fctr"],"align":["left"]},{"label":["TENUREA"],"name":[16],"type":["fctr"],"align":["left"]},{"label":["HHT"],"name":[17],"type":["fctr"],"align":["left"]},{"label":["P60"],"name":[18],"type":["fctr"],"align":["left"]},{"label":["P65"],"name":[19],"type":["fctr"],"align":["left"]},{"label":["P18"],"name":[20],"type":["fctr"],"align":["left"]},{"label":["NPF"],"name":[21],"type":["fctr"],"align":["left"]},{"label":["NOCH"],"name":[22],"type":["fctr"],"align":["left"]},{"label":["NRCH"],"name":[23],"type":["fctr"],"align":["left"]},{"label":["PAOC"],"name":[24],"type":["fctr"],"align":["left"]},{"label":["PARC"],"name":[25],"type":["fctr"],"align":["left"]},{"label":["UPART"],"name":[26],"type":["fctr"],"align":["left"]},{"label":["MULTG"],"name":[27],"type":["fctr"],"align":["left"]},{"label":["PNUM"],"name":[28],"type":["fctr"],"align":["left"]},{"label":["PSUB"],"name":[29],"type":["fctr"],"align":["left"]},{"label":["PWEIGHT"],"name":[30],"type":["fctr"],"align":["left"]},{"label":["RELATE"],"name":[31],"type":["fctr"],"align":["left"]},{"label":["RELATEA"],"name":[32],"type":["fctr"],"align":["left"]},{"label":["OC"],"name":[33],"type":["fctr"],"align":["left"]},{"label":["RC"],"name":[34],"type":["fctr"],"align":["left"]},{"label":["SEX"],"name":[35],"type":["fctr"],"align":["left"]},{"label":["SEXA"],"name":[36],"type":["fctr"],"align":["left"]},{"label":["SSPA"],"name":[37],"type":["fctr"],"align":["left"]},{"label":["AGE"],"name":[38],"type":["fctr"],"align":["left"]},{"label":["AGEA"],"name":[39],"type":["fctr"],"align":["left"]},{"label":["QTRBIR"],"name":[40],"type":["fctr"],"align":["left"]},{"label":["HISPAN"],"name":[41],"type":["fctr"],"align":["left"]},{"label":["HISPANA"],"name":[42],"type":["fctr"],"align":["left"]},{"label":["NUMRACE"],"name":[43],"type":["fctr"],"align":["left"]},{"label":["WHITE"],"name":[44],"type":["fctr"],"align":["left"]},{"label":["BLACK"],"name":[45],"type":["fctr"],"align":["left"]},{"label":["AIAN"],"name":[46],"type":["fctr"],"align":["left"]},{"label":["ASIAN"],"name":[47],"type":["fctr"],"align":["left"]},{"label":["NHAW"],"name":[48],"type":["fctr"],"align":["left"]},{"label":["OPI"],"name":[49],"type":["fctr"],"align":["left"]},{"label":["OTHER"],"name":[50],"type":["fctr"],"align":["left"]},{"label":["RACESHORT"],"name":[51],"type":["fctr"],"align":["left"]},{"label":["RACEDET"],"name":[52],"type":["fctr"],"align":["left"]},{"label":["RACECHKBX"],"name":[53],"type":["fctr"],"align":["left"]},{"label":["RACEA"],"name":[54],"type":["fctr"],"align":["left"]},{"label":["GQTYP"],"name":[55],"type":["fctr"],"align":["left"]},{"label":["GQTYPA"],"name":[56],"type":["fctr"],"align":["left"]}],"data":[{"1":"1","2":"District of Columbia","3":"South","4":"South Atlantic","5":"00101","6":"38961472","7":"36805772","8":"73","9":"10","10":"2","11":"Housing unit","12":"No","13":"Not in universe (occupied or GQ)","14":"0","15":"Owned by you or someone in this household with a mortgage or loan","16":"0","17":"Husband-wife family household","18":"1","19":"0","20":"0","21":"2","22":"0","23":"0","24":"No own children under 18 years","25":"No related children under 18 years","26":"All other households","27":"Not a multigenerational household","28":"2","29":"No","30":"10","31":"Husband/wife","32":"No","33":"0","34":"0","35":"Female","36":"No","37":"No","38":"58","39":"No","40":"Q2","41":"Not Hispanic or Latino","42":"No","43":"1","44":"Yes","45":"No","46":"No","47":"No","48":"No","49":"No","50":"No","51":"White alone","52":"White alone","53":"White alone","54":"No","55":"Not in a GQ","56":"No"},{"1":"2","2":"District of Columbia","3":"South","4":"South Atlantic","5":"00101","6":"38961472","7":"36805772","8":"54","9":"10","10":"2","11":"Housing unit","12":"No","13":"Not in universe (occupied or GQ)","14":"0","15":"Rented","16":"0","17":"Husband-wife family household","18":"0","19":"0","20":"0","21":"2","22":"0","23":"0","24":"No own children under 18 years","25":"No related children under 18 years","26":"All other households","27":"Not a multigenerational household","28":"1","29":"No","30":"10","31":"Householder","32":"No","33":"0","34":"0","35":"Male","36":"No","37":"No","38":"49","39":"No","40":"Q1","41":"Not Hispanic or Latino","42":"No","43":"1","44":"Yes","45":"No","46":"No","47":"No","48":"No","49":"No","50":"No","51":"White alone","52":"White alone","53":"White alone","54":"No","55":"Not in a GQ","56":"No"},{"1":"2","2":"District of Columbia","3":"South","4":"South Atlantic","5":"00101","6":"38961472","7":"36805772","8":"54","9":"10","10":"2","11":"Housing unit","12":"No","13":"Not in universe (occupied or GQ)","14":"0","15":"Rented","16":"0","17":"Husband-wife family household","18":"0","19":"0","20":"0","21":"2","22":"0","23":"0","24":"No own children under 18 years","25":"No related children under 18 years","26":"All other households","27":"Not a multigenerational household","28":"2","29":"No","30":"10","31":"Husband/wife","32":"No","33":"0","34":"0","35":"Female","36":"No","37":"No","38":"41","39":"No","40":"Q1","41":"Not Hispanic or Latino","42":"No","43":"1","44":"Yes","45":"No","46":"No","47":"No","48":"No","49":"No","50":"No","51":"White alone","52":"White alone","53":"White alone","54":"No","55":"Not in a GQ","56":"No"},{"1":"3","2":"District of Columbia","3":"South","4":"South Atlantic","5":"00101","6":"38961472","7":"36805772","8":"62","9":"10","10":"1","11":"Housing unit","12":"No","13":"Not in universe (occupied or GQ)","14":"0","15":"Owned by you or someone in this household with a mortgage or loan","16":"0","17":"Nonfamily household:  Female householder, living alone","18":"1","19":"0","20":"0","21":"0","22":"0","23":"0","24":"No own children under 18 years","25":"No related children under 18 years","26":"All other households","27":"Not a multigenerational household","28":"1","29":"No","30":"10","31":"Householder","32":"No","33":"0","34":"0","35":"Female","36":"No","37":"No","38":"63","39":"No","40":"Q2","41":"Not Hispanic or Latino","42":"No","43":"1","44":"Yes","45":"No","46":"No","47":"No","48":"No","49":"No","50":"No","51":"White alone","52":"White alone","53":"White alone","54":"No","55":"Not in a GQ","56":"No"},{"1":"4","2":"District of Columbia","3":"South","4":"South Atlantic","5":"00101","6":"38961472","7":"36805772","8":"50","9":"10","10":"1","11":"Housing unit","12":"No","13":"Not in universe (occupied or GQ)","14":"0","15":"Owned by you or someone in this household free and clear (without a mortgage or loan)","16":"0","17":"Nonfamily household:  Female householder, living alone","18":"1","19":"1","20":"0","21":"0","22":"0","23":"0","24":"No own children under 18 years","25":"No related children under 18 years","26":"All other households","27":"Not a multigenerational household","28":"1","29":"No","30":"10","31":"Householder","32":"No","33":"0","34":"0","35":"Female","36":"No","37":"No","38":"66","39":"No","40":"Q2","41":"Not Hispanic or Latino","42":"No","43":"1","44":"Yes","45":"No","46":"No","47":"No","48":"No","49":"No","50":"No","51":"White alone","52":"White alone","53":"White alone","54":"No","55":"Not in a GQ","56":"No"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
@@ -1850,17 +1884,17 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <div id="selecting-columns" class="section level3">
 <h3>Selecting Columns</h3>
 <p>RDS allows for a number of different ways to search for variable data. Users can provide the name, a regex, or keyword to search on.</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" data-line-number="1"><span class="co"># We will search for SerialNO directly, anything that starts with P (regex)</span></a>
-<a class="sourceLine" id="cb9-2" data-line-number="2">dataSet &lt;-</a>
-<a class="sourceLine" id="cb9-3" data-line-number="3"><span class="st">  </span>rds.r<span class="op">::</span><span class="kw">select</span>(</a>
-<a class="sourceLine" id="cb9-4" data-line-number="4">    dataProduct,</a>
-<a class="sourceLine" id="cb9-5" data-line-number="5">    <span class="dt">cols =</span> <span class="st">&quot;serialno,p.*&quot;</span>,</a>
-<a class="sourceLine" id="cb9-6" data-line-number="6">    <span class="dt">limit =</span> <span class="dv">5</span>,</a>
-<a class="sourceLine" id="cb9-7" data-line-number="7">    <span class="dt">autoPage =</span> <span class="ot">FALSE</span>,</a>
-<a class="sourceLine" id="cb9-8" data-line-number="8">    <span class="dt">inject =</span> <span class="ot">TRUE</span></a>
-<a class="sourceLine" id="cb9-9" data-line-number="9">  )</a></code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb12-1" data-line-number="1"><span class="co"># We will search for SerialNO directly, anything that starts with P (regex)</span></a>
+<a class="sourceLine" id="cb12-2" data-line-number="2">dataSet &lt;-</a>
+<a class="sourceLine" id="cb12-3" data-line-number="3"><span class="st">  </span>rds.r<span class="op">::</span><span class="kw">select</span>(</a>
+<a class="sourceLine" id="cb12-4" data-line-number="4">    dataProduct,</a>
+<a class="sourceLine" id="cb12-5" data-line-number="5">    <span class="dt">cols =</span> <span class="st">&quot;serialno,p.*&quot;</span>,</a>
+<a class="sourceLine" id="cb12-6" data-line-number="6">    <span class="dt">limit =</span> <span class="dv">5</span>,</a>
+<a class="sourceLine" id="cb12-7" data-line-number="7">    <span class="dt">autoPage =</span> <span class="ot">FALSE</span>,</a>
+<a class="sourceLine" id="cb12-8" data-line-number="8">    <span class="dt">inject =</span> <span class="ot">TRUE</span></a>
+<a class="sourceLine" id="cb12-9" data-line-number="9">  )</a></code></pre></div>
 <pre><code>## [1] &quot;http://dev.richdataservices.com/rds/api/query/uscensus/census2010-hp/select?limit=5&amp;offset=0&amp;cols=serialno%2cp.%2a&amp;inject=TRUE&amp;metadata=TRUE&quot;</code></pre>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" data-line-number="1"><span class="kw">kable</span>(dataSet<span class="op">@</span>records)</a></code></pre></div>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb14-1" data-line-number="1"><span class="kw">kable</span>(dataSet<span class="op">@</span>records)</a></code></pre></div>
 <table>
 <thead>
 <tr class="header">
@@ -1946,17 +1980,17 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 </tbody>
 </table>
 <p>Users can also get variables by keyword. By prefixing the column name with <code>$</code> users can specify the keyword to search on. RDS will search variable metadata (names, labels, descriptions, etc) to find variables with the keyword in it and return them</p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb12-1" data-line-number="1"><span class="co"># We will search with the keyword of code</span></a>
-<a class="sourceLine" id="cb12-2" data-line-number="2">dataSet &lt;-</a>
-<a class="sourceLine" id="cb12-3" data-line-number="3"><span class="st">  </span>rds.r<span class="op">::</span><span class="kw">select</span>(</a>
-<a class="sourceLine" id="cb12-4" data-line-number="4">    dataProduct,</a>
-<a class="sourceLine" id="cb12-5" data-line-number="5">    <span class="dt">cols =</span> <span class="st">&quot;$code&quot;</span>,</a>
-<a class="sourceLine" id="cb12-6" data-line-number="6">    <span class="dt">limit =</span> <span class="dv">5</span>,</a>
-<a class="sourceLine" id="cb12-7" data-line-number="7">    <span class="dt">autoPage =</span> <span class="ot">FALSE</span>,</a>
-<a class="sourceLine" id="cb12-8" data-line-number="8">    <span class="dt">inject =</span> <span class="ot">TRUE</span></a>
-<a class="sourceLine" id="cb12-9" data-line-number="9">  )</a></code></pre></div>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb15-1" data-line-number="1"><span class="co"># We will search with the keyword of code</span></a>
+<a class="sourceLine" id="cb15-2" data-line-number="2">dataSet &lt;-</a>
+<a class="sourceLine" id="cb15-3" data-line-number="3"><span class="st">  </span>rds.r<span class="op">::</span><span class="kw">select</span>(</a>
+<a class="sourceLine" id="cb15-4" data-line-number="4">    dataProduct,</a>
+<a class="sourceLine" id="cb15-5" data-line-number="5">    <span class="dt">cols =</span> <span class="st">&quot;$code&quot;</span>,</a>
+<a class="sourceLine" id="cb15-6" data-line-number="6">    <span class="dt">limit =</span> <span class="dv">5</span>,</a>
+<a class="sourceLine" id="cb15-7" data-line-number="7">    <span class="dt">autoPage =</span> <span class="ot">FALSE</span>,</a>
+<a class="sourceLine" id="cb15-8" data-line-number="8">    <span class="dt">inject =</span> <span class="ot">TRUE</span></a>
+<a class="sourceLine" id="cb15-9" data-line-number="9">  )</a></code></pre></div>
 <pre><code>## [1] &quot;http://dev.richdataservices.com/rds/api/query/uscensus/census2010-hp/select?limit=5&amp;offset=0&amp;cols=%24code&amp;inject=TRUE&amp;metadata=TRUE&quot;</code></pre>
-<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb14-1" data-line-number="1"><span class="kw">kable</span>(dataSet<span class="op">@</span>records)</a></code></pre></div>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb17-1" data-line-number="1"><span class="kw">kable</span>(dataSet<span class="op">@</span>records)</a></code></pre></div>
 <table>
 <thead>
 <tr class="header">

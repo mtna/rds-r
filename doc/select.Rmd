@@ -56,6 +56,7 @@ dataSet <-
                 limit = 10,
                 autoPage = FALSE)
 kable(dataSet@records)
+dataSet@variables
 ```
 
 #### Getting the Metadata
@@ -63,8 +64,7 @@ kable(dataSet@records)
 In addition to the records, every data set returned by the select method will include any variable metadata that is associated with the data set. 
 
 ```{r }
-# Showing just 6 columns for the sake of space.
-kable(dataSet@variables[c(4, 3, 7, 6, 1, 13)])
+dataSet@variables
 ```
 
 ### Injecting Metadata

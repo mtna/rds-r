@@ -1,0 +1,84 @@
+---
+title: "Tabulate"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Tabulate}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+<style>
+  table {
+     width: 100%;
+  }
+  
+  th, td {
+    font-size: 8pt;
+  }
+</style>
+
+```{r, message=FALSE, warning=FALSE, echo=FALSE}
+library(rds.r)
+library(knitr)
+library(rmarkdown)
+library(ggplot2)
+library(scales)
+library(gridExtra)
+```
+### Overview 
+
+The tabulate method allows tabulations to be created by specifying the dimensions and measures that are desired. This operation can provide quick and simple analysis directly from the RDS server. This provides users with the ability to create a table or chart once in their code, markdown, or dashboard. If the data or metadata is updated on the server, the updates will automatically flow into the R code without any further adjustment needed. 
+
+### Getting the Data Product
+
+The first thing we need to do is set up a connection to the RDS server and get the data product we want to use, in this case we will use a subset of the U.S. 2010 Census PUMS files, containing DC, DE, MD, and VA.
+
+```{r }
+rds <- get.rds("http://dev.richdataservices.com")
+catalog <- rds.r::getCatalog(rds, "uscensus")
+dataProduct <- rds.r::getDataProduct(catalog, "census2010-hp")
+```
+
+### Basic Tabulation. 
+
+We will begin with a basic tabulation and just show the count of respondents by state. To do this we only need to specify the dimension we want, the default measure is a count.
+
+** Include Code Labels **
+
+```{r fig.width=7, fig.height=4}
+tabulation <- rds.r::tabulate(dataProduct, dimensions = "state")
+df <- tabulation@records
+
+p<-ggplot(df, aes(x=STATE, y=as.numeric(as.character(count)), color = STATE)) +
+  geom_bar(stat="identity", fill="white") + scale_y_continuous(labels = comma) + xlab("State") + ylab("Count")
+p
+```
+
+#### Basic Tabulation With Metadata
+
+As you can see in the previous chart the states are returned as their 2 digit fips code, which is how they are stored in the database. While these may be useful for some other sort of map, in a bar chart they are not helpful. If the RDS server has the metadata set up we can request that it return the code labels for us with the `inject` parameters. 
+
+This also ensures that we are always able to get our metadata from the source. For large data sets these dont need to be hard coded by hand and if the metadata ever changes (new codes added, typos fixed, etc) we don't have to do anything on our end because the server will provide the updated code values. 
+
+Here is the same bar chart with the labels injected. 
+
+```{r fig.width=7, fig.height=4}
+tabulation <- rds.r::tabulate(dataProduct, dimensions = "state", inject = T)
+df <- tabulation@records
+
+p<-ggplot(df, aes(x=STATE, y=as.numeric(as.character(count)), color = STATE)) +
+  geom_bar(stat="identity", fill="white") + scale_y_continuous(labels = comma) + xlab("State") + ylab("Count")
+p
+```
+
+#### Specifying a Measure
+
+
+```{r fig.width=7, fig.height=4}
+tabulation <- rds.r::tabulate(dataProduct, dimensions = "state", measures = "under18:AVG(P18)",inject = T)
+df <- tabulation@records
+
+p<-ggplot(df, aes(x=STATE, y=as.numeric(as.character(under18)), color = STATE)) +
+  geom_bar(stat="identity", fill="white") + scale_y_continuous(labels = comma) + xlab("State") + ylab("Count")
+p
+```
