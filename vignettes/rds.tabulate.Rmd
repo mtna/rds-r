@@ -46,11 +46,16 @@ We will begin with a basic tabulation and just show the count of respondents by 
 ** Include Code Labels **
 
 ```{r fig.width=7, fig.height=4}
-tabulation <- rds.r::tabulate(dataProduct, dimensions = "state")
+tabulation <- rds.tabulate(dataProduct, dimensions = "state")
 df <- tabulation@records
 
-p<-ggplot(df, aes(x=STATE, y=as.numeric(as.character(count)), color = STATE)) +
-  geom_bar(stat="identity", fill="white") + scale_y_continuous(labels = comma) + xlab("State") + ylab("Count")
+p <-
+  ggplot(df, aes(
+    x = STATE,
+    y = as.numeric(as.character(count)),
+    color = STATE
+  )) +
+  geom_bar(stat = "identity", fill = "white") + scale_y_continuous(labels = comma) + xlab("State") + ylab("Count")
 p
 ```
 
@@ -63,11 +68,17 @@ This also ensures that we are always able to get our metadata from the source. F
 Here is the same bar chart with the labels injected. 
 
 ```{r fig.width=7, fig.height=4}
-tabulation <- rds.r::tabulate(dataProduct, dimensions = "state", inject = T)
+tabulation <-
+  rds.tabulate(dataProduct, dimensions = "state", inject = T)
 df <- tabulation@records
 
-p<-ggplot(df, aes(x=STATE, y=as.numeric(as.character(count)), color = STATE)) +
-  geom_bar(stat="identity", fill="white") + scale_y_continuous(labels = comma) + xlab("State") + ylab("Count")
+p <-
+  ggplot(df, aes(
+    x = STATE,
+    y = as.numeric(as.character(count)),
+    color = STATE
+  )) +
+  geom_bar(stat = "identity", fill = "white") + scale_y_continuous(labels = comma) + xlab("State") + ylab("Count")
 p
 ```
 
@@ -75,10 +86,21 @@ p
 
 
 ```{r fig.width=7, fig.height=4}
-tabulation <- rds.r::tabulate(dataProduct, dimensions = "state", measures = "under18:AVG(P18)",inject = T)
+tabulation <-
+  rds.tabulate(
+    dataProduct,
+    dimensions = "state",
+    measures = "under18:AVG(P18)",
+    inject = T
+  )
 df <- tabulation@records
 
-p<-ggplot(df, aes(x=STATE, y=as.numeric(as.character(under18)), color = STATE)) +
-  geom_bar(stat="identity", fill="white") + scale_y_continuous(labels = comma) + xlab("State") + ylab("Count")
+p <-
+  ggplot(df, aes(
+    x = STATE,
+    y = as.numeric(as.character(under18)),
+    color = STATE
+  )) +
+  geom_bar(stat = "identity", fill = "white") + scale_y_continuous(labels = comma) + xlab("State") + ylab("Count")
 p
 ```

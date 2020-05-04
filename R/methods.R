@@ -654,7 +654,7 @@ setMethod("getClassification", signature("rds.dataProduct", "character"), functi
 
 #' Select
 #'
-#' The select(dataProduct) method is used to access the record level data of the data product. In the explorer and through the API the total number of cells is limited to 10000 cells. This is done to keep a small and manageable amount of information going over the network. Be aware that by default the select method will perform numerous calls to build up a complete dataset. If this is not desired remember to set autoPage=FALSE.
+#' The rds.select(dataProduct) method is used to access the record level data of the data product. In the explorer and through the API the total number of cells is limited to 10000 cells. This is done to keep a small and manageable amount of information going over the network. Be aware that by default the select method will perform numerous calls to build up a complete dataset. If this is not desired remember to set autoPage=FALSE.
 #'
 #' @param dataProduct The dataProduct whose data is desired.
 #' @param limit Specifies the number of records to return.
@@ -667,10 +667,10 @@ setMethod("getClassification", signature("rds.dataProduct", "character"), functi
 #' @param where Describes how to subset the records based on variable values.
 #' @param inject Specifies if metadata should be injected into the data frame. If true and there are classifications available the columns codes will be replaced with code values. Defaults to FALSE
 #' @param autoPage If set to true multiple queries will be sent to the RDS server in order to compile the complete data set.
-#' @name select
-#' @rdname select
-#' @exportMethod select
-setGeneric("select", function(dataProduct,
+#' @name rds.select
+#' @rdname rds.select
+#' @exportMethod rds.select
+setGeneric("rds.select", function(dataProduct,
                               limit = NULL,
                               offset = NULL,
                               cols = NULL,
@@ -681,11 +681,11 @@ setGeneric("select", function(dataProduct,
                               where = NULL,
                               inject = FALSE,
                               autoPage = TRUE)
-           standardGeneric("select"))
+           standardGeneric("rds.select"))
 
 #' Select
 #'
-#' The select(dataProduct) method is used to access the record level data of the data product. In the explorer and through the API the total number of cells is limited to 10000 cells. This is done to keep a small and manageable amount of information going over the network. Be aware that by default the select method will perform numerous calls to build up a complete dataset. If this is not desired remember to set autoPage=FALSE.
+#' The rds.select(dataProduct) method is used to access the record level data of the data product. In the explorer and through the API the total number of cells is limited to 10000 cells. This is done to keep a small and manageable amount of information going over the network. Be aware that by default the select method will perform numerous calls to build up a complete dataset. If this is not desired remember to set autoPage=FALSE.
 #' 
 #' @import jsonlite urltools 
 #' @param dataProduct The dataProduct whose data is desired.
@@ -699,7 +699,7 @@ setGeneric("select", function(dataProduct,
 #' @param where Describes how to subset the records based on variable values.
 #' @param inject Specifies if metadata should be injected into the data frame. If true and there are classifications available the columns codes will be replaced with code values. Defaults to FALSE
 #' @param autoPage If set to true multiple queries will be sent to the RDS server in order to compile the complete data set.
-setMethod("select", signature("rds.dataProduct"), function(dataProduct,
+setMethod("rds.select", signature("rds.dataProduct"), function(dataProduct,
                                                            limit = 20,
                                                            offset = 0,
                                                            cols = NULL,
@@ -908,7 +908,7 @@ setMethod("select", signature("rds.dataProduct"), function(dataProduct,
 
 #' Tabulate
 #'
-#' The tabulate(dataProduct) method is used to create aggregated tables and perform analysis on a data product.
+#' The rds.tabulate(dataProduct) method is used to create aggregated tables and perform analysis on a data product.
 #'
 #' @param dataProduct The dataProduct whose data is being used in the tabulation.
 #' @param dimensions The names of the variables that should be used as dimensions.
@@ -919,10 +919,10 @@ setMethod("select", signature("rds.dataProduct"), function(dataProduct,
 #' @param where Describes the subset of records the tabulation should run on.
 #' @param totals Specifies if totals should be included. Totals are used to provide roll up information about the counts of dimensions at different levels.
 #' @param inject Specifies if metadata should be injected into the data frame. If true and there are classifications available the columns codes will be replaced with code values. Defaults to FALSE
-#' @name tabulate
-#' @rdname tabulate
-#' @exportMethod tabulate
-setGeneric("tabulate", function(dataProduct,
+#' @name rds.tabulate
+#' @rdname rds.tabulate
+#' @exportMethod rds.tabulate
+setGeneric("rds.tabulate", function(dataProduct,
                                 dimensions,
                                 measures = NULL,
                                 limit = NULL,
@@ -931,11 +931,11 @@ setGeneric("tabulate", function(dataProduct,
                                 where = NULL,
                                 totals = TRUE,
                                 inject = FALSE)
-  standardGeneric("tabulate"))
+  standardGeneric("rds.tabulate"))
 
 #' Tabulate
 #'
-#' The tabulate(dataProduct) method is used to create aggregated tables and perform analysis on a data product.
+#' The rds.tabulate(dataProduct) method is used to create aggregated tables and perform analysis on a data product.
 #' 
 #' @import jsonlite urltools
 #' @param dataProduct The dataProduct whose data is being used in the tabulation.
@@ -947,7 +947,7 @@ setGeneric("tabulate", function(dataProduct,
 #' @param where Describes the subset of records the tabulation should run on.
 #' @param totals Specifies if totals should be included. Totals are used to provide roll up information about the counts of dimensions at different levels.
 #' @param inject Specifies if metadata should be injected into the data frame. If true and there are classifications available the columns codes will be replaced with code values. Defaults to FALSE
-setMethod("tabulate", signature("rds.dataProduct", "character"), function(dataProduct,
+setMethod("rds.tabulate", signature("rds.dataProduct", "character"), function(dataProduct,
                                                                           dimensions,
                                                                           measures = NULL,
                                                                           limit = NULL,

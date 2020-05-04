@@ -51,10 +51,10 @@ This will print out the API calls it makes to build up the data set so the user 
 # Set autoPage = FALSE for example so we don't have the entire data set.
 # We will also limit the columns to 9 and rows to 10 so that the table looks OK in the HTML.
 dataSet <-
-  rds.r::select(dataProduct,
-                colLimit = 9,
-                limit = 10,
-                autoPage = FALSE)
+  rds.select(dataProduct,
+             colLimit = 9,
+             limit = 10,
+             autoPage = FALSE)
 kable(dataSet@records)
 dataSet@variables
 ```
@@ -75,10 +75,10 @@ In the case that the values of a variable are coded variables and the codes are 
 # Set autoPage = FALSE for example so we don't have the entire data set.
 # We will also limit the rows to 5 so that the table looks OK in the HTML.
 dataSet <-
-  rds.r::select(dataProduct,
-                limit = 5,
-                autoPage = FALSE,
-                inject = TRUE)
+  rds.select(dataProduct,
+             limit = 5,
+             autoPage = FALSE,
+             inject = TRUE)
 paged_table(dataSet@records)
 ```
 
@@ -89,7 +89,7 @@ RDS allows for a number of different ways to search for variable data. Users can
 ```{r }
 # We will search for SerialNO directly, anything that starts with P (regex)
 dataSet <-
-  rds.r::select(
+  rds.select(
     dataProduct,
     cols = "serialno,p.*",
     limit = 5,
@@ -103,7 +103,7 @@ Users can also get variables by keyword. By prefixing the column name with `$` u
 ```{r }
 # We will search with the keyword of code
 dataSet <-
-  rds.r::select(
+  rds.select(
     dataProduct,
     cols = "$code",
     limit = 5,
