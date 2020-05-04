@@ -11,10 +11,6 @@ vignette: >
   table {
      width: 100%;
   }
-  
-  th, td {
-    font-size: 8pt;
-  }
 </style>
 
 ```{r, message=FALSE, warning=FALSE, echo=FALSE}
@@ -39,68 +35,93 @@ catalog <- rds.r::getCatalog(rds, "uscensus")
 dataProduct <- rds.r::getDataProduct(catalog, "census2010-hp")
 ```
 
-### Basic Tabulation. 
+### Basic Tabulation 
 
-We will begin with a basic tabulation and just show the count of respondents by state. To do this we only need to specify the dimension we want, the default measure is a count.
-
-** Include Code Labels **
+We will begin with a basic tabulation and show the count of respondents by state. To do this we only need to specify the dimension we want, the default measure is a count.
 
 ```{r fig.width=7, fig.height=4}
 tabulation <- rds.tabulate(dataProduct, dimensions = "state")
-df <- tabulation@records
 
-p <-
-  ggplot(df, aes(
-    x = STATE,
-    y = as.numeric(as.character(count)),
-    color = STATE
-  )) +
-  geom_bar(stat = "identity", fill = "white") + scale_y_continuous(labels = comma) + xlab("State") + ylab("Count")
-p
+ggplot(tabulation@records, aes(
+  x = STATE,
+  y = as.numeric(as.character(count)),
+  color = STATE
+)) +
+  geom_bar(stat = "identity", fill = "white") + 
+  scale_y_continuous(labels = comma) + xlab("State") + ylab("Count")
 ```
 
 #### Basic Tabulation With Metadata
 
 As you can see in the previous chart the states are returned as their 2 digit fips code, which is how they are stored in the database. While these may be useful for some other sort of map, in a bar chart they are not helpful. If the RDS server has the metadata set up we can request that it return the code labels for us with the `inject` parameters. 
 
-This also ensures that we are always able to get our metadata from the source. For large data sets these dont need to be hard coded by hand and if the metadata ever changes (new codes added, typos fixed, etc) we don't have to do anything on our end because the server will provide the updated code values. 
+This also ensures that R users are always able to get the metadata from the source. Because the server is providing the metadata R users should not need to hard code any code values by hand. In addition, if the metadata ever changes (new codes added, typos fixed, etc) R users don't have to do change anything in their code because the server will provide the updated code values. 
 
 Here is the same bar chart with the labels injected. 
 
 ```{r fig.width=7, fig.height=4}
 tabulation <-
   rds.tabulate(dataProduct, dimensions = "state", inject = T)
-df <- tabulation@records
 
-p <-
-  ggplot(df, aes(
-    x = STATE,
-    y = as.numeric(as.character(count)),
-    color = STATE
-  )) +
-  geom_bar(stat = "identity", fill = "white") + scale_y_continuous(labels = comma) + xlab("State") + ylab("Count")
-p
+ggplot(tabulation@records, aes(
+  x = STATE,
+  y = as.numeric(as.character(count)),
+  color = STATE
+)) +
+  geom_bar(stat = "identity", fill = "white") + 
+  scale_y_continuous(labels = comma) + xlab("State") + ylab("Count")
 ```
 
 #### Specifying a Measure
 
+If R users would like to get a different measure then the count, they will need to specify the measure(s) they would like to use. The syntax for a measure is as follows: `<name>:<function>(<target_variable>)`. The name is the name of the variable that will be returned and can be whatever the user wants the computed variable to be called, the function is the function to run on a variable in the data product, and the target variable is the name of the variable to perform the function on. If all variables should be used `*` can be used as the target variable, for example COUNT(*) will provide return the total count of records for the specified dimensions. Currently supported functions are:
+ 
+- COUNT
+- PERCENT
+- SUM
+- AVG
+- MIN
+- MAX
+
+In this example we will get the percentage of respondents by state.
 
 ```{r fig.width=7, fig.height=4}
 tabulation <-
   rds.tabulate(
     dataProduct,
     dimensions = "state",
-    measures = "under18:AVG(P18)",
+    measures = "percent:PERCENT(*)",
     inject = T
   )
-df <- tabulation@records
 
-p <-
-  ggplot(df, aes(
-    x = STATE,
-    y = as.numeric(as.character(under18)),
-    color = STATE
-  )) +
-  geom_bar(stat = "identity", fill = "white") + scale_y_continuous(labels = comma) + xlab("State") + ylab("Count")
-p
+ggplot(tabulation@records, aes(
+  x = STATE,
+  y = as.numeric(as.character(percent)),
+  color = STATE
+)) +
+  geom_bar(stat = "identity", fill = "white") + 
+  scale_y_continuous(labels = function(x) paste0(x, "%")) + xlab("State") + ylab("Percent of Respondents")
 ```
+
+#### Multiple Dimensions and Measures
+
+Multiple dimensions and measures can be used if desired. In this example we will get a cross tabulation of state, household / family type, and sex, with their percentages returned to us. 
+
+```{r fig.width=7, fig.height=4}
+tabulation <-
+  rds.tabulate(
+    dataProduct,
+    dimensions = c("state", "hht", "sex"),
+    measures = c("percent:PERCENT(*)"),
+    inject = T
+  )
+
+
+# Make the plot
+ggplot(tabulation@records, aes(x=STATE, y=as.numeric(as.character(percent)), fill=HHT)) + geom_bar(stat="identity") +
+  scale_y_continuous(name = "Percent") + 
+  facet_grid(tabulation@records$SEX) +
+  theme(axis.text.x=element_text(angle=45, hjust = 1))
+
+```
+

@@ -56,15 +56,6 @@ dataSet <-
              limit = 10,
              autoPage = FALSE)
 kable(dataSet@records)
-dataSet@variables
-```
-
-#### Getting the Metadata
-
-In addition to the records, every data set returned by the select method will include any variable metadata that is associated with the data set. 
-
-```{r }
-dataSet@variables
 ```
 
 ### Injecting Metadata
@@ -91,7 +82,7 @@ RDS allows for a number of different ways to search for variable data. Users can
 dataSet <-
   rds.select(
     dataProduct,
-    cols = "serialno,p.*",
+    cols = c("serialno", "p.*"),
     limit = 5,
     autoPage = FALSE,
     inject = TRUE
