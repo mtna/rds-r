@@ -42,11 +42,7 @@ We will begin with a basic tabulation and show the count of respondents by state
 ```{r fig.width=7, fig.height=4}
 tabulation <- rds.tabulate(dataProduct, dimensions = "state")
 
-ggplot(tabulation@records, aes(
-  x = STATE,
-  y = as.numeric(as.character(count)),
-  color = STATE
-)) +
+ggplot(tabulation@records, aes(x = STATE, y = count, color = STATE)) +
   geom_bar(stat = "identity", fill = "white") + 
   scale_y_continuous(labels = comma) + xlab("State") + ylab("Count")
 ```
@@ -94,11 +90,7 @@ tabulation <-
     inject = T
   )
 
-ggplot(tabulation@records, aes(
-  x = STATE,
-  y = as.numeric(as.character(percent)),
-  color = STATE
-)) +
+ggplot(tabulation@records, aes(x = STATE, y = percent, color = STATE)) +
   geom_bar(stat = "identity", fill = "white") + 
   scale_y_continuous(labels = function(x) paste0(x, "%")) + xlab("State") + ylab("Percent of Respondents")
 ```
@@ -118,9 +110,9 @@ tabulation <-
 
 
 # Make the plot
-ggplot(tabulation@records, aes(x=STATE, y=as.numeric(as.character(percent)), fill=HHT)) + geom_bar(stat="identity") +
+ggplot(tabulation@records, aes(x=STATE, y=percent, fill=HHT)) + geom_bar(stat="identity") +
   scale_y_continuous(name = "Percent") + 
-  facet_grid(tabulation@records$SEX) +
+  facet_grid(as.factor(tabulation@records$SEX)) +
   theme(axis.text.x=element_text(angle=45, hjust = 1))
 
 ```

@@ -905,6 +905,27 @@ setMethod("rds.select", signature("rds.dataProduct"), function(dataProduct,
     names(records) <- variableNames
   } 
   
+  # change to the correct data type based on variable types
+  for (row in 1:nrow(variableDf)) {
+    id <- variableDf[row, "id"]
+    classificationUri <- variableDf[row, "classificationUri"]
+    dataType <- variableDf[row, "dataType"]
+    
+    if(!is.na(classificationUri) && inject == T){
+      records[, id] <- as.factor(records[, id])
+    } else if(dataType == "CHAR" || dataType == "TEXT" || dataType == "LONG_TEXT" || dataType == "BIG_INTEGER" || dataType == "BIG_DECIMAL"){
+      records[, id] <- as.character(records[, id])
+    } else if (dataType == "BYTE" || dataType == "SHORT" || dataType == "INTEGER" || dataType == "LONG") {
+      records[, id] <- as.integer(as.character(records[, id]))
+    } else if (dataType == "FLOAT" || dataType == "DOUBLE" || dataType == "NUMERIC") {
+      records[, id] <- as.numeric(as.character(records[, id]))
+    } else if (dataType == "DATE") {
+      records[, id] <- as.Date(records[, id])
+    } else if (dataType == "BOOLEAN") {
+      records[, id] <- as.logical(as.character(records[, id]))
+    }
+  }
+  
   # Create and return the data set
   dataSet <-
     new(
@@ -1116,6 +1137,27 @@ setMethod("rds.tabulate", signature("rds.dataProduct", "character"), function(da
   }
   # Format the info as a data.frame
   info <- data.frame(t(json$info[-1]))
+  
+  # change to the correct data type based on variable types
+  for (row in 1:nrow(variableDf)) {
+    id <- variableDf[row, "id"]
+    classificationUri <- variableDf[row, "classificationUri"]
+    dataType <- variableDf[row, "dataType"]
+
+    if(!is.na(classificationUri) && inject == T){
+      data[, id] <- as.factor(data[, id])
+    }else if (dataType == "CHAR" || dataType == "TEXT" || dataType == "LONG_TEXT" || dataType == "BIG_INTEGER" || dataType == "BIG_DECIMAL"){
+      data[, id] <- as.character(data[, id])
+    } else if (dataType == "BYTE" || dataType == "SHORT" || dataType == "INTEGER" || dataType == "LONG") {
+      data[, id] <- as.integer(as.character(data[, id]))
+    } else if (dataType == "FLOAT" || dataType == "DOUBLE" || dataType == "NUMERIC") {
+      data[, id] <- as.numeric(as.character(data[, id]))
+    } else if (dataType == "DATE") {
+      data[, id] <- as.Date(data[, id])
+    } else if (dataType == "BOOLEAN") {
+      data[, id] <- as.logical(as.character(data[, id]))
+    }
+  }
   
   dataSet <-
     new(
