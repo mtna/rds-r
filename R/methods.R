@@ -896,8 +896,14 @@ setMethod("rds.select", signature("rds.dataProduct"), function(dataProduct,
     }
   }
   
-  # Set the column names
-  colnames(records) <- variableNames
+  # Set the column names of the records
+  if(ncol(records)>0) {
+    colnames(records) <- variableNames
+  } else {
+    #if no records were returned we initiate the records as a new data frame with no data and the correct variable names
+    records <- as.data.frame(matrix(vector(), ncol = length(variableNames)))
+    names(records) <- variableNames
+  } 
   
   # Create and return the data set
   dataSet <-
@@ -1097,7 +1103,16 @@ setMethod("rds.tabulate", signature("rds.dataProduct", "character"), function(da
       id    <- variableDf[row, "id"]
       variableNames <- c(variableNames, id)
     }
-    colnames(data) <- variableNames
+    
+    # Set the column names of the records
+    if(ncol(data)>0) {
+      colnames(data) <- variableNames
+    } else {
+      #if no records were returned we initiate the records as a new data frame with no data and the correct variable names
+      data <- as.data.frame(matrix(vector(), ncol = length(variableNames)))
+      names(data) <- variableNames
+    } 
+    
   }
   # Format the info as a data.frame
   info <- data.frame(t(json$info[-1]))
