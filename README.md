@@ -10,7 +10,7 @@
 
 ## References
 [Examples](https://github.com/mtna/rds-r-examples) | [News](./NEWS.md)
-|---|---|---|---|---|
+|---|---|
 
 ## Install
 
