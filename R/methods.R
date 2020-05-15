@@ -911,7 +911,7 @@ setMethod("rds.select", signature("rds.dataProduct"), function(dataProduct,
     classificationUri <- variableDf[row, "classificationUri"]
     dataType <- variableDf[row, "dataType"]
     
-    if(!is.na(classificationUri) && inject == T){
+    if(!is.null(classificationUri) && !is.na(classificationUri) && inject == T){
       records[, id] <- as.factor(records[, id])
     } else if(dataType == "CHAR" || dataType == "TEXT" || dataType == "LONG_TEXT" || dataType == "BIG_INTEGER" || dataType == "BIG_DECIMAL"){
       records[, id] <- as.character(records[, id])
@@ -1144,7 +1144,7 @@ setMethod("rds.tabulate", signature("rds.dataProduct", "character"), function(da
     classificationUri <- variableDf[row, "classificationUri"]
     dataType <- variableDf[row, "dataType"]
 
-    if(!is.na(classificationUri) && inject == T){
+    if(!is.null(classificationUri) && !is.na(classificationUri) && inject == T){
       data[, id] <- as.factor(data[, id])
     }else if (dataType == "CHAR" || dataType == "TEXT" || dataType == "LONG_TEXT" || dataType == "BIG_INTEGER" || dataType == "BIG_DECIMAL"){
       data[, id] <- as.character(data[, id])
