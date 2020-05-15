@@ -22,12 +22,12 @@ browseVignettes(package="rds.r")
 ```
 ## Overview
 
-This R library facilitates access and integration with MTNA [Rich Data Services](http://www.richdataservices.com) API, enabling immediate access to RDS backed datasets and metadata collections. RDS provides on-premises or cloud based solution for concurrently accessing, querying, tabulating, and packaging data and metadata through a flexible REST API. 
+This R library facilitates access and integration with the [Rich Data Services API](http://www.richdataservices.com), enabling immediate access to the catalogs and data products hosted on RDS. This allows R developers to access the data through the R library and not have to do any of the techincal work of building up the API calls and handling the responses. Data and metadata will be retrieved, parsed into the appropriate classes, and returend to the developer to be begin working with immediately. 
 
 ## Why RDS?
 Retrieving data and metadata for analytical, reporting, or visualization purposes is typically a time and resource consuming process that involves several steps such as:
 -   Locating and downloading the data
--   Converting and load into R
+-   Converting and loading into R
 -   Computing subsets or aggregation
 -   Finding relevant documentation
 -   Manually transcribing codes/classification/labels and other descriptive elements into R objects
