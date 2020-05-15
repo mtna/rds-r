@@ -4,13 +4,13 @@
 ![Travis (.com) branch](https://img.shields.io/travis/com/mtna/rds-r?style=for-the-badge)
 <!-- badges: end -->
 
-<a href="https://www2.richdataservices.com"><img src="https://www2.richdataservices.com/assets/logo.svg" align="left" target="_blank" hspace="10" vspace="6" style="max-width: 200px"></a>
+<a href="https://www2.richdataservices.com"><img src="https://www2.richdataservices.com/assets/logo.svg" align="left" target="_blank" hspace="10" vspace="6" style="max-width: 200px"></a><br/>
 
 **Rich Data Services** (or **RDS**) is a suite of REST APIs designed by [Metadata Technology North America (MTNA)](https://www.mtna.us) to meet various needs for data engineers, managers, custodians, and consumers. RDS provides a range of services including data profiling, mapping, transformation, validation, ingestion, and dissemination. For more information about each of these APIs and how you can incorporate or consume them as part of your work flow please visit the MTNA website.
 
 ## References
 [Examples](https://github.com/mtna/rds-r-examples) | [News](./NEWS.md)
-|---|---|---|---|---|
+|---|---|
 
 ## Install
 
