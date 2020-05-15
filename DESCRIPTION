@@ -1,8 +1,8 @@
 Package: rds.r
 Title: Rich Data Services
-Version: 1.0.0
+Version: 0.0.1.9000
 Authors@R: person("Andrew", "DeCarlo", email = "andrew.decarlo@mtna.us", role = c("aut", "cre"))
-Description: Provides functions to acces data and metadata from an RDS server. 
+Description: Provides functions to access data and metadata from an RDS server. 
 Depends:
     R (>= 3.2.2),methods,jsonlite,urltools
 License: file LICENSE

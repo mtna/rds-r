@@ -1,3 +1,7 @@
+<!-- badges: start -->
+[![Travis build status](https://travis-ci.com/mtna/rds-r.svg?branch=master)](https://travis-ci.com/mtna/rds-r)
+<!-- badges: end -->
+
 # rds.r
 -   [Overview](#overview)
 -   [Why RDS](#why)
