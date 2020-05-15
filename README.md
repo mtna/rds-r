@@ -1,5 +1,5 @@
 <!-- badges: start -->
-[![Travis build status](https://travis-ci.com/mtna/rds-r.svg?branch=master)](https://travis-ci.com/mtna/rds-r)
+![Travis (.com) branch](https://img.shields.io/travis/com/mtna/rds-r?style=for-the-badge)
 <!-- badges: end -->
 
 # rds.r
