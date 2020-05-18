@@ -24,7 +24,7 @@ Catalogs in RDS are simply collections of data products. A data product is the o
 
 ```{r}
 # set up the host / domain name of the RDS instance
-host = "http://dev.richdataservices.com"
+host = "http://covid19.richdataservices.com"
 
 # connect to the server
 rds <- get.rds(host)
