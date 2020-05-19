@@ -19,7 +19,7 @@ setMethod("getCatalogs", signature("rds.server"), function(server) {
   # Query the server for all the catalogs
   catalogsUrl <-
     paste(server@baseUrl,
-          "/catalog",
+          "/api/catalog",
           sep = "",
           collapse = NULL)
   response <- jsonlite::fromJSON(catalogsUrl)
@@ -69,7 +69,7 @@ setMethod("getCatalog", signature("rds.server", "character"), function(server, c
   tryCatch({
     catalogUrl <- paste(
       server@baseUrl,
-      "/catalog/",
+      "/api/catalog/",
       catalogId,
       sep = "",
       collapse = NULL
@@ -130,7 +130,7 @@ setMethod("getDataProducts", signature("rds.catalog"), function(catalog) {
   server <- catalog@server
   dataProductsUrl <-
     paste(server@baseUrl,
-          "/catalog/",
+          "/api/catalog/",
           catalog@id,
           sep = "",
           collapse = NULL)
@@ -188,7 +188,7 @@ setMethod("getDataProduct", signature("rds.catalog", "character"), function(cata
   tryCatch({
     dataProductUrl <- paste(
       server@baseUrl,
-      "/catalog/",
+      "/api/catalog/",
       catalog@id,
       "/",
       dataProductId,
@@ -283,7 +283,7 @@ setMethod("getVariables", signature("rds.dataProduct"), function(dataProduct,
   # Set up the get request
   variablesUrl <- paste(
     rds@baseUrl,
-    "/catalog/",
+    "/api/catalog/",
     catalog@id,
     "/",
     dataProduct@id,
@@ -361,7 +361,7 @@ setMethod("getVariable", signature("rds.dataProduct", "character"), function(dat
   tryCatch({
     variableUrl <- paste(
       server@baseUrl,
-      "/catalog/",
+      "/api/catalog/",
       catalog@id,
       "/",
       dataProduct@id,
@@ -512,7 +512,7 @@ setMethod("getClassifications", signature("rds.dataProduct"), function(dataProdu
   request <-
     paste(
       rds@baseUrl,
-      "/catalog/",
+      "/api/catalog/",
       catalog@id,
       "/",
       dataProduct@id,
@@ -589,7 +589,7 @@ setMethod("getClassification", signature("rds.dataProduct", "character"), functi
   request <-
     paste(
       rds@baseUrl,
-      "/catalog/",
+      "/api/catalog/",
       catalog@id,
       "/",
       dataProduct@id,
@@ -610,7 +610,7 @@ setMethod("getClassification", signature("rds.dataProduct", "character"), functi
     codeRequest <-
       paste(
         rds@baseUrl,
-        "/catalog/",
+        "/api/catalog/",
         catalog@id,
         "/",
         dataProduct@id,
@@ -732,7 +732,7 @@ setMethod("rds.select", signature("rds.dataProduct"), function(dataProduct,
     # Build the select query
     select <- paste(
       rds@baseUrl,
-      "/query/",
+      "/api/query/",
       catalog@id,
       "/",
       dataProduct@id,
@@ -999,7 +999,7 @@ setMethod("rds.tabulate", signature("rds.dataProduct", "character"), function(da
   tabulate <-
     paste(
       rds@baseUrl,
-      "/query/",
+      "/api/query/",
       catalog@id,
       "/",
       dataProduct@id,
