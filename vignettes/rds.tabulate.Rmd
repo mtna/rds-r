@@ -30,7 +30,8 @@ The tabulate method allows tabulations to be created by specifying the dimension
 The first thing we need to do is set up a connection to the RDS server and get the data product we want to use, in this case we will use a subset of the U.S. 2010 Census PUMS files, containing DC, DE, MD, and VA.
 
 ```{r }
-rds <- get.rds("http://covid19.richdataservices.com")
+# provide the api URL to get the server
+rds <- get.rds("http://covid19.richdataservices.com/rds/api")
 catalog <- rds.r::getCatalog(rds, "uscensus")
 dataProduct <- rds.r::getDataProduct(catalog, "census2010-hp")
 ```

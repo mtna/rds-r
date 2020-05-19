@@ -1,40 +1,27 @@
 #' Get RDS Server
 #'
-#' This function uses the provided host, port, and protocol to build up an RDS server. This will create the base
-#' api paths that the server uses as well as pulling basis information about the server.
+#' This function uses the provided API URL to connect to a RDS server. Connecting to the server will 
+#' validate that this URL is correct and all the subsequent calls for catalogs, data products, metadata,
+#' or data will use this API URL as a base.
 #'
-#' @param host The host or domain name of the server
-#' @param port The port the RDS server is running on if needed. This is NULL by default.
-#' @param protocol The protocol to use in the call, http by default.
+#' @param apiUrl The RDS API URL of the RDS instance that is being accessed. 
 #' @import methods
 #' @keywords server
 #' @export
 #' @examples
-#' get.rds("http://dev.richdataservices.com")
-get.rds <- function(host,
-                    port = NULL,
-                    protocol = "http") {
+#' get.rds("http://dev.richdataservices.com/rds/api")
+get.rds <- function(apiUrl) {
   # Set up the URL of the server
-  baseUrl <- ""
+  baseUrl <- apiUrl
   
-  # if the user has not included the protocol, we will append it now
-    if (!startsWith(host, "http")) {
-    baseUrl <- protocol
-    if (!endsWith(protocol, "://")) {
-      baseUrl <- paste(baseUrl, "://", sep = "", collapse = NULL)
-    }
+  # if the user has a trailing / we will remove it.
+  if (endsWith(baseUrl, "/")) {
+    baseUrl <- substr(baseUrl, 0, nchar(baseUrl)-1)
   }
-  
-  # add the domain to the url
-  baseUrl <- paste(baseUrl, host, sep = "", collapse = NULL)
-  if (!is.null(port)) {
-    baseUrl <- paste(baseUrl, ":", port, sep = "", collapse = NULL)
-  }
-  baseUrl <- paste(baseUrl, "/rds", sep = "", collapse = NULL)
   
   # Get the server information
   serverInfo <-
-    jsonlite::fromJSON(paste(baseUrl, "/api/server/info", sep = "", collapse = NULL))
+    jsonlite::fromJSON(paste(baseUrl, "/server/info", sep = "", collapse = NULL))
   serverName <- serverInfo[[1]][1]
   serverVersion <- serverInfo[[2]][1]
   
@@ -42,7 +29,7 @@ get.rds <- function(host,
   disclaimer <-
     tryCatch(
       jsonlite::fromJSON(paste(
-        baseUrl, "/api/server/disclaimer", sep = "", collapse = NULL
+        baseUrl, "/server/disclaimer", sep = "", collapse = NULL
       )),
       error = function(e) {
         disclaimer <- ""

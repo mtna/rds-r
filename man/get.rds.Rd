@@ -4,20 +4,17 @@
 \alias{get.rds}
 \title{Get RDS Server}
 \usage{
-get.rds(host, port = NULL, protocol = "http")
+get.rds(apiUrl)
 }
 \arguments{
-\item{host}{The host or domain name of the server}
-
-\item{port}{The port the RDS server is running on if needed. This is NULL by default.}
-
-\item{protocol}{The protocol to use in the call, http by default.}
+\item{apiUrl}{The RDS API URL of the RDS instance that is being accessed.}
 }
 \description{
-This function uses the provided host, port, and protocol to build up an RDS server. This will create the base
-api paths that the server uses as well as pulling basis information about the server.
+This function uses the provided API URL to connect to a RDS server. Connecting to the server will 
+validate that this URL is correct and all the subsequent calls for catalogs, data products, metadata,
+or data will use this API URL as a base.
 }
 \examples{
-get.rds("http://dev.richdataservices.com")
+get.rds("http://dev.richdataservices.com/rds/api")
 }
 \keyword{server}

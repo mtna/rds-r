@@ -23,11 +23,11 @@ library("knitr")
 Catalogs in RDS are simply collections of data products. A data product is the object in RDS that holds data and any documentation or metadata that surrounds the data. The catalog contains a list of data products and we can get all of them or a single product if desired.
 
 ```{r}
-# set up the host / domain name of the RDS instance
-host = "http://covid19.richdataservices.com"
+# set up the base API URL
+apiUrl = "http://covid19.richdataservices.com/rds/api"
 
 # connect to the server
-rds <- get.rds(host)
+rds <- get.rds(apiUrl)
 
 # get a catalog
 census <- rds.r::getCatalog(rds, "uscensus")
