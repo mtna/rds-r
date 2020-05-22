@@ -371,6 +371,7 @@ setMethod("getVariable", signature("rds.dataProduct", "character"), function(dat
       sep = "",
       collapse = NULL
     )
+    print(variableUrl)
     variable <- jsonlite::fromJSON(variableUrl)
     
     # Gather the variable frequencies and format them
@@ -407,6 +408,31 @@ setMethod("getVariable", signature("rds.dataProduct", "character"), function(dat
       }
     }
     
+    # Gather the variable summaryStatistics and format them
+    variableStatistics <- list()
+    if (!is.null(variable$summaryStatistics)) {
+      for (i in 1:nrow(variable$summaryStatistics$sets)) {
+        # Get the set to work with
+        statisticSet <- variable$summaryStatistics$sets[i,]
+        statistics <- new(
+          "rds.statistics",
+          weighted = statisticSet[i, "weighted"],
+          weights = ifelse(is.null(statisticSet[i, "weights"]), NA_character_, statisticSet[i, "weights"]),
+          distinct = ifelse(is.null(statisticSet[i, "distinct"]), NA_real_, statisticSet[i, "distinct"]),
+          max = ifelse(is.null(statisticSet[i, "max"]), NA_real_, statisticSet[i, "max"]),
+          mean = ifelse(is.null(statisticSet[i, "mean"]), NA_real_, statisticSet[i, "mean"]),
+          median = ifelse(is.null(statisticSet[i, "median"]), NA_real_, statisticSet[i, "median"]),
+          min = ifelse(is.null(statisticSet[i, "min"]), NA_real_, statisticSet[i, "min"]),
+          missing = ifelse(is.null(statisticSet[i, "missing"]), NA_real_, statisticSet[i, "missing"]),
+          populated = ifelse(is.null(statisticSet[i, "populated"]), NA_real_, statisticSet[i, "populated"]),
+          standardDeviation = ifelse(is.null(statisticSet[i, "standardDeviation"]), NA_real_, statisticSet[i, "standardDeviation"]),
+          variance = ifelse(is.null(statisticSet[i, "variance"]), NA_real_, statisticSet[i, "variance"])
+        )
+        
+        variableStatistics <- append(variableStatistics, statistics)
+      }
+    }
+    
     rdsVariable <- new(
       "rds.variable",
       id = variable$id,
@@ -428,6 +454,7 @@ setMethod("getVariable", signature("rds.dataProduct", "character"), function(dat
       isMeasure = ifelse(is.null(variable$isMeasure), FALSE, variable$isMeasure),
       isRequired = ifelse(is.null(variable$isRequired), FALSE, variable$isRequired),
       isWeight = ifelse(is.null(variable$isWeight), FALSE, variable$isWeight),
+      statistics = variableStatistics,
       frequencies = variableFrequencies
     )
   },
@@ -513,6 +540,32 @@ setMethod("parseVariables", signature("data.frame"), function(variableDf) {
       }
     }
     
+    # Gather the variable summaryStatistics and format them
+    summaryStatistics  <- variableDf[row, "summaryStatistics"]
+    variableStatistics <- list()
+    if (!is.null(summaryStatistics) && !is.null(frequencies$sets[[1]])) {
+      for (i in 1:nrow(summaryStatistics)) {
+        # Get the set to work with
+        statisticSet <- summaryStatistics$sets[[i]]
+        statistics <- new(
+          "rds.statistics",
+          weighted = statisticSet[i, "weighted"],
+          weights = ifelse(is.null(statisticSet[i, "weights"]), NA_character_, statisticSet[i, "weights"]),
+          distinct = ifelse(is.null(statisticSet[i, "distinct"]), NA_real_, statisticSet[i, "distinct"]),
+          max = ifelse(is.null(statisticSet[i, "max"]), NA_real_, statisticSet[i, "max"]),
+          mean = ifelse(is.null(statisticSet[i, "mean"]), NA_real_, statisticSet[i, "mean"]),
+          median = ifelse(is.null(statisticSet[i, "median"]), NA_real_, statisticSet[i, "median"]),
+          min = ifelse(is.null(statisticSet[i, "min"]), NA_real_, statisticSet[i, "min"]),
+          missing = ifelse(is.null(statisticSet[i, "missing"]), NA_real_, statisticSet[i, "missing"]),
+          populated = ifelse(is.null(statisticSet[i, "populated"]), NA_real_, statisticSet[i, "populated"]),
+          standardDeviation = ifelse(is.null(statisticSet[i, "standardDeviation"]), NA_real_, statisticSet[i, "standardDeviation"]),
+          variance = ifelse(is.null(statisticSet[i, "variance"]), NA_real_, statisticSet[i, "variance"])
+        )
+        
+        variableStatistics <- append(variableStatistics, statistics)
+      }
+    }
+    
     # pull out the variables to test existence from the data frame
     label  <- variableDf[row, "label"]
     description  <- variableDf[row, "description"]
@@ -552,6 +605,7 @@ setMethod("parseVariables", signature("data.frame"), function(variableDf) {
       isMeasure = ifelse(is.null(isMeasure), FALSE, isMeasure),
       isRequired = ifelse(is.null(isRequired), FALSE, isRequired),
       isWeight = ifelse(is.null(isWeight), FALSE, isWeight),
+      statistics = variableStatistics,
       frequencies = variableFrequencies
     )
     variables <- append(variables, rdsVariable)

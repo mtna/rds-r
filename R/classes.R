@@ -94,6 +94,29 @@ setClass(
   )
 )
 
+#' Rich Data Services Statistics
+#' 
+#' 
+#' @name rds.statistics-class
+#' @rdname rds.statistics-class
+#' @exportClass rds.statistics
+setClass(
+  "rds.statistics",
+  representation(
+    weighted = "logical",
+    weights = "character",
+    distinct = "numeric",
+    max = "numeric",
+    mean = "numeric",
+    median = "numeric",
+    min = "numeric",
+    missing = "numeric",
+    populated = "numeric",
+    standardDeviation = "numeric",
+    variance = "numeric"
+  )
+)
+
 #' Rich Data Services Variable 
 #' 
 #' A variable containg the metadata round a column of data. This will provide information about the variable, what it is, the codes that apply to it and summary statistics. 
@@ -117,6 +140,7 @@ setClass(
 #' @slot isMeasure Indicates if the variable can be used as a measure or not in tabulations.
 #' @slot isRequired Indicates if the variable should always be included in the results or not.
 #' @slot isWeight Indicates if the variable can be used as a weight.
+#' @slot statistics A list of rds.statistics objects that potentially contains weighted or non weighted summary statistics of the variables values.
 #' @slot frequencies A list of rds.frequency objects that potentially contains weighted or non weighted frequencies of the variables values.
 #' @name rds.variable-class
 #' @rdname rds.variable-class
@@ -143,22 +167,8 @@ setClass(
     isMeasure = "logical",
     isRequired = "logical",
     isWeight = "logical",
+    statistics ="list",
     frequencies ="list"
-  )
-)
-
-#' Rich Data Services Statistics
-#' 
-#' 
-#' @name rds.statistics-class
-#' @rdname rds.statistics-class
-#' @exportClass rds.statistics
-setClass(
-  "rds.statistics",
-  representation(
-    weighted = "logical",
-    weights = "character",
-    statistics = "data.frame"
   )
 )
 
