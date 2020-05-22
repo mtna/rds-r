@@ -13,6 +13,7 @@ rds.select(
   colOffset = NULL,
   count = FALSE,
   orderby = NULL,
+  weights = NULL,
   where = NULL,
   inject = FALSE,
   autoPage = TRUE
@@ -34,6 +35,8 @@ rds.select(
 \item{count}{Specifies that the total count of records in the dataProduct should be included in the info section.}
 
 \item{orderby}{Describes how the results should be ordered.}
+
+\item{weights}{Ids of numeric variables to weight the data with. This should only be used for variables that are flagged as weights.}
 
 \item{where}{Describes how to subset the records based on variable values.}
 
