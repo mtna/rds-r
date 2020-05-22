@@ -130,10 +130,10 @@ from the main (upstream) repository:
   git branch -D feature/my-new-feature
   ```
 
-- Update your develop with the latest upstream version:
+- Update your develop with the latest version:
 
   ```shell
-  git pull --ff upstream develop
+  git pull --ff
   ```
 
 ## <a name="rules"></a> Coding Rules
