@@ -32,9 +32,9 @@ setMethod("getCatalogs", signature("rds.server"), function(server) {
       "rds.catalog",
       server = server,
       id = catalogs[catalogIndex, "id"],
-      description = ifelse(is.null(catalogs[catalogIndex, "description"]), "", catalogs[catalogIndex, "description"]),
-      label = ifelse(is.null(catalogs[catalogIndex, "label"]), "", catalogs[catalogIndex, "label"]),
-      name = ifelse(is.null(catalogs[catalogIndex, "name"]), "", catalogs[catalogIndex, "name"]),
+      description = ifelse(is.null(catalogs[catalogIndex, "description"]), NA_character_, catalogs[catalogIndex, "description"]),
+      label = ifelse(is.null(catalogs[catalogIndex, "label"]), NA_character_, catalogs[catalogIndex, "label"]),
+      name = ifelse(is.null(catalogs[catalogIndex, "name"]), NA_character_, catalogs[catalogIndex, "name"]),
       dataProductCount = ifelse(is.null(nrow(catalogs[catalogIndex, "dataProducts"][[1]])), 0, nrow(catalogs[catalogIndex, "dataProducts"][[1]]))
     )
     rdsCatalogs <- append(rdsCatalogs, rdsCatalog)
@@ -145,14 +145,14 @@ setMethod("getDataProducts", signature("rds.catalog"), function(catalog) {
       "rds.dataProduct",
       catalog = catalog,
       id = dataProducts[productIndex, "id"],
-      citation = ifelse(is.null(dataProducts[productIndex, "citation"]), "", dataProducts[productIndex, "citation"]),
-      description = ifelse(is.null(dataProducts[productIndex, "description"]), "", dataProducts[productIndex, "description"]),
-      label = ifelse(is.null(dataProducts[productIndex, "label"]), "", dataProducts[productIndex, "label"]),
+      citation = ifelse(is.null(dataProducts[productIndex, "citation"]), NA_character_, dataProducts[productIndex, "citation"]),
+      description = ifelse(is.null(dataProducts[productIndex, "description"]), NA_character_, dataProducts[productIndex, "description"]),
+      label = ifelse(is.null(dataProducts[productIndex, "label"]), NA_character_, dataProducts[productIndex, "label"]),
       lastUpdate = as.POSIXct(dataProducts[productIndex, "lastUpdate"], format = "%Y-%m-%dT%H:%M:%OSZ"),
-      name = ifelse(is.null(dataProducts[productIndex, "name"]), "", dataProducts[productIndex, "name"]),
-      note = ifelse(is.null(dataProducts[productIndex, "note"]), "", dataProducts[productIndex, "note"]),
-      provenance = ifelse(is.null(dataProducts[productIndex, "provenance"]), "", dataProducts[productIndex, "provenance"]),
-      restriction = ifelse(is.null(dataProducts[productIndex, "restriction"]), "", dataProducts[productIndex, "restriction"])
+      name = ifelse(is.null(dataProducts[productIndex, "name"]), NA_character_, dataProducts[productIndex, "name"]),
+      note = ifelse(is.null(dataProducts[productIndex, "note"]), NA_character_, dataProducts[productIndex, "note"]),
+      provenance = ifelse(is.null(dataProducts[productIndex, "provenance"]), NA_character_, dataProducts[productIndex, "provenance"]),
+      restriction = ifelse(is.null(dataProducts[productIndex, "restriction"]), NA_character_, dataProducts[productIndex, "restriction"])
     )
     rdsDataProducts <- append(rdsDataProducts, rdsProduct)
   }
@@ -200,24 +200,24 @@ setMethod("getDataProduct", signature("rds.catalog", "character"), function(cata
       "rds.dataProduct",
       catalog = catalog,
       id = dataProduct$id,
-      citation = ifelse(is.null(dataProduct$citation), "", dataProduct$citation),
+      citation = ifelse(is.null(dataProduct$citation), NA_character_, dataProduct$citation),
       description = ifelse(
         is.null(dataProduct$description),
-        "",
+        NA_character_,
         dataProduct$description
       ),
-      label = ifelse(is.null(dataProduct$label), "", dataProduct$label),
+      label = ifelse(is.null(dataProduct$label), NA_character_, dataProduct$label),
       lastUpdate = as.POSIXct(dataProduct$lastUpdate, format = "%Y-%m-%dT%H:%M:%OSZ"),
-      name = ifelse(is.null(dataProduct$name), "", dataProduct$name),
-      note = ifelse(is.null(dataProduct$note), "", dataProduct$note),
+      name = ifelse(is.null(dataProduct$name), NA_character_, dataProduct$name),
+      note = ifelse(is.null(dataProduct$note), NA_character_, dataProduct$note),
       provenance = ifelse(
         is.null(dataProduct$provenance),
-        "",
+        NA_character_,
         dataProduct$provenance
       ),
       restriction = ifelse(
         is.null(dataProduct$restriction),
-        "",
+        NA_character_,
         dataProduct$restriction
       )
     )
@@ -327,6 +327,7 @@ setMethod("getVariables", signature("rds.dataProduct"), function(dataProduct,
   }
   
   variables <- jsonlite::fromJSON(variablesUrl)
+  variables <- parseVariables(variables)
   return (variables)
 })
 
@@ -381,7 +382,7 @@ setMethod("getVariable", signature("rds.dataProduct", "character"), function(dat
         
         # Weight properties
         weighted <- frequencySet$weighted
-        weights <- ""
+        weights <- NA_character_
         
         # Set up the data frame
         setValues <- names(frequencySet$map)
@@ -389,7 +390,6 @@ setMethod("getVariable", signature("rds.dataProduct", "character"), function(dat
         frequencyDf <- data.frame()
         for (freqIndex in 1:length(setValues)) {
           value <- setValues[freqIndex]
-          
           dfRow <- data.frame(value, setFrequencies[1, value])
           frequencyDf <- rbind(frequencyDf, dfRow)
         }
@@ -409,42 +409,22 @@ setMethod("getVariable", signature("rds.dataProduct", "character"), function(dat
     
     rdsVariable <- new(
       "rds.variable",
-      dataProduct = dataProduct,
       id = variable$id,
-      name = ifelse(is.null(variable$name), "", variable$name),
-      label = ifelse(is.null(variable$label), "", variable$label),
-      description = ifelse(is.null(variable$description), "", variable$description),
-      questionText = ifelse(
-        is.null(variable$questionText),
-        "",
-        variable$questionText
-      ),
-      dataType = ifelse(is.null(variable$dataType), "", variable$dataType),
-      storageType = ifelse(is.null(variable$storageType), "", variable$storageType),
-      fixedStorageWidth = ifelse(
-        is.null(variable$fixedStorageWidth),
-        0,
-        variable$fixedStorageWidth
-      ),
-      startPosition = ifelse(
-        is.null(variable$startPosition),
-        0,
-        variable$startPosition
-      ),
-      endPosition = ifelse(is.null(variable$endPosition), 0, variable$endPosition),
-      decimals = ifelse(is.null(variable$decimals), 0, variable$decimals),
-      classificationId = ifelse(
-        is.null(variable$classificationId),
-        "",
-        variable$classificationId
-      ),
-      classificationUri = ifelse(
-        is.null(variable$classificationUri),
-        "",
-        variable$classificationUri
-      ),
-      index = ifelse(is.null(variable$index), 0, variable$index),
+      name =  variable$name,
+      storageType = variable$storageType,
+      index = variable$index,
+      label = ifelse(is.null(variable$label), NA_character_, variable$label),
+      description = ifelse(is.null(variable$description), NA_character_, variable$description),
+      questionText = ifelse(is.null(variable$questionText), NA_character_, variable$questionText),
+      dataType = ifelse(!is.null(variable$dataType), variable$dataType, NA_character_),
+      fixedStorageWidth = ifelse(is.null(variable$fixedStorageWidth), NA_integer_, variable$fixedStorageWidth),
+      startPosition = ifelse(is.null(variable$startPosition), NA_integer_, variable$startPosition),
+      endPosition = ifelse(is.null(variable$endPosition), NA_integer_, variable$endPosition),
+      decimals = ifelse(is.null(variable$decimals), NA_integer_, variable$decimals),
+      classificationId = ifelse(is.null(variable$classificationId), NA_character_, variable$classificationId),
+      classificationUri = ifelse(is.null(variable$classificationUri), NA_character_, variable$classificationUri),
       reference = ifelse(is.null(variable$reference), FALSE, variable$reference),
+      isDimension = ifelse(is.null(variable$isDimension), FALSE, variable$isDimension),
       isMeasure = ifelse(is.null(variable$isMeasure), FALSE, variable$isMeasure),
       isRequired = ifelse(is.null(variable$isRequired), FALSE, variable$isRequired),
       isWeight = ifelse(is.null(variable$isWeight), FALSE, variable$isWeight),
@@ -474,6 +454,111 @@ setMethod("getVariable", signature("rds.dataProduct", "character"), function(dat
   return (rdsVariable)
 })
 
+#' Parse Variables
+#'
+#' A method to parse the variable data frames that are returned from the REST call into a list of variable objects.
+#'
+#' @param variableDf The variable data frame to parse
+#' @name parseVariables
+#' @rdname parseVariables
+setGeneric("parseVariables", function(variableDf)
+  standardGeneric("parseVariables"))
+
+#' Parse Variables
+#'
+#' A method to parse the variable data frames that are returned from the REST call into a list of variable objects.
+#'
+#' @param variableDf The variable data frame to parse
+setMethod("parseVariables", signature("data.frame"), function(variableDf) {
+  variables <- c()
+  
+  for (row in 1:nrow(variableDf)) {
+    # Gather the variable frequencies and format them
+    frequencies  <- variableDf[row, "frequencies"]
+    variableFrequencies <- list()
+    if (!is.null(frequencies) && !is.null(frequencies$sets[[1]])) {
+      for (i in 1:length(frequencies$sets)) {
+        # Get the set to work with
+        frequencySet <- frequencies$sets[[i]]
+        
+        # Weight properties
+        weighted <- frequencySet$weighted
+        weights <- NA_character_
+        
+        # Set up the data frame
+        setValues <- names(frequencySet$map)
+        setFrequencies <- frequencySet$map[1, ]
+        frequencyDf <- data.frame()
+        if (length(setValues) > 1) {
+          for (freqIndex in 1:length(setValues)) {
+            value <- setValues[freqIndex]
+            
+            dfRow <- data.frame(value, setFrequencies[1, value])
+            frequencyDf <- rbind(frequencyDf, dfRow)
+          }
+        } else{
+          frequencyDf <- data.frame(setValues, setFrequencies)
+        }
+        names(frequencyDf) <- c("Value", "Frequency")
+        
+        variableFrequency <- new(
+          "rds.frequency",
+          weighted = weighted,
+          weights = weights,
+          frequencies = frequencyDf
+        )
+        
+        variableFrequencies <-
+          append(variableFrequencies, variableFrequency)
+      }
+    }
+    
+    # pull out the variables to test existence from the data frame
+    label  <- variableDf[row, "label"]
+    description  <- variableDf[row, "description"]
+    questionText  <- variableDf[row, "questionText"]
+    dataType  <- variableDf[row, "dataType"]
+    uri  <- variableDf[row, "uri"]
+    fixedStorageWidth  <- variableDf[row, "fixedStorageWidth"]
+    startPosition <- variableDf[row, "startPosition"]
+    endPosition  <- variableDf[row, "endPosition"]
+    decimals  <- variableDf[row, "decimals"]
+    classificationId  <- variableDf[row, "classificationId"]
+    classificationUri  <- variableDf[row, "classificationUri"]
+    reference  <- variableDf[row, "reference"]
+    isDimension  <- variableDf[row, "isDimension"]
+    isMeasure  <- variableDf[row, "isMeasure"]
+    isRequired  <- variableDf[row, "isRequired"]
+    isWeight  <- variableDf[row, "isWeight"]
+    
+    rdsVariable <- new(
+      "rds.variable",
+      id = variableDf[row, "id"],
+      name = variableDf[row, "name"],
+      storageType = variableDf[row, "storageType"],
+      index = variableDf[row, "index"],
+      label = ifelse(is.null(label), NA_character_, label),
+      description = ifelse(is.null(description), NA_character_, description),
+      questionText = ifelse(is.null(questionText), NA_character_, questionText),
+      dataType = ifelse(!is.null(dataType), dataType, NA_character_),
+      fixedStorageWidth = ifelse(is.null(fixedStorageWidth), NA_integer_, fixedStorageWidth),
+      startPosition = ifelse(is.null(startPosition), NA_integer_, startPosition),
+      endPosition = ifelse(is.null(endPosition), NA_integer_, endPosition),
+      decimals = ifelse(is.null(decimals), NA_integer_, decimals),
+      classificationId = ifelse(is.null(classificationId), NA_character_, classificationId),
+      classificationUri = ifelse(is.null(classificationUri), NA_character_, classificationUri),
+      reference = ifelse(is.null(reference), FALSE, reference),
+      isDimension = ifelse(is.null(isDimension), FALSE, isDimension),
+      isMeasure = ifelse(is.null(isMeasure), FALSE, isMeasure),
+      isRequired = ifelse(is.null(isRequired), FALSE, isRequired),
+      isWeight = ifelse(is.null(isWeight), FALSE, isWeight),
+      frequencies = variableFrequencies
+    )
+    variables <- append(variables, rdsVariable)
+  }
+  
+  return (variables)
+})
 
 
 #' Get Classifications
@@ -930,7 +1015,7 @@ setMethod("rds.select", signature("rds.dataProduct"), function(dataProduct,
   dataSet <-
     new(
       "rds.dataset",
-      variables = variableDf,
+      variables = parseVariables(variableDf),
       records = records,
       info = info
     )
@@ -1162,7 +1247,7 @@ setMethod("rds.tabulate", signature("rds.dataProduct", "character"), function(da
   dataSet <-
     new(
       "rds.dataset",
-      variables = variableDf,
+      variables = parseVariables(variableDf),
       records = data,
       totals = totals,
       info = info

@@ -31,7 +31,7 @@ The first thing we need to do is set up a connection to the RDS server and get t
 
 ```{r }
 # provide the api URL to get the server
-rds <- get.rds("http://covid19.richdataservices.com/rds")
+rds <- get.rds("http://dev.richdataservices.com/rds")
 catalog <- rds.r::getCatalog(rds, "uscensus")
 dataProduct <- rds.r::getDataProduct(catalog, "census2010-hp")
 ```
