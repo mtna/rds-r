@@ -11,6 +11,7 @@
   limit = NULL,
   offset = NULL,
   orderby = NULL,
+  weights = NULL,
   where = NULL,
   totals = TRUE,
   inject = FALSE
@@ -28,6 +29,8 @@
 \item{offset}{Specifies the starting index of the records.}
 
 \item{orderby}{Describes how the results should be ordered.}
+
+\item{weights}{Ids of numeric variables to weight the data with. This should only be used for variables that are flagged as weights.}
 
 \item{where}{Describes the subset of records the tabulation should run on.}
 
