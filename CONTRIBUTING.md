@@ -21,7 +21,7 @@ Do not open issues for general support questions as we want to keep GitHub issue
 
 ## <a name="gitflow"></a> Gitflow
 
-This repository follows the [Gitflow](https://www.atlassian.com/git/tutorials/comparing-workflows/gitflow-workflow) workflow. We believe this will make the rds-r package easier to use in through `devtools::install_github("mtna/rds-r")` as master should always be the latest stable released version.
+This repository follows the [Gitflow](https://datasift.github.io/gitflow/IntroducingGitFlow.html) workflow. We believe this will make the rds-r package easier to use in through `devtools::install_github("mtna/rds-r")` as master should always be the latest stable released version.
 
 The main branches to be aware of are:
 
