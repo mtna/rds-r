@@ -24,7 +24,7 @@ Catalogs in RDS are simply collections of data products. A data product is the o
 
 ```{r}
 # set up the base API URL
-url = "http://covid19.richdataservices.com/rds"
+url = "http://dev.richdataservices.com/rds"
 
 # connect to the server
 rds <- get.rds(url)

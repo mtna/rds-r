@@ -10,8 +10,6 @@ A variable containg the metadata round a column of data. This will provide infor
 \section{Slots}{
 
 \describe{
-\item{\code{dataProduct}}{The data product the variable belongs to.}
-
 \item{\code{id}}{The variable ID.}
 
 \item{\code{name}}{The variable name.}
@@ -41,6 +39,8 @@ A variable containg the metadata round a column of data. This will provide infor
 \item{\code{index}}{The index of the variable in the data product.}
 
 \item{\code{reference}}{Indicates if the variable is a reference. If true, this variable will not contain the full variable metadata, and the variable metadata should be retrieved from the server if more detail about the variable is desired.}
+
+\item{\code{isDimension}}{Indicates if the variable can be used as a dimension or not in tabulations.}
 
 \item{\code{isMeasure}}{Indicates if the variable can be used as a measure or not in tabulations.}
 

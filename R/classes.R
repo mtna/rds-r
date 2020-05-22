@@ -98,7 +98,6 @@ setClass(
 #' 
 #' A variable containg the metadata round a column of data. This will provide information about the variable, what it is, the codes that apply to it and summary statistics. 
 #' 
-#' @slot dataProduct The data product the variable belongs to.
 #' @slot id The variable ID.
 #' @slot name The variable name.
 #' @slot label The variable label.
@@ -114,6 +113,7 @@ setClass(
 #' @slot classificationUri If the variable has a classification associated with it its URI will be here. This can be used for query purposes.
 #' @slot index The index of the variable in the data product.
 #' @slot reference Indicates if the variable is a reference. If true, this variable will not contain the full variable metadata, and the variable metadata should be retrieved from the server if more detail about the variable is desired.
+#' @slot isDimension Indicates if the variable can be used as a dimension or not in tabulations.
 #' @slot isMeasure Indicates if the variable can be used as a measure or not in tabulations.
 #' @slot isRequired Indicates if the variable should always be included in the results or not.
 #' @slot isWeight Indicates if the variable can be used as a weight.
@@ -124,7 +124,6 @@ setClass(
 setClass(
   "rds.variable",
   representation(
-    dataProduct = "rds.dataProduct",
     id = "character",
     name = "character",
     label = "character",
@@ -140,6 +139,7 @@ setClass(
     classificationUri = "character",
     index = "numeric",
     reference = "logical",
+    isDimension = "logical",
     isMeasure = "logical",
     isRequired = "logical",
     isWeight = "logical",
@@ -176,7 +176,7 @@ setClass(
 setClass(
   "rds.dataset",
   representation(
-    variables = "data.frame",
+    variables = "list",
     records = "data.frame",
     totals = "data.frame",
     info = "data.frame"
