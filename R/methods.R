@@ -17,11 +17,7 @@ setGeneric("getCatalogs", function(server)
 #' @param server The server to query for the catalogs.
 setMethod("getCatalogs", signature("rds.server"), function(server) {
   # Query the server for all the catalogs
-  catalogsUrl <-
-    paste(server@baseUrl,
-          "/api/catalog",
-          sep = "",
-          collapse = NULL)
+  catalogsUrl <- paste(server@baseUrl, "/api/catalog", sep = "")
   response <- jsonlite::fromJSON(catalogsUrl)
   catalogs <- response[[1]]
   
@@ -67,13 +63,8 @@ setMethod("getCatalog", signature("rds.server", "character"), function(server, c
   # Query the server for the specified catlog
   rdsCatalog <- NULL
   tryCatch({
-    catalogUrl <- paste(
-      server@baseUrl,
-      "/api/catalog/",
-      catalogId,
-      sep = "",
-      collapse = NULL
-    )
+    catalogUrl <-
+      paste(server@baseUrl, "/api/catalog/", catalogId, sep = "")
     catalog <- jsonlite::fromJSON(catalogUrl)
     rdsCatalog <- new(
       "rds.catalog",
@@ -94,13 +85,7 @@ setMethod("getCatalog", signature("rds.server", "character"), function(server, c
   # Throw error if we cannot find the catalog.
   if (is.null(rdsCatalog)) {
     stop(
-      paste(
-        "No catalog could be found with the ID [",
-        catalogId,
-        "]",
-        sep = "",
-        collapse = NULL
-      )
+      paste("No catalog could be found with the ID [", catalogId, "]",  sep = "")
     )
   }
   
@@ -129,12 +114,7 @@ setMethod("getDataProducts", signature("rds.catalog"), function(catalog) {
   # Set up the request URL
   server <- catalog@server
   dataProductsUrl <-
-    paste(server@baseUrl,
-          "/api/catalog/",
-          catalog@id,
-          sep = "",
-          collapse = NULL)
-  
+    paste(server@baseUrl, "/api/catalog/", catalog@id, sep = "")
   response <- jsonlite::fromJSON(dataProductsUrl)
   dataProducts = response[[1]]
   
@@ -186,15 +166,8 @@ setMethod("getDataProduct", signature("rds.catalog", "character"), function(cata
   # Query the server for the specified data product
   rdsDataProduct <- NULL
   tryCatch({
-    dataProductUrl <- paste(
-      server@baseUrl,
-      "/api/catalog/",
-      catalog@id,
-      "/",
-      dataProductId,
-      sep = "",
-      collapse = NULL
-    )
+    dataProductUrl <- 
+      paste(server@baseUrl, "/api/catalog/", catalog@id, "/", dataProductId,sep = "")
     dataProduct <- jsonlite::fromJSON(dataProductUrl)
     rdsDataProduct <- new(
       "rds.dataProduct",
@@ -229,15 +202,7 @@ setMethod("getDataProduct", signature("rds.catalog", "character"), function(cata
   # Throw error if we cannot find the data product.
   if (is.null(rdsDataProduct)) {
     stop(
-      paste(
-        "No data product [",
-        dataProductId,
-        "] could be found in the catalog [",
-        catalog@id,
-        "]",
-        sep = "",
-        collapse = NULL
-      )
+      paste("No data product [", dataProductId, "] could be found in the catalog [", catalog@id, "]", sep = "")
     )
   }
   
@@ -281,49 +246,25 @@ setMethod("getVariables", signature("rds.dataProduct"), function(dataProduct,
   rds <- catalog@server
   
   # Set up the get request
-  variablesUrl <- paste(
-    rds@baseUrl,
-    "/api/catalog/",
-    catalog@id,
-    "/",
-    dataProduct@id,
-    "/variables",
-    sep = "",
-    collapse = NULL
-  )
+  variablesUrl <- 
+    paste(rds@baseUrl, "/api/catalog/", catalog@id, "/", dataProduct@id, "/variables", sep = "")
   
   # add the cols if not null
   paramPrefix = "?"
   if (!is.null(cols)) {
-    variablesUrl <- paste(variablesUrl,
-                          paramPrefix,
-                          "cols=",
-                          cols,
-                          sep = "",
-                          collapse = NULL)
+    variablesUrl <- 
+      paste(variablesUrl, paramPrefix, "cols=", cols, sep = "")
     paramPrefix = "&"
   }
   
   if (!is.null(collimit)) {
-    variablesUrl <- paste(
-      variablesUrl,
-      paramPrefix,
-      "collimit=",
-      collimit,
-      sep = "",
-      collapse = NULL
-    )
+    variablesUrl <-
+      paste(variablesUrl, paramPrefix, "collimit=", collimit, sep = "")
     paramPrefix = "&"
   }
   if (!is.null(coloffset)) {
-    variablesUrl <- paste(
-      variablesUrl,
-      paramPrefix,
-      "coloffset=",
-      coloffset,
-      sep = "",
-      collapse = NULL
-    )
+    variablesUrl <-
+      paste(variablesUrl, paramPrefix, "coloffset=", coloffset, sep = "")
   }
   
   variables <- jsonlite::fromJSON(variablesUrl)
@@ -360,17 +301,9 @@ setMethod("getVariable", signature("rds.dataProduct", "character"), function(dat
   # Query the server for the specified variable
   rdsVariable <- NULL
   tryCatch({
-    variableUrl <- paste(
-      server@baseUrl,
-      "/api/catalog/",
-      catalog@id,
-      "/",
-      dataProduct@id,
-      "/variable/",
-      variableId,
-      sep = "",
-      collapse = NULL
-    )
+    variableUrl <- 
+      paste(server@baseUrl, "/api/catalog/", catalog@id, "/", dataProduct@id, "/variable/", variableId, sep = "")
+    print(variableUrl)
     variable <- jsonlite::fromJSON(variableUrl)
     
     # Gather the variable frequencies and format them
@@ -407,6 +340,31 @@ setMethod("getVariable", signature("rds.dataProduct", "character"), function(dat
       }
     }
     
+    # Gather the variable summaryStatistics and format them
+    variableStatistics <- list()
+    if (!is.null(variable$summaryStatistics)) {
+      for (i in 1:nrow(variable$summaryStatistics$sets)) {
+        # Get the set to work with
+        statisticSet <- variable$summaryStatistics$sets[i,]
+        statistics <- new(
+          "rds.statistics",
+          weighted = statisticSet[i, "weighted"],
+          weights = ifelse(is.null(statisticSet[i, "weights"]), NA_character_, statisticSet[i, "weights"]),
+          distinct = ifelse(is.null(statisticSet[i, "distinct"]), NA_real_, statisticSet[i, "distinct"]),
+          max = ifelse(is.null(statisticSet[i, "max"]), NA_real_, statisticSet[i, "max"]),
+          mean = ifelse(is.null(statisticSet[i, "mean"]), NA_real_, statisticSet[i, "mean"]),
+          median = ifelse(is.null(statisticSet[i, "median"]), NA_real_, statisticSet[i, "median"]),
+          min = ifelse(is.null(statisticSet[i, "min"]), NA_real_, statisticSet[i, "min"]),
+          missing = ifelse(is.null(statisticSet[i, "missing"]), NA_real_, statisticSet[i, "missing"]),
+          populated = ifelse(is.null(statisticSet[i, "populated"]), NA_real_, statisticSet[i, "populated"]),
+          standardDeviation = ifelse(is.null(statisticSet[i, "standardDeviation"]), NA_real_, statisticSet[i, "standardDeviation"]),
+          variance = ifelse(is.null(statisticSet[i, "variance"]), NA_real_, statisticSet[i, "variance"])
+        )
+        
+        variableStatistics <- append(variableStatistics, statistics)
+      }
+    }
+    
     rdsVariable <- new(
       "rds.variable",
       id = variable$id,
@@ -428,6 +386,7 @@ setMethod("getVariable", signature("rds.dataProduct", "character"), function(dat
       isMeasure = ifelse(is.null(variable$isMeasure), FALSE, variable$isMeasure),
       isRequired = ifelse(is.null(variable$isRequired), FALSE, variable$isRequired),
       isWeight = ifelse(is.null(variable$isWeight), FALSE, variable$isWeight),
+      statistics = variableStatistics,
       frequencies = variableFrequencies
     )
   },
@@ -513,6 +472,32 @@ setMethod("parseVariables", signature("data.frame"), function(variableDf) {
       }
     }
     
+    # Gather the variable summaryStatistics and format them
+    summaryStatistics  <- variableDf[row, "summaryStatistics"]
+    variableStatistics <- list()
+    if (!is.null(summaryStatistics) && !is.null(frequencies$sets[[1]])) {
+      for (i in 1:nrow(summaryStatistics)) {
+        # Get the set to work with
+        statisticSet <- summaryStatistics$sets[[i]]
+        statistics <- new(
+          "rds.statistics",
+          weighted = statisticSet[i, "weighted"],
+          weights = ifelse(is.null(statisticSet[i, "weights"]), NA_character_, statisticSet[i, "weights"]),
+          distinct = ifelse(is.null(statisticSet[i, "distinct"]), NA_real_, statisticSet[i, "distinct"]),
+          max = ifelse(is.null(statisticSet[i, "max"]), NA_real_, statisticSet[i, "max"]),
+          mean = ifelse(is.null(statisticSet[i, "mean"]), NA_real_, statisticSet[i, "mean"]),
+          median = ifelse(is.null(statisticSet[i, "median"]), NA_real_, statisticSet[i, "median"]),
+          min = ifelse(is.null(statisticSet[i, "min"]), NA_real_, statisticSet[i, "min"]),
+          missing = ifelse(is.null(statisticSet[i, "missing"]), NA_real_, statisticSet[i, "missing"]),
+          populated = ifelse(is.null(statisticSet[i, "populated"]), NA_real_, statisticSet[i, "populated"]),
+          standardDeviation = ifelse(is.null(statisticSet[i, "standardDeviation"]), NA_real_, statisticSet[i, "standardDeviation"]),
+          variance = ifelse(is.null(statisticSet[i, "variance"]), NA_real_, statisticSet[i, "variance"])
+        )
+        
+        variableStatistics <- append(variableStatistics, statistics)
+      }
+    }
+    
     # pull out the variables to test existence from the data frame
     label  <- variableDf[row, "label"]
     description  <- variableDf[row, "description"]
@@ -552,6 +537,7 @@ setMethod("parseVariables", signature("data.frame"), function(variableDf) {
       isMeasure = ifelse(is.null(isMeasure), FALSE, isMeasure),
       isRequired = ifelse(is.null(isRequired), FALSE, isRequired),
       isWeight = ifelse(is.null(isWeight), FALSE, isWeight),
+      statistics = variableStatistics,
       frequencies = variableFrequencies
     )
     variables <- append(variables, rdsVariable)
@@ -595,38 +581,19 @@ setMethod("getClassifications", signature("rds.dataProduct"), function(dataProdu
   
   # Set up the classifications query
   request <-
-    paste(
-      rds@baseUrl,
-      "/api/catalog/",
-      catalog@id,
-      "/",
-      dataProduct@id,
-      "/classifications",
-      sep = "",
-      collapse = NULL
-    )
+    paste(rds@baseUrl, "/api/catalog/", catalog@id, "/", dataProduct@id, "/classifications", sep = "")
   
   # append any filled out options to the request
   paramPrefix = "?"
   if (!is.null(limit)) {
     request <-
-      paste(request,
-            paramPrefix,
-            "limit=",
-            limit,
-            sep = "",
-            collapse = NULL)
+      paste(request, paramPrefix, "limit=", limit, sep = "")
     paramPrefix = "&"
   }
   
   if (!is.null(offset)) {
     request <-
-      paste(request,
-            paramPrefix,
-            "offset=",
-            offset,
-            sep = "",
-            collapse = NULL)
+      paste(request, paramPrefix, "offset=", offset, sep = "")
     paramPrefix = "&"
   }
   
@@ -672,17 +639,7 @@ setMethod("getClassification", signature("rds.dataProduct", "character"), functi
   
   # create the GET request and retrieve the JSON result
   request <-
-    paste(
-      rds@baseUrl,
-      "/api/catalog/",
-      catalog@id,
-      "/",
-      dataProduct@id,
-      "/classification/",
-      classificationId,
-      sep = "",
-      collapse = NULL
-    )
+    paste(rds@baseUrl, "/api/catalog/", catalog@id, "/", dataProduct@id, "/classification/", classificationId, sep = "")
   
   json <- jsonlite::fromJSON(request)
   id <- json$id
@@ -693,43 +650,18 @@ setMethod("getClassification", signature("rds.dataProduct", "character"), functi
   if (codeCount > 0) {
     #query for codes in a separate call and add them on to this classification
     codeRequest <-
-      paste(
-        rds@baseUrl,
-        "/api/catalog/",
-        catalog@id,
-        "/",
-        dataProduct@id,
-        "/classification/",
-        classificationId,
-        "/codes",
-        sep = "",
-        collapse = NULL
-      )
+      paste(rds@baseUrl, "/api/catalog/", catalog@id, "/", dataProduct@id, "/classification/", classificationId, "/codes", sep = "")
     # append any filled out options to the request
     paramPrefix = "?"
     if (!is.null(limit)) {
       codeRequest <-
-        paste(
-          codeRequest,
-          paramPrefix,
-          "limit=",
-          limit,
-          sep = "",
-          collapse = NULL
-        )
+        paste(codeRequest,  paramPrefix, "limit=", limit, sep = "")
       paramPrefix = "&"
     }
     
     if (!is.null(offset)) {
       codeRequest <-
-        paste(
-          codeRequest,
-          paramPrefix,
-          "offset=",
-          offset,
-          sep = "",
-          collapse = NULL
-        )
+        paste(codeRequest, paramPrefix, "offset=", offset, sep = "")
       paramPrefix = "&"
     }
     codeListJson <- jsonlite::fromJSON(codeRequest)
@@ -751,6 +683,7 @@ setMethod("getClassification", signature("rds.dataProduct", "character"), functi
 #' @param colOffset Specifies the starting index of the classifications to be returned
 #' @param count Specifies that the total count of records in the dataProduct should be included in the info section.
 #' @param orderby Describes how the results should be ordered.
+#' @param weights Ids of numeric variables to weight the data with. This should only be used for variables that are flagged as weights. 
 #' @param where Describes how to subset the records based on variable values.
 #' @param inject Specifies if metadata should be injected into the data frame. If true and there are classifications available the columns codes will be replaced with code values. Defaults to FALSE
 #' @param autoPage If set to true multiple queries will be sent to the RDS server in order to compile the complete data set.
@@ -765,6 +698,7 @@ setGeneric("rds.select", function(dataProduct,
                                   colOffset = NULL,
                                   count = FALSE,
                                   orderby = NULL,
+                                  weights = NULL,
                                   where = NULL,
                                   inject = FALSE,
                                   autoPage = TRUE)
@@ -783,6 +717,7 @@ setGeneric("rds.select", function(dataProduct,
 #' @param colOffset Specifies the starting index of the classifications to be returned
 #' @param count Specifies that the total count of records in the dataProduct should be included in the info section.
 #' @param orderby Describes how the results should be ordered.
+#' @param weights Ids of numeric variables to weight the data with. This should only be used for variables that are flagged as weights. 
 #' @param where Describes how to subset the records based on variable values.
 #' @param inject Specifies if metadata should be injected into the data frame. If true and there are classifications available the columns codes will be replaced with code values. Defaults to FALSE
 #' @param autoPage If set to true multiple queries will be sent to the RDS server in order to compile the complete data set.
@@ -794,6 +729,7 @@ setMethod("rds.select", signature("rds.dataProduct"), function(dataProduct,
                                                                colOffset = NULL,
                                                                count = FALSE,
                                                                orderby = NULL,
+                                                               weights = NULL,
                                                                where = NULL,
                                                                inject = FALSE,
                                                                autoPage = TRUE) {
@@ -815,128 +751,70 @@ setMethod("rds.select", signature("rds.dataProduct"), function(dataProduct,
   
   while (query) {
     # Build the select query
-    select <- paste(
-      rds@baseUrl,
-      "/api/query/",
-      catalog@id,
-      "/",
-      dataProduct@id,
-      "/select",
-      sep = "",
-      collapse = NULL
-    )
+    select <- paste(rds@baseUrl, "/api/query/", catalog@id, "/", dataProduct@id, "/select", sep = "")
     
     # append any filled out options to the select
     paramPrefix <- "?"
     if (!is.null(limit))  {
-      select <- paste(select,
-                      paramPrefix,
-                      "limit=",
-                      limit,
-                      sep = "",
-                      collapse = NULL)
+      select <- paste(select, paramPrefix, "limit=", limit, sep = "")
       paramPrefix <- "&"
     }
     
     if (!is.null(offset))  {
-      select <- paste(select,
-                      paramPrefix,
-                      "offset=",
-                      offset,
-                      sep = "",
-                      collapse = NULL)
+      select <- paste(select, paramPrefix, "offset=", offset, sep = "")
       paramPrefix <- "&"
     }
     
     if (!is.null(cols)) {
-      select <- paste(
-        select,
-        paramPrefix,
-        "cols=",
-        url_encode(paste(cols, collapse = ",")),
-        sep = "",
-        collapse = NULL
-      )
+      select <-
+        paste(select, paramPrefix, "cols=", url_encode(paste(cols, collapse = ",")), sep = "")
       paramPrefix <- "&"
     }
     
     if (!is.null(colLimit))  {
-      select <- paste(
-        select,
-        paramPrefix,
-        "colLimit=",
-        colLimit,
-        sep = "",
-        collapse = NULL
-      )
+      select <-
+        paste(select, paramPrefix, "colLimit=", colLimit, sep = "")
       paramPrefix <- "&"
     }
     
     if (!is.null(colOffset))  {
       select <-
-        paste(
-          select,
-          paramPrefix,
-          "colOffset=",
-          colOffset,
-          sep = "",
-          collapse = NULL
-        )
+        paste(select, paramPrefix, "colOffset=", colOffset, sep = "")
       paramPrefix <- "&"
     }
     
     if (count)  {
       select <-
-        paste(select,
-              paramPrefix,
-              "count=TRUE",
-              sep = "",
-              collapse = NULL)
+        paste(select, paramPrefix, "count=TRUE", sep = "")
       paramPrefix <- "&"
     }
     
     if (!is.null(orderby))  {
       select <-
-        paste(
-          select,
-          paramPrefix,
-          "orderby=",
-          url_encode(paste(orderby, collapse = ",")),
-          sep = "",
-          collapse = NULL
-        )
+        paste(select, paramPrefix, "orderby=", url_encode(paste(orderby, collapse = ",")), sep = "")
+      paramPrefix <- "&"
+    }
+    
+    if (!is.null(weights))  {
+      select <-
+        paste(select, paramPrefix, "weights=", url_encode(paste(weights, collapse = ",")), sep = "")
       paramPrefix <- "&"
     }
     
     if (!is.null(where))  {
-      select <- paste(
-        select,
-        paramPrefix,
-        "where=",
-        url_encode(where),
-        sep = "",
-        collapse = NULL
-      )
+      select <-
+        paste(select, paramPrefix, "where=", url_encode(where), sep = "")
       paramPrefix <- "&"
     }
     
     if (inject) {
       select <-
-        paste(select,
-              paramPrefix,
-              "inject=",
-              inject,
-              sep = "",
-              collapse = NULL)
+        paste(select, paramPrefix, "inject=", inject, sep = "")
       paramPrefix <- "&"
     }
     
     if (metadata) {
-      select <- paste(select,
-                      paramPrefix,
-                      "metadata=TRUE",
-                      sep = "",
-                      collapse = NULL)
+      select <- paste(select, paramPrefix, "metadata=TRUE", sep = "")
       paramPrefix <- "&"
     }
     
@@ -1034,6 +912,7 @@ setMethod("rds.select", signature("rds.dataProduct"), function(dataProduct,
 #' @param limit Specifies the number of records to return.
 #' @param offset Specifies the starting index of the records.
 #' @param orderby Describes how the results should be ordered.
+#' @param weights Ids of numeric variables to weight the data with. This should only be used for variables that are flagged as weights. 
 #' @param where Describes the subset of records the tabulation should run on.
 #' @param totals Specifies if totals should be included. Totals are used to provide roll up information about the counts of dimensions at different levels.
 #' @param inject Specifies if metadata should be injected into the data frame. If true and there are classifications available the columns codes will be replaced with code values. Defaults to FALSE
@@ -1046,6 +925,7 @@ setGeneric("rds.tabulate", function(dataProduct,
                                     limit = NULL,
                                     offset = NULL,
                                     orderby = NULL,
+                                    weights = NULL,
                                     where = NULL,
                                     totals = TRUE,
                                     inject = FALSE)
@@ -1062,6 +942,7 @@ setGeneric("rds.tabulate", function(dataProduct,
 #' @param limit Specifies the number of records to return.
 #' @param offset Specifies the starting index of the records.
 #' @param orderby Describes how the results should be ordered.
+#' @param weights Ids of numeric variables to weight the data with. This should only be used for variables that are flagged as weights. 
 #' @param where Describes the subset of records the tabulation should run on.
 #' @param totals Specifies if totals should be included. Totals are used to provide roll up information about the counts of dimensions at different levels.
 #' @param inject Specifies if metadata should be injected into the data frame. If true and there are classifications available the columns codes will be replaced with code values. Defaults to FALSE
@@ -1071,6 +952,7 @@ setMethod("rds.tabulate", signature("rds.dataProduct", "character"), function(da
                                                                               limit = NULL,
                                                                               offset = NULL,
                                                                               orderby = NULL,
+                                                                              weights = NULL,
                                                                               where = NULL,
                                                                               totals = TRUE,
                                                                               inject = FALSE) {
@@ -1082,111 +964,63 @@ setMethod("rds.tabulate", signature("rds.dataProduct", "character"), function(da
   
   # Create the query
   tabulate <-
-    paste(
-      rds@baseUrl,
-      "/api/query/",
-      catalog@id,
-      "/",
-      dataProduct@id,
-      "/tabulate",
-      sep = "",
-      collapse = NULL
-    )
+    paste(rds@baseUrl, "/api/query/", catalog@id, "/", dataProduct@id, "/tabulate", sep = "")
   
   # Append any filled out options to the request
   paramPrefix <- "?"
-  tabulate <- paste(tabulate,
-                    paramPrefix,
-                    "metadata=true",
-                    sep = "",
-                    collapse = NULL)
+  tabulate <- paste(tabulate, paramPrefix, "metadata=true", sep = "")
   paramPrefix <- "&"
   
   if (inject) {
-    tabulate <- paste(tabulate,
-                      paramPrefix,
-                      "inject=true",
-                      sep = "",
-                      collapse = NULL)
+    tabulate <-
+      paste(tabulate, paramPrefix, "inject=true", sep = "")
     paramPrefix <- "&"
   }
   
   if (totals) {
-    tabulate <- paste(tabulate,
-                      paramPrefix,
-                      "totals=true",
-                      sep = "",
-                      collapse = NULL)
+    tabulate <-
+      paste(tabulate, paramPrefix, "totals=true", sep = "")
     paramPrefix <- "&"
   }
   
   if (!is.null(dimensions)) {
-    tabulate <- paste(
-      tabulate,
-      paramPrefix,
-      "dims=",
-      url_encode(paste(dimensions, collapse = ",")),
-      sep = "",
-      collapse = NULL
-    )
+    tabulate <-
+      paste(tabulate, paramPrefix, "dims=", url_encode(paste(dimensions, collapse = ",")), sep = "")
     paramPrefix <- "&"
   }
   
   if (!is.null(measures)) {
-    tabulate <- paste(
-      tabulate,
-      paramPrefix,
-      "measure=",
-      url_encode(paste(measures, collapse = ",")),
-      sep = "",
-      collapse = NULL
-    )
+    tabulate <-
+      paste(tabulate, paramPrefix, "measure=", url_encode(paste(measures, collapse = ",")), sep = "")
     paramPrefix <- "&"
   }
   
   if (!is.null(limit))  {
-    tabulate <- paste(tabulate,
-                      paramPrefix,
-                      "limit=",
-                      limit,
-                      sep = "",
-                      collapse = NULL)
+    tabulate <- paste(tabulate, paramPrefix, "limit=", limit, sep = "")
     paramPrefix <- "&"
   }
   
   if (!is.null(offset))  {
-    tabulate <- paste(tabulate,
-                      paramPrefix,
-                      "offset=",
-                      offset,
-                      sep = "",
-                      collapse = NULL)
+    tabulate <-
+      paste(tabulate, paramPrefix, "offset=", offset, sep = "")
+    paramPrefix <- "&"
+  }
+  
+  if (!is.null(weights))  {
+    tabulate <-
+      paste(tabulate, paramPrefix, "weights=", url_encode(paste(weights, collapse = ",")), sep = "")
     paramPrefix <- "&"
   }
   
   if (!is.null(where))  {
     tabulate <-
-      paste(
-        tabulate,
-        paramPrefix,
-        "where=",
-        url_encode(where),
-        sep = "",
-        collapse = NULL
-      )
+      paste(tabulate, paramPrefix, "where=", url_encode(where), sep = "")
     paramPrefix <- "&"
   }
   
   if (!is.null(orderby))  {
     tabulate <-
-      paste(
-        tabulate,
-        paramPrefix,
-        "orderby=",
-        url_encode(paste(orderby, collapse = ",")),
-        sep = "",
-        collapse = NULL
-      )
+      paste(tabulate, paramPrefix, "orderby=", url_encode(paste(orderby, collapse = ",")), sep = "")
     paramPrefix <- "&"
   }
   

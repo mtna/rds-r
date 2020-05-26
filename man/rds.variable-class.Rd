@@ -48,6 +48,8 @@ A variable containg the metadata round a column of data. This will provide infor
 
 \item{\code{isWeight}}{Indicates if the variable can be used as a weight.}
 
+\item{\code{statistics}}{A list of rds.statistics objects that potentially contains weighted or non weighted summary statistics of the variables values.}
+
 \item{\code{frequencies}}{A list of rds.frequency objects that potentially contains weighted or non weighted frequencies of the variables values.}
 }}
 

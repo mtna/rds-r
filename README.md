@@ -22,7 +22,7 @@ browseVignettes(package="rds.r")
 ```
 ## Overview
 
-This R library facilitates access and integration with the [Rich Data Services API](http://www.richdataservices.com), enabling immediate access to the catalogs and data products hosted on RDS. This allows R developers to access the data through the R library and not have to do any of the techincal work of building up the API calls and handling the responses. Data and metadata will be retrieved, parsed into the appropriate classes, and returend to the developer to be begin working with immediately. 
+This R library facilitates access and integration with the [Rich Data Services API](http://www.richdataservices.com), enabling immediate access to the catalogs and data products hosted on RDS. This allows R developers to access the data through the R library and not have to do any of the technical work of building up the API calls and handling the responses. Data and metadata will be retrieved, parsed into the appropriate classes, and returned to the developer to be begin working with immediately. 
 
 ## Why RDS?
 Retrieving data and metadata for analytical, reporting, or visualization purposes is typically a time and resource consuming process that involves several steps such as:
@@ -36,14 +36,15 @@ RDS simplifies this process by offering a REST API to perform all of the above i
 
 RDS combines on the fly querying and tabulation capabilities with metadata retrieval features. Comprehensive variable and classification metadata can accompany any data queried through RDS, enabling immediate reuse and rendering. 
 
-Visit the RDS web site for detailed informtion on the platform capabilities or learn more about how to complement and deliver your data to you users. 
+Visit the RDS web site for detailed information on the platform capabilities or learn more about how to complement and deliver your data to you users. 
 
 ## Contribute
 Putting this product together and maintaining the repository takes time and resources. We welcome your support in any shape or form, in particular:
 
-* Fork/clone, and contribute to the package
+* Contribute to the package following our [contribution guidelines][contribute].
 * Let us know is you find any discrepancy or have suggestions towards enhancing the content or quality of the library
 * Donations are appreciated and can be made through [PayPal](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=GKAYVJSBLN92E)
 * Consider using RDS or any of our data/metadata [services, products, or expertise](http://www.mtna.us)
 
 
+[contribute]: ./CONTRIBUTING.md
