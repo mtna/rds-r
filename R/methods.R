@@ -429,120 +429,120 @@ setGeneric("parseVariables", function(variableDf)
 #'
 #' @param variableDf The variable data frame to parse
 setMethod("parseVariables", signature("data.frame"), function(variableDf) {
-  variables <- c()
-  
-  for (row in 1:nrow(variableDf)) {
-    # Gather the variable frequencies and format them
-    frequencies  <- variableDf[row, "frequencies"]
-    variableFrequencies <- list()
-    if (!is.null(frequencies) && !is.null(frequencies$sets[[1]])) {
-      for (i in 1:length(frequencies$sets)) {
-        # Get the set to work with
-        frequencySet <- frequencies$sets[[i]]
-        
-        # Weight properties
-        weighted <- frequencySet$weighted
-        weights <- NA_character_
-        
-        # Set up the data frame
-        setValues <- names(frequencySet$map)
-        setFrequencies <- frequencySet$map[1, ]
-        frequencyDf <- data.frame()
-        if (length(setValues) > 1) {
-          for (freqIndex in 1:length(setValues)) {
-            value <- setValues[freqIndex]
-            
-            dfRow <- data.frame(value, setFrequencies[1, value])
-            frequencyDf <- rbind(frequencyDf, dfRow)
+  variables <- list()
+  if(nrow(variableDf) > 0){
+    for (row in 1:nrow(variableDf)) {
+      # Gather the variable frequencies and format them
+      frequencies  <- variableDf[row, "frequencies"]
+      variableFrequencies <- list()
+      if (!is.null(frequencies) && !is.null(frequencies$sets[[1]])) {
+        for (i in 1:length(frequencies$sets)) {
+          # Get the set to work with
+          frequencySet <- frequencies$sets[[i]]
+          
+          # Weight properties
+          weighted <- frequencySet$weighted
+          weights <- NA_character_
+          
+          # Set up the data frame
+          setValues <- names(frequencySet$map)
+          setFrequencies <- frequencySet$map[1, ]
+          frequencyDf <- data.frame()
+          if (length(setValues) > 1) {
+            for (freqIndex in 1:length(setValues)) {
+              value <- setValues[freqIndex]
+              
+              dfRow <- data.frame(value, setFrequencies[1, value])
+              frequencyDf <- rbind(frequencyDf, dfRow)
+            }
+          } else{
+            frequencyDf <- data.frame(setValues, setFrequencies)
           }
-        } else{
-          frequencyDf <- data.frame(setValues, setFrequencies)
+          names(frequencyDf) <- c("Value", "Frequency")
+          
+          variableFrequency <- new(
+            "rds.frequency",
+            weighted = weighted,
+            weights = weights,
+            frequencies = frequencyDf
+          )
+          
+          variableFrequencies <-
+            append(variableFrequencies, variableFrequency)
         }
-        names(frequencyDf) <- c("Value", "Frequency")
-        
-        variableFrequency <- new(
-          "rds.frequency",
-          weighted = weighted,
-          weights = weights,
-          frequencies = frequencyDf
-        )
-        
-        variableFrequencies <-
-          append(variableFrequencies, variableFrequency)
       }
-    }
-    
-    # Gather the variable summaryStatistics and format them
-    summaryStatistics  <- variableDf[row, "summaryStatistics"]
-    variableStatistics <- list()
-    if (!is.null(summaryStatistics) && !is.null(frequencies$sets[[1]])) {
-      for (i in 1:nrow(summaryStatistics)) {
-        # Get the set to work with
-        statisticSet <- summaryStatistics$sets[[i]]
-        statistics <- new(
-          "rds.statistics",
-          weighted = statisticSet[i, "weighted"],
-          weights = ifelse(is.null(statisticSet[i, "weights"]), NA_character_, statisticSet[i, "weights"]),
-          distinct = ifelse(is.null(statisticSet[i, "distinct"]), NA_real_, statisticSet[i, "distinct"]),
-          max = ifelse(is.null(statisticSet[i, "max"]), NA_real_, statisticSet[i, "max"]),
-          mean = ifelse(is.null(statisticSet[i, "mean"]), NA_real_, statisticSet[i, "mean"]),
-          median = ifelse(is.null(statisticSet[i, "median"]), NA_real_, statisticSet[i, "median"]),
-          min = ifelse(is.null(statisticSet[i, "min"]), NA_real_, statisticSet[i, "min"]),
-          missing = ifelse(is.null(statisticSet[i, "missing"]), NA_real_, statisticSet[i, "missing"]),
-          populated = ifelse(is.null(statisticSet[i, "populated"]), NA_real_, statisticSet[i, "populated"]),
-          standardDeviation = ifelse(is.null(statisticSet[i, "standardDeviation"]), NA_real_, statisticSet[i, "standardDeviation"]),
-          variance = ifelse(is.null(statisticSet[i, "variance"]), NA_real_, statisticSet[i, "variance"])
-        )
-        
-        variableStatistics <- append(variableStatistics, statistics)
+      
+      # Gather the variable summaryStatistics and format them
+      summaryStatistics  <- variableDf[row, "summaryStatistics"]
+      variableStatistics <- list()
+      if (!is.null(summaryStatistics) && !is.null(frequencies$sets[[1]])) {
+        for (i in 1:nrow(summaryStatistics)) {
+          # Get the set to work with
+          statisticSet <- summaryStatistics$sets[[i]]
+          statistics <- new(
+            "rds.statistics",
+            weighted = statisticSet[i, "weighted"],
+            weights = ifelse(is.null(statisticSet[i, "weights"]), NA_character_, statisticSet[i, "weights"]),
+            distinct = ifelse(is.null(statisticSet[i, "distinct"]), NA_real_, statisticSet[i, "distinct"]),
+            max = ifelse(is.null(statisticSet[i, "max"]), NA_real_, statisticSet[i, "max"]),
+            mean = ifelse(is.null(statisticSet[i, "mean"]), NA_real_, statisticSet[i, "mean"]),
+            median = ifelse(is.null(statisticSet[i, "median"]), NA_real_, statisticSet[i, "median"]),
+            min = ifelse(is.null(statisticSet[i, "min"]), NA_real_, statisticSet[i, "min"]),
+            missing = ifelse(is.null(statisticSet[i, "missing"]), NA_real_, statisticSet[i, "missing"]),
+            populated = ifelse(is.null(statisticSet[i, "populated"]), NA_real_, statisticSet[i, "populated"]),
+            standardDeviation = ifelse(is.null(statisticSet[i, "standardDeviation"]), NA_real_, statisticSet[i, "standardDeviation"]),
+            variance = ifelse(is.null(statisticSet[i, "variance"]), NA_real_, statisticSet[i, "variance"])
+          )
+          
+          variableStatistics <- append(variableStatistics, statistics)
+        }
       }
+      
+      # pull out the variables to test existence from the data frame
+      label  <- variableDf[row, "label"]
+      description  <- variableDf[row, "description"]
+      questionText  <- variableDf[row, "questionText"]
+      dataType  <- variableDf[row, "dataType"]
+      uri  <- variableDf[row, "uri"]
+      fixedStorageWidth  <- variableDf[row, "fixedStorageWidth"]
+      startPosition <- variableDf[row, "startPosition"]
+      endPosition  <- variableDf[row, "endPosition"]
+      decimals  <- variableDf[row, "decimals"]
+      classificationId  <- variableDf[row, "classificationId"]
+      classificationUri  <- variableDf[row, "classificationUri"]
+      reference  <- variableDf[row, "reference"]
+      isDimension  <- variableDf[row, "isDimension"]
+      isMeasure  <- variableDf[row, "isMeasure"]
+      isRequired  <- variableDf[row, "isRequired"]
+      isWeight  <- variableDf[row, "isWeight"]
+      
+      rdsVariable <- new(
+        "rds.variable",
+        id = variableDf[row, "id"],
+        name = variableDf[row, "name"],
+        storageType = variableDf[row, "storageType"],
+        index = variableDf[row, "index"],
+        label = ifelse(is.null(label), NA_character_, label),
+        description = ifelse(is.null(description), NA_character_, description),
+        questionText = ifelse(is.null(questionText), NA_character_, questionText),
+        dataType = ifelse(!is.null(dataType), dataType, NA_character_),
+        fixedStorageWidth = ifelse(is.null(fixedStorageWidth), NA_integer_, fixedStorageWidth),
+        startPosition = ifelse(is.null(startPosition), NA_integer_, startPosition),
+        endPosition = ifelse(is.null(endPosition), NA_integer_, endPosition),
+        decimals = ifelse(is.null(decimals), NA_integer_, decimals),
+        classificationId = ifelse(is.null(classificationId), NA_character_, classificationId),
+        classificationUri = ifelse(is.null(classificationUri), NA_character_, classificationUri),
+        reference = ifelse(is.null(reference), FALSE, reference),
+        isDimension = ifelse(is.null(isDimension), FALSE, isDimension),
+        isMeasure = ifelse(is.null(isMeasure), FALSE, isMeasure),
+        isRequired = ifelse(is.null(isRequired), FALSE, isRequired),
+        isWeight = ifelse(is.null(isWeight), FALSE, isWeight),
+        statistics = variableStatistics,
+        frequencies = variableFrequencies
+      )
+      variables <- append(variables, rdsVariable)
     }
-    
-    # pull out the variables to test existence from the data frame
-    label  <- variableDf[row, "label"]
-    description  <- variableDf[row, "description"]
-    questionText  <- variableDf[row, "questionText"]
-    dataType  <- variableDf[row, "dataType"]
-    uri  <- variableDf[row, "uri"]
-    fixedStorageWidth  <- variableDf[row, "fixedStorageWidth"]
-    startPosition <- variableDf[row, "startPosition"]
-    endPosition  <- variableDf[row, "endPosition"]
-    decimals  <- variableDf[row, "decimals"]
-    classificationId  <- variableDf[row, "classificationId"]
-    classificationUri  <- variableDf[row, "classificationUri"]
-    reference  <- variableDf[row, "reference"]
-    isDimension  <- variableDf[row, "isDimension"]
-    isMeasure  <- variableDf[row, "isMeasure"]
-    isRequired  <- variableDf[row, "isRequired"]
-    isWeight  <- variableDf[row, "isWeight"]
-    
-    rdsVariable <- new(
-      "rds.variable",
-      id = variableDf[row, "id"],
-      name = variableDf[row, "name"],
-      storageType = variableDf[row, "storageType"],
-      index = variableDf[row, "index"],
-      label = ifelse(is.null(label), NA_character_, label),
-      description = ifelse(is.null(description), NA_character_, description),
-      questionText = ifelse(is.null(questionText), NA_character_, questionText),
-      dataType = ifelse(!is.null(dataType), dataType, NA_character_),
-      fixedStorageWidth = ifelse(is.null(fixedStorageWidth), NA_integer_, fixedStorageWidth),
-      startPosition = ifelse(is.null(startPosition), NA_integer_, startPosition),
-      endPosition = ifelse(is.null(endPosition), NA_integer_, endPosition),
-      decimals = ifelse(is.null(decimals), NA_integer_, decimals),
-      classificationId = ifelse(is.null(classificationId), NA_character_, classificationId),
-      classificationUri = ifelse(is.null(classificationUri), NA_character_, classificationUri),
-      reference = ifelse(is.null(reference), FALSE, reference),
-      isDimension = ifelse(is.null(isDimension), FALSE, isDimension),
-      isMeasure = ifelse(is.null(isMeasure), FALSE, isMeasure),
-      isRequired = ifelse(is.null(isRequired), FALSE, isRequired),
-      isWeight = ifelse(is.null(isWeight), FALSE, isWeight),
-      statistics = variableStatistics,
-      frequencies = variableFrequencies
-    )
-    variables <- append(variables, rdsVariable)
   }
-  
   return (variables)
 })
 
@@ -867,28 +867,30 @@ setMethod("rds.select", signature("rds.dataProduct"), function(dataProduct,
     records <- as.data.frame(matrix(vector(), ncol = length(variableNames)))
     names(records) <- variableNames
   } 
-  
+
   # change to the correct data type based on variable types
-  for (row in 1:nrow(variableDf)) {
-    id <- variableDf[row, "id"]
-    classificationUri <- variableDf[row, "classificationUri"]
-    dataType <- variableDf[row, "dataType"]
-    
-    if(!is.null(classificationUri) && !is.na(classificationUri) && inject == T){
-      records[, id] <- as.factor(records[, id])
-    } else if(dataType == "CHAR" || dataType == "TEXT" || dataType == "LONG_TEXT" || dataType == "BIG_INTEGER" || dataType == "BIG_DECIMAL"){
-      records[, id] <- as.character(records[, id])
-    } else if (dataType == "BYTE" || dataType == "SHORT" || dataType == "INTEGER" || dataType == "LONG") {
-      records[, id] <- as.integer(as.character(records[, id]))
-    } else if (dataType == "FLOAT" || dataType == "DOUBLE" || dataType == "NUMERIC") {
-      records[, id] <- as.numeric(as.character(records[, id]))
-    } else if (dataType == "DATE") {
-      records[, id] <- as.Date(records[, id])
-    } else if (dataType == "BOOLEAN") {
-      records[, id] <- as.logical(as.character(records[, id]))
+  if(nrow(variableDf) > 0){
+    for (row in 1:nrow(variableDf)) {
+      id <- variableDf[row, "id"]
+      classificationUri <- variableDf[row, "classificationUri"]
+      dataType <- variableDf[row, "dataType"]
+  
+      if(!is.null(classificationUri) && !is.na(classificationUri) && inject == T){
+        records[, id] <- as.factor(records[, id])
+      } else if(dataType == "CHAR" || dataType == "TEXT" || dataType == "LONG_TEXT" || dataType == "BIG_INTEGER" || dataType == "BIG_DECIMAL"){
+        records[, id] <- as.character(records[, id])
+      } else if (dataType == "BYTE" || dataType == "SHORT" || dataType == "INTEGER" || dataType == "LONG") {
+        records[, id] <- as.integer(as.character(records[, id]))
+      } else if (dataType == "FLOAT" || dataType == "DOUBLE" || dataType == "NUMERIC") {
+        records[, id] <- as.numeric(as.character(records[, id]))
+      } else if (dataType == "DATE") {
+        records[, id] <- as.Date(records[, id])
+      } else if (dataType == "BOOLEAN") {
+        records[, id] <- as.logical(as.character(records[, id]))
+      }
     }
   }
-  
+
   # Create and return the data set
   dataSet <-
     new(
@@ -1053,28 +1055,39 @@ setMethod("rds.tabulate", signature("rds.dataProduct", "character"), function(da
       names(data) <- variableNames
     } 
     
+    # Set the column names of the totals
+    if(ncol(totals)>0) {
+      colnames(totals) <- variableNames
+    } else {
+      #if no totals were returned we initiate the totals as a new data frame with no data and the correct variable names
+      totals <- as.data.frame(matrix(vector(), ncol = length(variableNames)))
+      names(totals) <- variableNames
+    } 
+    
   }
   # Format the info as a data.frame
   info <- data.frame(t(json$info[-1]))
   
   # change to the correct data type based on variable types
-  for (row in 1:nrow(variableDf)) {
-    id <- variableDf[row, "id"]
-    classificationUri <- variableDf[row, "classificationUri"]
-    dataType <- variableDf[row, "dataType"]
-
-    if(!is.null(classificationUri) && !is.na(classificationUri) && inject == T){
-      data[, id] <- as.factor(data[, id])
-    }else if (dataType == "CHAR" || dataType == "TEXT" || dataType == "LONG_TEXT" || dataType == "BIG_INTEGER" || dataType == "BIG_DECIMAL"){
-      data[, id] <- as.character(data[, id])
-    } else if (dataType == "BYTE" || dataType == "SHORT" || dataType == "INTEGER" || dataType == "LONG") {
-      data[, id] <- as.integer(as.character(data[, id]))
-    } else if (dataType == "FLOAT" || dataType == "DOUBLE" || dataType == "NUMERIC") {
-      data[, id] <- as.numeric(as.character(data[, id]))
-    } else if (dataType == "DATE") {
-      data[, id] <- as.Date(data[, id])
-    } else if (dataType == "BOOLEAN") {
-      data[, id] <- as.logical(as.character(data[, id]))
+  if(nrow(variableDf) > 0){
+    for (row in 1:nrow(variableDf)) {
+      id <- variableDf[row, "id"]
+      classificationUri <- variableDf[row, "classificationUri"]
+      dataType <- variableDf[row, "dataType"]
+  
+      if(!is.null(classificationUri) && !is.na(classificationUri) && inject == T){
+        data[, id] <- as.factor(data[, id])
+      }else if (dataType == "CHAR" || dataType == "TEXT" || dataType == "LONG_TEXT" || dataType == "BIG_INTEGER" || dataType == "BIG_DECIMAL"){
+        data[, id] <- as.character(data[, id])
+      } else if (dataType == "BYTE" || dataType == "SHORT" || dataType == "INTEGER" || dataType == "LONG") {
+        data[, id] <- as.integer(as.character(data[, id]))
+      } else if (dataType == "FLOAT" || dataType == "DOUBLE" || dataType == "NUMERIC") {
+        data[, id] <- as.numeric(as.character(data[, id]))
+      } else if (dataType == "DATE") {
+        data[, id] <- as.Date(data[, id])
+      } else if (dataType == "BOOLEAN") {
+        data[, id] <- as.logical(as.character(data[, id]))
+      }
     }
   }
   
