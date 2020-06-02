@@ -20,7 +20,6 @@ This function uses the provided host, port, protocol, and application path to bu
 paths that the server uses to build up future requests as well as pulling basic information about the server.
 }
 \examples{
-get.rds("http://dev.richdataservices.com")
-get.rds("dev.richdataservices.com", path = "rds")
+get.rds("https://covid19.richdataservices.com/rds")
 }
 \keyword{server}
