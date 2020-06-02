@@ -11,8 +11,7 @@
 #' @keywords server
 #' @export
 #' @examples
-#' get.rds("http://dev.richdataservices.com")
-#' get.rds("dev.richdataservices.com", path = "rds")
+#' get.rds("https://covid19.richdataservices.com/rds")
 get.rds <- function(host,
                     port = NULL,
                     protocol = "http",

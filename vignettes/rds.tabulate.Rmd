@@ -27,51 +27,48 @@ The tabulate method allows tabulations to be created by specifying the dimension
 
 ### Getting the Data Product
 
-The first thing we need to do is set up a connection to the RDS server and get the data product we want to use, in this case we will use a subset of the U.S. 2010 Census PUMS files, containing DC, DE, MD, and VA.
+The first thing we need to do is set up a connection to the RDS server and get the data product we want to use, in this case we will use a subset of the Canadian Labor Force Survey.
 
 ```{r }
-# provide the api URL to get the server
-rds <- get.rds("http://dev.richdataservices.com/rds")
-catalog <- rds.r::getCatalog(rds, "uscensus")
-dataProduct <- rds.r::getDataProduct(catalog, "census2010-hp")
+# provide the root application URL to get the server
+rds <- get.rds("https://covid19.richdataservices.com/rds")
+catalog <- rds.r::getCatalog(rds, "ca")
+dataProduct <- rds.r::getDataProduct(catalog, "pums_lfs")
 ```
 
 ### Basic Tabulation 
 
-We will begin with a basic tabulation and show the count of respondents by state. To do this we only need to specify the dimension we want, the default measure is a count.
+We will begin with a basic tabulation and show the count of respondents by province To do this we only need to specify the dimension we want, the default measure is a count.
 
 ```{r fig.width=7, fig.height=4}
-tabulation <- rds.tabulate(dataProduct, dimensions = "state")
+tabulation <- rds.tabulate(dataProduct, dimensions = "prov")
 
-ggplot(tabulation@records, aes(x = STATE, y = count, color = STATE)) +
+ggplot(tabulation@records, aes(x = PROV, y = count, color = PROV)) +
   geom_bar(stat = "identity", fill = "white") + 
-  scale_y_continuous(labels = comma) + xlab("State") + ylab("Count")
+  scale_y_continuous(labels = comma) + xlab("Province") + ylab("Count")
 ```
 
 #### Basic Tabulation With Metadata
 
-As you can see in the previous chart the states are returned as their 2 digit fips code, which is how they are stored in the database. While these may be useful for some other sort of map, in a bar chart they are not helpful. If the RDS server has the metadata set up we can request that it return the code labels for us with the `inject` parameters. 
+As you can see in the previous chart the states are returned as their 2 digit numeric code, which is how they are stored in the database. While these may be useful for some other sort of map, in a bar chart they are not helpful. If the RDS server has the metadata set up we can request that it return the code labels for us with the `inject` parameters. 
 
-This also ensures that R users are always able to get the metadata from the source. Because the server is providing the metadata R users should not need to hard code any code values by hand. In addition, if the metadata ever changes (new codes added, typos fixed, etc) R users don't have to do change anything in their code because the server will provide the updated code values. 
+This also ensures that R users are always able to get the metadata from the source. Because the server is providing the metadata, R users should not need to hard code any code values by hand. In addition, if the metadata ever changes (new codes added, typos fixed, etc) R users don't have to do change anything in their code because the server will provide the updated code values. 
 
 Here is the same bar chart with the labels injected. 
 
 ```{r fig.width=7, fig.height=4}
 tabulation <-
-  rds.tabulate(dataProduct, dimensions = "state", inject = T)
+  rds.tabulate(dataProduct, dimensions = "prov", inject = T)
 
-ggplot(tabulation@records, aes(
-  x = STATE,
-  y = as.numeric(as.character(count)),
-  color = STATE
-)) +
+ggplot(tabulation@records, aes(x = PROV, y = count, color = PROV)) +
   geom_bar(stat = "identity", fill = "white") + 
-  scale_y_continuous(labels = comma) + xlab("State") + ylab("Count")
+  scale_y_continuous(labels = comma) + xlab("Province") + ylab("Count") +
+  theme(axis.text.x = element_text(angle = 35, hjust = 1))
 ```
 
 #### Specifying a Measure
 
-If R users would like to get a different measure then the count, they will need to specify the measure(s) they would like to use. The syntax for a measure is as follows: `<name>:<function>(<target_variable>)`. The name is the name of the variable that will be returned and can be whatever the user wants the computed variable to be called, the function is the function to run on a variable in the data product, and the target variable is the name of the variable to perform the function on. If all variables should be used `*` can be used as the target variable, for example COUNT(*) will provide return the total count of records for the specified dimensions. Currently supported functions are:
+If R users would like to get a different measure then the count, they will need to specify the measure(s) they would like to use. The syntax for a measure is as follows: `<name>:<function>(<target_variable>)`. The name is the name of the variable that will be returned and can be whatever the user wants the computed variable to be called (should be valid SQL-like name), the function is the function to run on a variable in the data product, and the target variable is the name of the variable to perform the function on. If all variables should be used `*` can be used as the target variable, for example COUNT(*) will provide return the total count of records for the specified dimensions. Currently supported functions are:
  
 - COUNT
 - PERCENT
@@ -86,32 +83,33 @@ In this example we will get the percentage of respondents by state.
 tabulation <-
   rds.tabulate(
     dataProduct,
-    dimensions = "state",
+    dimensions = "prov",
     measures = "percent:PERCENT(*)",
     inject = T
   )
 
-ggplot(tabulation@records, aes(x = STATE, y = percent, color = STATE)) +
+ggplot(tabulation@records, aes(x = PROV, y = percent, color = PROV)) +
   geom_bar(stat = "identity", fill = "white") + 
-  scale_y_continuous(labels = function(x) paste0(x, "%")) + xlab("State") + ylab("Percent of Respondents")
+  scale_y_continuous(labels = function(x) paste0(x, "%")) + xlab("Province") + ylab("Percent of Respondents") +
+  theme(axis.text.x = element_text(angle = 35, hjust = 1))
 ```
 
 #### Multiple Dimensions and Measures
 
-Multiple dimensions and measures can be used if desired. In this example we will get a cross tabulation of state, household / family type, and sex, with their percentages returned to us. 
+Multiple dimensions and measures can be used if desired. In this example we will get a cross tabulation of province, marriage status, and sex, with their percentages returned to us. 
 
 ```{r fig.width=7, fig.height=4}
 tabulation <-
   rds.tabulate(
     dataProduct,
-    dimensions = c("state", "hht", "sex"),
+    dimensions = c("prov", "marstat", "sex"),
     measures = c("percent:PERCENT(*)"),
     inject = T
   )
 
 
 # Make the plot
-ggplot(tabulation@records, aes(x=STATE, y=percent, fill=HHT)) + geom_bar(stat="identity") +
+ggplot(tabulation@records, aes(x=PROV, y=percent, fill=MARSTAT)) + geom_bar(stat="identity") +
   scale_y_continuous(name = "Percent") + 
   facet_grid(as.factor(tabulation@records$SEX)) +
   theme(axis.text.x=element_text(angle=45, hjust = 1))
