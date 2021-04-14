@@ -89,7 +89,7 @@ setClass(
   "rds.frequency",
   representation(
     weighted = "logical",
-    weights = "character",
+    weights = "list",
     frequencies ="data.frame"
   )
 )
@@ -104,7 +104,7 @@ setClass(
   "rds.statistics",
   representation(
     weighted = "logical",
-    weights = "character",
+    weights = "list",
     distinct = "numeric",
     max = "numeric",
     mean = "numeric",
