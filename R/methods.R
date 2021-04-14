@@ -442,8 +442,8 @@ setMethod("parseVariables", signature("data.frame"), function(variableDf) {
           
           # Weight properties
           weighted <- frequencySet$weighted
-          weights = ifelse(is.null(frequencySet$weights), NA_character_, frequencySet$weights[0])
-          
+          weights = ifelse(is.null(frequencySet$weights), list(), frequencySet$weights[0])
+
           # Set up the data frame
           setValues <- names(frequencySet$map)
           setFrequencies <- frequencySet$map[1, ]
@@ -479,10 +479,11 @@ setMethod("parseVariables", signature("data.frame"), function(variableDf) {
         for (i in 1:nrow(summaryStatistics)) {
           # Get the set to work with
           statisticSet <- summaryStatistics$sets[[i]]
+          
           statistics <- new(
             "rds.statistics",
             weighted = statisticSet[i, "weighted"],
-            weights = ifelse(is.null(statisticSet[i, "weights"]), NA_character_, statisticSet[i, "weights"][0]),
+            weights = ifelse(is.null(statisticSet$weights), list(), statisticSet$weights[0]),
             distinct = ifelse(is.null(statisticSet[i, "distinct"]), NA_real_, statisticSet[i, "distinct"]),
             max = ifelse(is.null(statisticSet[i, "max"]), NA_real_, statisticSet[i, "max"]),
             mean = ifelse(is.null(statisticSet[i, "mean"]), NA_real_, statisticSet[i, "mean"]),
