@@ -509,6 +509,7 @@ setMethod("parseVariables", signature("data.frame"), function(variableDf) {
       startPosition <- variableDf[row, "startPosition"]
       endPosition  <- variableDf[row, "endPosition"]
       decimals  <- variableDf[row, "decimals"]
+      index <- variableDf[row, "index"]
       classificationId  <- variableDf[row, "classificationId"]
       classificationUri  <- variableDf[row, "classificationUri"]
       reference  <- variableDf[row, "reference"]
@@ -522,7 +523,7 @@ setMethod("parseVariables", signature("data.frame"), function(variableDf) {
         id = variableDf[row, "id"],
         name = variableDf[row, "name"],
         storageType = variableDf[row, "storageType"],
-        index = variableDf[row, "index"],
+        index = ifelse(is.null(index), NA_integer_, index),
         label = ifelse(is.null(label), NA_character_, label),
         description = ifelse(is.null(description), NA_character_, description),
         questionText = ifelse(is.null(questionText), NA_character_, questionText),
