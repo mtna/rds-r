@@ -432,6 +432,22 @@ setMethod("parseVariables", signature("data.frame"), function(variableDf) {
   variables <- list()
   if(nrow(variableDf) > 0){
     for (row in 1:nrow(variableDf)) {
+      # Gather the variable reserved values
+      reservedValues  <- variableDf[row, "reservedValues"][[1]]
+      variableReservedValues <- list()
+      if (!is.null(reservedValues)) {
+        for (i in 1:nrow(reservedValues)) {
+          # Get the reservedValue to work with
+          reservedValue <- new(
+            "rds.reservedValue",
+            codeValue = reservedValues[i, "codeValue"],
+            computable = reservedValues[i, "computable"],
+            name = reservedValues[i, "name"]
+          )
+          variableReservedValues <- append(variableReservedValues, reservedValue)
+        }
+      }
+      
       # Gather the variable frequencies and format them
       frequencies  <- variableDf[row, "frequencies"]
       variableFrequencies <- list()
@@ -509,6 +525,7 @@ setMethod("parseVariables", signature("data.frame"), function(variableDf) {
       startPosition <- variableDf[row, "startPosition"]
       endPosition  <- variableDf[row, "endPosition"]
       decimals  <- variableDf[row, "decimals"]
+      index <- variableDf[row, "index"]
       classificationId  <- variableDf[row, "classificationId"]
       classificationUri  <- variableDf[row, "classificationUri"]
       reference  <- variableDf[row, "reference"]
@@ -522,7 +539,7 @@ setMethod("parseVariables", signature("data.frame"), function(variableDf) {
         id = variableDf[row, "id"],
         name = variableDf[row, "name"],
         storageType = variableDf[row, "storageType"],
-        index = variableDf[row, "index"],
+        index = ifelse(is.null(index), NA_integer_, index),
         label = ifelse(is.null(label), NA_character_, label),
         description = ifelse(is.null(description), NA_character_, description),
         questionText = ifelse(is.null(questionText), NA_character_, questionText),
@@ -538,6 +555,7 @@ setMethod("parseVariables", signature("data.frame"), function(variableDf) {
         isMeasure = ifelse(is.null(isMeasure), FALSE, isMeasure),
         isRequired = ifelse(is.null(isRequired), FALSE, isRequired),
         isWeight = ifelse(is.null(isWeight), FALSE, isWeight),
+        reservedValues = variableReservedValues,
         statistics = variableStatistics,
         frequencies = variableFrequencies
       )
@@ -856,7 +874,6 @@ setMethod("rds.select", signature("rds.dataProduct"), function(dataProduct,
       metadata <- FALSE
       offset <- offset + limit
       limit <- floor(10000 / length(variableNames))
-      Sys.sleep(0.2)
     }
   }
   
@@ -873,10 +890,9 @@ setMethod("rds.select", signature("rds.dataProduct"), function(dataProduct,
   if(nrow(variableDf) > 0){
     for (row in 1:nrow(variableDf)) {
       id <- variableDf[row, "id"]
-      classificationUri <- variableDf[row, "classificationUri"]
       dataType <- variableDf[row, "dataType"]
   
-      if(!is.null(classificationUri) && !is.na(classificationUri) && inject == T){
+      if((isClassified(row, variableDf) || hasReservedValues(row, variableDf)) && inject == T){
         records[, id] <- as.factor(records[, id])
       } else if(dataType == "CHAR" || dataType == "TEXT" || dataType == "LONG_TEXT" || dataType == "BIG_INTEGER" || dataType == "BIG_DECIMAL"){
         records[, id] <- as.character(records[, id])
@@ -1076,7 +1092,7 @@ setMethod("rds.tabulate", signature("rds.dataProduct", "character"), function(da
       classificationUri <- variableDf[row, "classificationUri"]
       dataType <- variableDf[row, "dataType"]
   
-      if(!is.null(classificationUri) && !is.na(classificationUri) && inject == T){
+      if((isClassified(row, variableDf) || hasReservedValues(row, variableDf)) && inject == T){
         data[, id] <- as.factor(data[, id])
       }else if (dataType == "CHAR" || dataType == "TEXT" || dataType == "LONG_TEXT" || dataType == "BIG_INTEGER" || dataType == "BIG_DECIMAL"){
         data[, id] <- as.character(data[, id])
@@ -1101,4 +1117,49 @@ setMethod("rds.tabulate", signature("rds.dataProduct", "character"), function(da
       info = info
     )
   return(dataSet)
+})
+
+
+#' Is Classified
+#'
+#' A method to check a variable in a DF to see if it has a classification URI set, which indicates that its a classified variable.
+#'
+#' @param rowNumber The row number of the data frame that represents the variable in question
+#' @param variableDf The variable data frame to check
+#' @name isClassified
+#' @rdname isClassified
+setGeneric("isClassified", function(rowNumber, variableDf)
+  standardGeneric("isClassified"))
+
+#' Is Classified
+#'
+#' A method to check a variable in a DF to see if it has a classification URI set, which indicates that its a classified variable.
+#'
+#' @param rowNumber The row number of the data frame that represents the variable in question
+#' @param variableDf The variable data frame to parse
+setMethod("isClassified", signature("numeric", "data.frame"), function(rowNumber, variableDf) {
+  classificationUri <- variableDf[rowNumber, "classificationUri"]
+  return (!is.null(classificationUri) && !is.na(classificationUri))
+})
+
+#' Has Reserved Values
+#'
+#' A method to check a variable in a DF to see if it has reserved values or not
+#'
+#' @param rowNumber The row number of the data frame that represents the variable in question
+#' @param variableDf The variable data frame to check
+#' @name hasReservedValues
+#' @rdname hasReservedValues
+setGeneric("hasReservedValues", function(rowNumber, variableDf)
+  standardGeneric("hasReservedValues"))
+
+#' Has Reserved Values
+#'
+#' A method to check a variable in a DF to see if it has reserved values or not
+#'
+#' @param rowNumber The row number of the data frame that represents the variable in question
+#' @param variableDf The variable data frame to parse
+setMethod("hasReservedValues", signature("numeric", "data.frame"), function(rowNumber, variableDf) {
+  reservedValues  <- variableDf[rowNumber, "reservedValues"][[1]]
+  return (!is.null(reservedValues))
 })
