@@ -117,6 +117,21 @@ setClass(
   )
 )
 
+#' Rich Data Services reserved values. Reserved values are codes that are set at the variable level (not classification) to identify values with special meaning amongst other non coded values.
+#' 
+#' 
+#' @name rds.reservedValue-class
+#' @rdname rds.reservedValue-class
+#' @exportClass rds.reservedValue
+setClass(
+  "rds.reservedValue",
+  representation(
+    codeValue = "character",
+    computable = "logical",
+    name = "character"
+  )
+)
+
 #' Rich Data Services Variable 
 #' 
 #' A variable containg the metadata round a column of data. This will provide information about the variable, what it is, the codes that apply to it and summary statistics. 
@@ -167,6 +182,7 @@ setClass(
     isMeasure = "logical",
     isRequired = "logical",
     isWeight = "logical",
+    reservedValues ="list",
     statistics ="list",
     frequencies ="list"
   )
