@@ -14,7 +14,8 @@ rds.tabulate(
   weights = NULL,
   where = NULL,
   totals = TRUE,
-  inject = FALSE
+  inject = FALSE,
+  apiKey = NULL
 )
 }
 \arguments{
@@ -37,6 +38,8 @@ rds.tabulate(
 \item{totals}{Specifies if totals should be included. Totals are used to provide roll up information about the counts of dimensions at different levels.}
 
 \item{inject}{Specifies if metadata should be injected into the data frame. If true and there are classifications available the columns codes will be replaced with code values. Defaults to FALSE}
+
+\item{apiKey}{The user's apiKey to access the API, if the API is not secured this can be NULL.}
 }
 \description{
 The rds.tabulate(dataProduct) method is used to create aggregated tables and perform analysis on a data product.

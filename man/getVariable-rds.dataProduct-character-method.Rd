@@ -4,12 +4,14 @@
 \alias{getVariable,rds.dataProduct,character-method}
 \title{Get Variable}
 \usage{
-\S4method{getVariable}{rds.dataProduct,character}(dataProduct, variableId)
+\S4method{getVariable}{rds.dataProduct,character}(dataProduct, variableId, apiKey = NULL)
 }
 \arguments{
 \item{dataProduct}{The rds.dataProduct to query for the variable.}
 
 \item{variableId}{The ID of the desired variable.}
+
+\item{apiKey}{The user's apiKey to access the API, if the API is not secured this can be NULL.}
 }
 \description{
 The getVariable(dataProduct, variableId) method can be used to get the variable with the provided ID from the provided rds.dataProduct.

@@ -4,12 +4,14 @@
 \alias{getDataProduct}
 \title{Get Data Product}
 \usage{
-getDataProduct(catalog, dataProductId)
+getDataProduct(catalog, dataProductId, apiKey = NULL)
 }
 \arguments{
 \item{catalog}{The catalog to query for the data product.}
 
 \item{dataProductId}{The ID of the desired data product.}
+
+\item{apiKey}{The user's apiKey to access the API, if the API is not secured this can be NULL.}
 }
 \description{
 The getDataProduct(catalog, dataProductId) method can be used to get the data product with the provided ID from the provided rds.catalog.

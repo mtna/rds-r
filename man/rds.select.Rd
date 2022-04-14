@@ -16,7 +16,8 @@ rds.select(
   weights = NULL,
   where = NULL,
   inject = FALSE,
-  autoPage = TRUE
+  autoPage = TRUE,
+  apiKey = NULL
 )
 }
 \arguments{
@@ -43,6 +44,8 @@ rds.select(
 \item{inject}{Specifies if metadata should be injected into the data frame. If true and there are classifications available the columns codes will be replaced with code values. Defaults to FALSE}
 
 \item{autoPage}{If set to true multiple queries will be sent to the RDS server in order to compile the complete data set.}
+
+\item{apiKey}{The user's apiKey to access the API, if the API is not secured this can be NULL.}
 }
 \description{
 The rds.select(dataProduct) method is used to access the record level data of the data product. In the explorer and through the API the total number of cells is limited to 10000 cells. This is done to keep a small and manageable amount of information going over the network. Be aware that by default the select method will perform numerous calls to build up a complete dataset. If this is not desired remember to set autoPage=FALSE.

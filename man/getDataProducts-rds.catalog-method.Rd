@@ -4,10 +4,12 @@
 \alias{getDataProducts,rds.catalog-method}
 \title{Get Data Products}
 \usage{
-\S4method{getDataProducts}{rds.catalog}(catalog)
+\S4method{getDataProducts}{rds.catalog}(catalog, apiKey = NULL)
 }
 \arguments{
 \item{catalog}{The catalog to query for the data products.}
+
+\item{apiKey}{The user's apiKey to access the API, if the API is not secured this can be NULL.}
 }
 \description{
 The getDataProducts(catalog) method can be used to retrieve all the data products from the provided catalog.

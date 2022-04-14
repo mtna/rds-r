@@ -4,7 +4,7 @@
 \alias{get.rds}
 \title{Get RDS Server}
 \usage{
-get.rds(host, port = NULL, protocol = "http", path = "rds")
+get.rds(host, port = NULL, protocol = "http", path = "rds", apiKey = NULL)
 }
 \arguments{
 \item{host}{The host or domain name of the server}
@@ -14,6 +14,8 @@ get.rds(host, port = NULL, protocol = "http", path = "rds")
 \item{protocol}{The protocol to use in the call, http by default.}
 
 \item{path}{The path to the RDS application root. This will be rds by default, if no path is desired (for instances behind a proxy) this can be set to null}
+
+\item{apiKey}{The user's apiKey to access the API, if the API is not secured this can be NULL.}
 }
 \description{
 This function uses the provided host, port, protocol, and application path to build up an RDS server. This will create the base
