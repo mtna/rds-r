@@ -2,23 +2,23 @@
 #'
 #' The getCatalogs(server) method can be used to get all the catalogs from the provided rds.server.
 #'
-#' @param server The server to query for the catalogs.
+#' @param server The server to query for the catalogs.#' 
+#' @param apiKey The user's apiKey to access the API, if the API is not secured this can be NULL.
 #' @name getCatalogs
 #' @rdname getCatalogs
 #' @exportMethod getCatalogs
-setGeneric("getCatalogs", function(server)
+setGeneric("getCatalogs", function(server, apiKey = NULL)
   standardGeneric("getCatalogs"))
 
 #' Get Catalogs
 #'
 #' The getCatalogs(server) method can be used to get all the catalogs from the provided rds.server.
 #'
-#' @import jsonlite
 #' @param server The server to query for the catalogs.
-setMethod("getCatalogs", signature("rds.server"), function(server) {
+#' @param apiKey The user's apiKey to access the API, if the API is not secured this can be NULL.
+setMethod("getCatalogs", signature("rds.server"), function(server, apiKey = NULL) {
   # Query the server for all the catalogs
-  catalogsUrl <- paste(server@baseUrl, "/api/catalog", sep = "")
-  response <- jsonlite::fromJSON(catalogsUrl)
+  response <- callApi(paste(server@baseUrl, "/api/catalog", sep = ""), apiKey)
   catalogs <- response[[1]]
   
   # Build the catalog classes
@@ -46,26 +46,25 @@ setMethod("getCatalogs", signature("rds.server"), function(server) {
 #'
 #' @param server The server to query for the catalog.
 #' @param catalogId The ID of the desired catalog.
+#' @param apiKey The user's apiKey to access the API, if the API is not secured this can be NULL.
 #' @name getCatalog
 #' @rdname getCatalog
 #' @exportMethod getCatalog
-setGeneric("getCatalog", function(server, catalogId)
+setGeneric("getCatalog", function(server, catalogId, apiKey = NULL)
   standardGeneric("getCatalog"))
 
 #' Get Catalog
 #'
 #' The getCatalog(server, catalogId) method can be used to get the catalog with the provided ID from the provided rds.server.
 #'
-#' @import jsonlite
 #' @param server The server to query for the catalog.
 #' @param catalogId The ID of the desired catalog.
-setMethod("getCatalog", signature("rds.server", "character"), function(server, catalogId) {
+#' @param apiKey The user's apiKey to access the API, if the API is not secured this can be NULL.
+setMethod("getCatalog", signature("rds.server", "character"), function(server, catalogId, apiKey = NULL) {
   # Query the server for the specified catlog
   rdsCatalog <- NULL
   tryCatch({
-    catalogUrl <-
-      paste(server@baseUrl, "/api/catalog/", catalogId, sep = "")
-    catalog <- jsonlite::fromJSON(catalogUrl)
+    catalog <- callApi(paste(server@baseUrl, "/api/catalog/", catalogId, sep = ""), apiKey)
     rdsCatalog <- new(
       "rds.catalog",
       server = server,
@@ -96,26 +95,24 @@ setMethod("getCatalog", signature("rds.server", "character"), function(server, c
 #'
 #' The getDataProducts(catalog) method can be used to retrieve all the data products from the provided catalog.
 #'
-#' @import jsonlite
 #' @param catalog The catalog to query for the data products.
+#' @param apiKey The user's apiKey to access the API, if the API is not secured this can be NULL.
 #' @name getDataProducts
 #' @rdname getDataProducts
 #' @exportMethod getDataProducts
-setGeneric("getDataProducts", function(catalog)
+setGeneric("getDataProducts", function(catalog, apiKey = NULL)
   standardGeneric("getDataProducts"))
 
 #' Get Data Products
 #'
 #' The getDataProducts(catalog) method can be used to retrieve all the data products from the provided catalog.
 #'
-#' @import jsonlite
 #' @param catalog The catalog to query for the data products.
-setMethod("getDataProducts", signature("rds.catalog"), function(catalog) {
+#' @param apiKey The user's apiKey to access the API, if the API is not secured this can be NULL.
+setMethod("getDataProducts", signature("rds.catalog"), function(catalog, apiKey = NULL) {
   # Set up the request URL
   server <- catalog@server
-  dataProductsUrl <-
-    paste(server@baseUrl, "/api/catalog/", catalog@id, sep = "")
-  response <- jsonlite::fromJSON(dataProductsUrl)
+  response <- callApi(paste(server@baseUrl, "/api/catalog/", catalog@id, sep = ""), apiKey)
   dataProducts = response[[1]]
   
   # Build the data product classes
@@ -146,29 +143,28 @@ setMethod("getDataProducts", signature("rds.catalog"), function(catalog) {
 #'
 #' @param catalog The catalog to query for the data product.
 #' @param dataProductId The ID of the desired data product.
+#' @param apiKey The user's apiKey to access the API, if the API is not secured this can be NULL.
 #' @name getDataProduct
 #' @rdname getDataProduct
 #' @exportMethod getDataProduct
-setGeneric("getDataProduct", function(catalog, dataProductId)
+setGeneric("getDataProduct", function(catalog, dataProductId, apiKey=NULL)
   standardGeneric("getDataProduct"))
 
 #' Get Data Product
 #'
 #' The getDataProduct(catalog, dataProductId) method can be used to get the data product with the provided ID from the provided rds.catalog.
 #'
-#' @import jsonlite
 #' @param catalog The catalog to query for the data product.
 #' @param dataProductId The ID of the desired data product.
-setMethod("getDataProduct", signature("rds.catalog", "character"), function(catalog, dataProductId) {
+#' @param apiKey The user's apiKey to access the API, if the API is not secured this can be NULL.
+setMethod("getDataProduct", signature("rds.catalog", "character"), function(catalog, dataProductId, apiKey=NULL) {
   # Get the server from the catalog
   server <- catalog@server
   
   # Query the server for the specified data product
   rdsDataProduct <- NULL
   tryCatch({
-    dataProductUrl <- 
-      paste(server@baseUrl, "/api/catalog/", catalog@id, "/", dataProductId,sep = "")
-    dataProduct <- jsonlite::fromJSON(dataProductUrl)
+    dataProduct <- callApi(paste(server@baseUrl, "/api/catalog/", catalog@id, "/", dataProductId,sep = ""), apiKey)
     rdsDataProduct <- new(
       "rds.dataProduct",
       catalog = catalog,
@@ -217,28 +213,31 @@ setMethod("getDataProduct", signature("rds.catalog", "character"), function(cata
 #' @param cols An optional variable query following the RDS column syntax. If left NULL all the variable will be returned.
 #' @param collimit An optional limit to the variables returned. If left NULL no limit will be applied.
 #' @param coloffset An optional offset to the variables returned. If left NULL no offset will be applied
+#' @param apiKey The user's apiKey to access the API, if the API is not secured this can be NULL.
 #' @name getVariables
 #' @rdname getVariables
 #' @exportMethod getVariables
 setGeneric("getVariables", function(dataProduct,
                                     cols = NULL,
                                     collimit = NULL,
-                                    coloffset = NULL)
+                                    coloffset = NULL,
+                                    apiKey = NULL)
   standardGeneric("getVariables"))
 
 #' Get Variables
 #'
 #' The getVariables(dataProduct) method can be used to get the variable summaries of all the with the provided ID from the provided rds.dataProduct.
 #'
-#' @import jsonlite
 #' @param dataProduct The rds.dataProduct to query for the variable.
 #' @param cols An optional variable query following the RDS column syntax. If left NULL all the variable will be returned.
 #' @param collimit An optional limit to the variables returned. If left NULL no limit will be applied.
 #' @param coloffset An optional offset to the variables returned. If left NULL no offset will be applied
+#' @param apiKey The user's apiKey to access the API, if the API is not secured this can be NULL.
 setMethod("getVariables", signature("rds.dataProduct"), function(dataProduct,
                                                                  cols = NULL,
                                                                  collimit = NULL,
-                                                                 coloffset = NULL) {
+                                                                 coloffset = NULL,
+                                                                 apiKey = NULL) {
   # Get catalog
   catalog <- dataProduct@catalog
   
@@ -266,8 +265,7 @@ setMethod("getVariables", signature("rds.dataProduct"), function(dataProduct,
     variablesUrl <-
       paste(variablesUrl, paramPrefix, "coloffset=", coloffset, sep = "")
   }
-  
-  variables <- jsonlite::fromJSON(variablesUrl)
+  variables <- callApi(variablesUrl, apiKey)
   variables <- parseVariables(variables)
   return (variables)
 })
@@ -278,20 +276,21 @@ setMethod("getVariables", signature("rds.dataProduct"), function(dataProduct,
 #'
 #' @param dataProduct The rds.dataProduct to query for the variable.
 #' @param variableId The ID of the desired variable.
+#' @param apiKey The user's apiKey to access the API, if the API is not secured this can be NULL.
 #' @name getVariable
 #' @rdname getVariable
 #' @exportMethod getVariable
-setGeneric("getVariable", function(dataProduct, variableId)
+setGeneric("getVariable", function(dataProduct, variableId, apiKey = NULL)
   standardGeneric("getVariable"))
 
 #' Get Variable
 #'
 #' The getVariable(dataProduct, variableId) method can be used to get the variable with the provided ID from the provided rds.dataProduct.
 #'
-#' @import jsonlite
 #' @param dataProduct The rds.dataProduct to query for the variable.
 #' @param variableId The ID of the desired variable.
-setMethod("getVariable", signature("rds.dataProduct", "character"), function(dataProduct, variableId) {
+#' @param apiKey The user's apiKey to access the API, if the API is not secured this can be NULL.
+setMethod("getVariable", signature("rds.dataProduct", "character"), function(dataProduct, variableId, apiKey = NULL) {
   # Get the catalog from the data product
   catalog <- dataProduct@catalog
   
@@ -304,7 +303,7 @@ setMethod("getVariable", signature("rds.dataProduct", "character"), function(dat
     variableUrl <- 
       paste(server@baseUrl, "/api/catalog/", catalog@id, "/", dataProduct@id, "/variable/", variableId, sep = "")
     print(variableUrl)
-    variable <- jsonlite::fromJSON(variableUrl)
+    variable <- callApi(variableUrl, apiKey)
     
     # Gather the variable frequencies and format them
     variableFrequencies <- list()
@@ -573,25 +572,28 @@ setMethod("parseVariables", signature("data.frame"), function(variableDf) {
 #' @param dataProduct The rds.dataProduct to query for classifications.
 #' @param limit Specifies the number of classifications to return.
 #' @param offset Specifies the starting index of the classifications.
+#' @param apiKey The user's apiKey to access the API, if the API is not secured this can be NULL.
 #' @name getClassifications
 #' @rdname getClassifications
 #' @exportMethod getClassifications
 setGeneric("getClassifications", function(dataProduct,
                                           limit = NULL,
-                                          offset = NULL)
+                                          offset = NULL,
+                                          apiKey = NULL)
   standardGeneric("getClassifications"))
 
 #' Get Classifications
 #'
 #' The getClassifications(dataProduct) method can be used to retrieve the descriptive information about all the classifications that are used in the data product.
 #'
-#' @import jsonlite
 #' @param dataProduct The rds.dataProduct to query for classifications.
 #' @param limit Specifies the number of classifications to return.
 #' @param offset Specifies the starting index of the classifications.
+#' @param apiKey The user's apiKey to access the API, if the API is not secured this can be NULL.
 setMethod("getClassifications", signature("rds.dataProduct"), function(dataProduct,
                                                                        limit = NULL,
-                                                                       offset = NULL) {
+                                                                       offset = NULL,
+                                                                       apiKey = NULL) {
   # Get the catalog from the data product
   catalog <- dataProduct@catalog
   
@@ -615,8 +617,7 @@ setMethod("getClassifications", signature("rds.dataProduct"), function(dataProdu
       paste(request, paramPrefix, "offset=", offset, sep = "")
     paramPrefix = "&"
   }
-  
-  classifications <- jsonlite::fromJSON(request)
+  classifications <- callApi(request, apiKey)
   return(classifications)
 })
 
@@ -628,28 +629,31 @@ setMethod("getClassifications", signature("rds.dataProduct"), function(dataProdu
 #' @param classificationId The ID or URI of the desired classification
 #' @param limit Specifies the number of codes to return.
 #' @param offset Specifies the starting index of the codes.
+#' @param apiKey The user's apiKey to access the API, if the API is not secured this can be NULL.
 #' @name getClassification
 #' @rdname getClassification
 #' @exportMethod getClassification
 setGeneric("getClassification", function(dataProduct,
                                          classificationId,
                                          limit = 1000,
-                                         offset = 0)
+                                         offset = 0,
+                                         apiKey = NULL)
   standardGeneric("getClassification"))
 
 #' Get Classification
 #'
 #' The getClassification(dataProduct, classificationId) method can be used to get the classification with the provided ID from the provided rds.dataProduct.
 #'
-#' @import jsonlite
 #' @param dataProduct The rds.dataProduct to query for the classification
 #' @param classificationId The ID or URI of the desired classification
 #' @param limit Specifies the number of codes to return.
 #' @param offset Specifies the starting index of the codes.
+#' @param apiKey The user's apiKey to access the API, if the API is not secured this can be NULL.
 setMethod("getClassification", signature("rds.dataProduct", "character"), function(dataProduct,
                                                                                    classificationId,
                                                                                    limit = 1000,
-                                                                                   offset = 0) {
+                                                                                   offset = 0,
+                                                                                   apiKey = NULL) {
   # Get the catalog from the data product
   catalog <- dataProduct@catalog
   
@@ -659,8 +663,7 @@ setMethod("getClassification", signature("rds.dataProduct", "character"), functi
   # create the GET request and retrieve the JSON result
   request <-
     paste(rds@baseUrl, "/api/catalog/", catalog@id, "/", dataProduct@id, "/classification/", classificationId, sep = "")
-  
-  json <- jsonlite::fromJSON(request)
+  json <- callApi(request, apiKey)
   id <- json$id
   codeCount <- json$rootCodeCount
   keywordCount <- json$keywordCount
@@ -683,7 +686,7 @@ setMethod("getClassification", signature("rds.dataProduct", "character"), functi
         paste(codeRequest, paramPrefix, "offset=", offset, sep = "")
       paramPrefix = "&"
     }
-    codeListJson <- jsonlite::fromJSON(codeRequest)
+    codeListJson <- callApi(codeRequest, apiKey)
   }
   
   codes <- data.frame(codeListJson)
@@ -706,6 +709,7 @@ setMethod("getClassification", signature("rds.dataProduct", "character"), functi
 #' @param where Describes how to subset the records based on variable values.
 #' @param inject Specifies if metadata should be injected into the data frame. If true and there are classifications available the columns codes will be replaced with code values. Defaults to FALSE
 #' @param autoPage If set to true multiple queries will be sent to the RDS server in order to compile the complete data set.
+#' @param apiKey The user's apiKey to access the API, if the API is not secured this can be NULL.
 #' @name rds.select
 #' @rdname rds.select
 #' @exportMethod rds.select
@@ -720,14 +724,15 @@ setGeneric("rds.select", function(dataProduct,
                                   weights = NULL,
                                   where = NULL,
                                   inject = FALSE,
-                                  autoPage = TRUE)
+                                  autoPage = TRUE,
+                                  apiKey = NULL)
   standardGeneric("rds.select"))
 
 #' Select
 #'
 #' The rds.select(dataProduct) method is used to access the record level data of the data product. In the explorer and through the API the total number of cells is limited to 10000 cells. This is done to keep a small and manageable amount of information going over the network. Be aware that by default the select method will perform numerous calls to build up a complete dataset. If this is not desired remember to set autoPage=FALSE.
 #'
-#' @import jsonlite urltools
+#' @import urltools
 #' @param dataProduct The dataProduct whose data is desired.
 #' @param limit Specifies the number of records to return.
 #' @param offset Specifies the starting index of the records.
@@ -740,6 +745,7 @@ setGeneric("rds.select", function(dataProduct,
 #' @param where Describes how to subset the records based on variable values.
 #' @param inject Specifies if metadata should be injected into the data frame. If true and there are classifications available the columns codes will be replaced with code values. Defaults to FALSE
 #' @param autoPage If set to true multiple queries will be sent to the RDS server in order to compile the complete data set.
+#' @param apiKey The user's apiKey to access the API, if the API is not secured this can be NULL.
 setMethod("rds.select", signature("rds.dataProduct"), function(dataProduct,
                                                                limit = 20,
                                                                offset = 0,
@@ -751,7 +757,8 @@ setMethod("rds.select", signature("rds.dataProduct"), function(dataProduct,
                                                                weights = NULL,
                                                                where = NULL,
                                                                inject = FALSE,
-                                                               autoPage = TRUE) {
+                                                               autoPage = TRUE,
+                                                               apiKey = NULL) {
   # Flag indicating that we need to run another query
   query = TRUE
   metadata = TRUE
@@ -841,7 +848,7 @@ setMethod("rds.select", signature("rds.dataProduct"), function(dataProduct,
     print(select)
     
     # Make the call
-    json <- jsonlite::fromJSON(select)
+    json <- callApi(select, apiKey)
     
     # Format the data and ensure the variable names are used as column names in the data.frame
     data <- data.frame(json$records)
@@ -935,6 +942,7 @@ setMethod("rds.select", signature("rds.dataProduct"), function(dataProduct,
 #' @param where Describes the subset of records the tabulation should run on.
 #' @param totals Specifies if totals should be included. Totals are used to provide roll up information about the counts of dimensions at different levels.
 #' @param inject Specifies if metadata should be injected into the data frame. If true and there are classifications available the columns codes will be replaced with code values. Defaults to FALSE
+#' @param apiKey The user's apiKey to access the API, if the API is not secured this can be NULL.
 #' @name rds.tabulate
 #' @rdname rds.tabulate
 #' @exportMethod rds.tabulate
@@ -947,14 +955,15 @@ setGeneric("rds.tabulate", function(dataProduct,
                                     weights = NULL,
                                     where = NULL,
                                     totals = TRUE,
-                                    inject = FALSE)
+                                    inject = FALSE,
+                                    apiKey = NULL)
   standardGeneric("rds.tabulate"))
 
 #' Tabulate
 #'
 #' The rds.tabulate(dataProduct) method is used to create aggregated tables and perform analysis on a data product.
 #'
-#' @import jsonlite urltools
+#' @import urltools
 #' @param dataProduct The dataProduct whose data is being used in the tabulation.
 #' @param dimensions The names of the variables that should be used as dimensions.
 #' @param measures The variables that should be used as a measure, will be the count by default.
@@ -965,6 +974,7 @@ setGeneric("rds.tabulate", function(dataProduct,
 #' @param where Describes the subset of records the tabulation should run on.
 #' @param totals Specifies if totals should be included. Totals are used to provide roll up information about the counts of dimensions at different levels.
 #' @param inject Specifies if metadata should be injected into the data frame. If true and there are classifications available the columns codes will be replaced with code values. Defaults to FALSE
+#' @param apiKey The user's apiKey to access the API, if the API is not secured this can be NULL.
 setMethod("rds.tabulate", signature("rds.dataProduct", "character"), function(dataProduct,
                                                                               dimensions,
                                                                               measures = NULL,
@@ -974,7 +984,8 @@ setMethod("rds.tabulate", signature("rds.dataProduct", "character"), function(da
                                                                               weights = NULL,
                                                                               where = NULL,
                                                                               totals = TRUE,
-                                                                              inject = FALSE) {
+                                                                              inject = FALSE,
+                                                                              apiKey = NULL) {
   # Get the catalog from the data product
   catalog <- dataProduct@catalog
   
@@ -1045,7 +1056,7 @@ setMethod("rds.tabulate", signature("rds.dataProduct", "character"), function(da
   
   # Print the request and get the JSON
   print(tabulate)
-  json <- jsonlite::fromJSON(tabulate)
+  json <- callApi(tabulate, apiKey)
   
   # Format the data and ensure the variable names are used as colnames in the data.frame
   data <- data.frame(json$records)
@@ -1162,4 +1173,30 @@ setGeneric("hasReservedValues", function(rowNumber, variableDf)
 setMethod("hasReservedValues", signature("numeric", "data.frame"), function(rowNumber, variableDf) {
   reservedValues  <- variableDf[rowNumber, "reservedValues"][[1]]
   return (!is.null(reservedValues))
+})
+
+#' Call API
+#'
+#' A method to handle making the call to the API, checking that the response is successful and returning the appropriate object
+#'
+#' @param url The API URL to hit
+#' @param apiKey An optional API key to use. 
+#' @name callApi
+#' @rdname callApi
+setGeneric("callApi", function(url, apiKey = NULL)
+  standardGeneric("callApi"))
+
+#' Call API
+#'
+#' A method to handle making the call to the API, checking that the response is successful and returning the appropriate object
+#'
+#' @import jsonlite httr
+#' @param url The API URL to hit
+#' @param apiKey An optional API key to use. 
+setMethod("callApi", signature("character"), function(url, apiKey = NULL) {
+  response <- if(!is.null(apiKey)) GET(url, add_headers("X-API-KEY"=apiKey)) else GET(url)
+  if(response$status_code != 200){
+    stop(paste("Error making call [",url,"], response code [",response$status_code,"]", sep = "", collapse = NULL))
+  }
+  return (jsonlite::fromJSON(content(response, "text")))
 })

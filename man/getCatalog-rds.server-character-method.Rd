@@ -4,12 +4,14 @@
 \alias{getCatalog,rds.server,character-method}
 \title{Get Catalog}
 \usage{
-\S4method{getCatalog}{rds.server,character}(server, catalogId)
+\S4method{getCatalog}{rds.server,character}(server, catalogId, apiKey = NULL)
 }
 \arguments{
 \item{server}{The server to query for the catalog.}
 
 \item{catalogId}{The ID of the desired catalog.}
+
+\item{apiKey}{The user's apiKey to access the API, if the API is not secured this can be NULL.}
 }
 \description{
 The getCatalog(server, catalogId) method can be used to get the catalog with the provided ID from the provided rds.server.

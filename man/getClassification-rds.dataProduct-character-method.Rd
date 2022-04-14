@@ -4,7 +4,13 @@
 \alias{getClassification,rds.dataProduct,character-method}
 \title{Get Classification}
 \usage{
-\S4method{getClassification}{rds.dataProduct,character}(dataProduct, classificationId, limit = 1000, offset = 0)
+\S4method{getClassification}{rds.dataProduct,character}(
+  dataProduct,
+  classificationId,
+  limit = 1000,
+  offset = 0,
+  apiKey = NULL
+)
 }
 \arguments{
 \item{dataProduct}{The rds.dataProduct to query for the classification}
@@ -14,6 +20,8 @@
 \item{limit}{Specifies the number of codes to return.}
 
 \item{offset}{Specifies the starting index of the codes.}
+
+\item{apiKey}{The user's apiKey to access the API, if the API is not secured this can be NULL.}
 }
 \description{
 The getClassification(dataProduct, classificationId) method can be used to get the classification with the provided ID from the provided rds.dataProduct.

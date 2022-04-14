@@ -4,7 +4,13 @@
 \alias{getVariables,rds.dataProduct-method}
 \title{Get Variables}
 \usage{
-\S4method{getVariables}{rds.dataProduct}(dataProduct, cols = NULL, collimit = NULL, coloffset = NULL)
+\S4method{getVariables}{rds.dataProduct}(
+  dataProduct,
+  cols = NULL,
+  collimit = NULL,
+  coloffset = NULL,
+  apiKey = NULL
+)
 }
 \arguments{
 \item{dataProduct}{The rds.dataProduct to query for the variable.}
@@ -14,6 +20,8 @@
 \item{collimit}{An optional limit to the variables returned. If left NULL no limit will be applied.}
 
 \item{coloffset}{An optional offset to the variables returned. If left NULL no offset will be applied}
+
+\item{apiKey}{The user's apiKey to access the API, if the API is not secured this can be NULL.}
 }
 \description{
 The getVariables(dataProduct) method can be used to get the variable summaries of all the with the provided ID from the provided rds.dataProduct.

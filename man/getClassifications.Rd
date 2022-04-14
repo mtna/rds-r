@@ -4,7 +4,7 @@
 \alias{getClassifications}
 \title{Get Classifications}
 \usage{
-getClassifications(dataProduct, limit = NULL, offset = NULL)
+getClassifications(dataProduct, limit = NULL, offset = NULL, apiKey = NULL)
 }
 \arguments{
 \item{dataProduct}{The rds.dataProduct to query for classifications.}
@@ -12,6 +12,8 @@ getClassifications(dataProduct, limit = NULL, offset = NULL)
 \item{limit}{Specifies the number of classifications to return.}
 
 \item{offset}{Specifies the starting index of the classifications.}
+
+\item{apiKey}{The user's apiKey to access the API, if the API is not secured this can be NULL.}
 }
 \description{
 The getClassifications(dataProduct) method can be used to retrieve the descriptive information about all the classifications that are used in the data product.

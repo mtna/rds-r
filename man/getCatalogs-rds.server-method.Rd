@@ -4,10 +4,12 @@
 \alias{getCatalogs,rds.server-method}
 \title{Get Catalogs}
 \usage{
-\S4method{getCatalogs}{rds.server}(server)
+\S4method{getCatalogs}{rds.server}(server, apiKey = NULL)
 }
 \arguments{
 \item{server}{The server to query for the catalogs.}
+
+\item{apiKey}{The user's apiKey to access the API, if the API is not secured this can be NULL.}
 }
 \description{
 The getCatalogs(server) method can be used to get all the catalogs from the provided rds.server.

@@ -7,6 +7,7 @@
 #' @param port The port the RDS server is running on if needed. This is NULL by default.
 #' @param protocol The protocol to use in the call, http by default.
 #' @param path The path to the RDS application root. This will be rds by default, if no path is desired (for instances behind a proxy) this can be set to null
+#' @param apiKey The user's apiKey to access the API, if the API is not secured this can be NULL.
 #' @import methods
 #' @keywords server
 #' @export
@@ -15,7 +16,8 @@
 get.rds <- function(host,
                     port = NULL,
                     protocol = "http",
-                    path = "rds") {
+                    path = "rds",
+                    apiKey = NULL) {
   # parse the string into a URL object (data frame)
   url <- url_parse(host)
   
@@ -38,17 +40,21 @@ get.rds <- function(host,
   baseUrl <- url_compose(url)
   
   # Get the server information
-  serverInfo <-
-    jsonlite::fromJSON(paste(baseUrl, "/api/server/info", sep = "", collapse = NULL))
+  url <- paste(baseUrl, "/api/server/info", sep = "", collapse = NULL)
+  response <- if(!is.null(apiKey)) GET(url, add_headers("X-API-KEY"=apiKey)) else GET(url)
+  if(response$status_code != 200){
+    stop(paste("Error getting server info, response code [",response$status_code,"]", sep = "", collapse = NULL))
+  }
+  serverInfo <- jsonlite::fromJSON(content(response, "text"))
   serverName <- serverInfo[[1]][1]
   serverVersion <- serverInfo[[2]][1]
   
   # Get the disclaimer if available, this may return null
+  url <- paste(baseUrl, "/api/server/disclaimer", sep = "", collapse = NULL)
+  response <- if(!is.null(apiKey)) GET(url, add_headers("X-API-KEY"=apiKey)) else GET(url)
   disclaimer <-
     tryCatch(
-      jsonlite::fromJSON(paste(
-        baseUrl, "/api/server/disclaimer", sep = "", collapse = NULL
-      )),
+      jsonlite::fromJSON(content(response, "text")),
       error = function(e) {
         disclaimer <- ""
       }
