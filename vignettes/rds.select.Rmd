@@ -34,9 +34,9 @@ The first thing we need to do is set up a connection to the RDS server and get t
 
 ```{r }
 # provide the api URL to get the server
-rds <- get.rds("http://dev.richdataservices.com/rds")
-catalog <- rds.r::getCatalog(rds, "uscensus")
-dataProduct <- rds.r::getDataProduct(catalog, "census2010-hp")
+rds <- get.rds("https://public.richdataservices.com/rds")
+catalog <- rds.r::getCatalog(rds, "covid19")
+dataProduct <- rds.r::getDataProduct(catalog, "ppp_loan")
 ```
 
 ### Basic Select 
@@ -79,11 +79,11 @@ paged_table(dataSet@records)
 RDS allows for a number of different ways to search for variable data. Users can provide the name, a regex, or keyword to search on. 
 
 ```{r }
-# We will search for SerialNO directly, anything that starts with P (regex)
+# We will search for date_approved directly, anything that starts with loan (regex)
 dataSet <-
   rds.select(
     dataProduct,
-    cols = c("serialno", "p.*"),
+    cols = c("date_approved", "loan.*"),
     limit = 5,
     autoPage = FALSE,
     inject = TRUE

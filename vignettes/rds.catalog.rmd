@@ -24,21 +24,21 @@ Catalogs in RDS are simply collections of data products. A data product is the o
 
 ```{r}
 # set up the base API URL
-url = "http://dev.richdataservices.com/rds"
+url = "https://public.richdataservices.com/rds"
 
 # connect to the server
 rds <- get.rds(url)
 
 # get a catalog
-census <- rds.r::getCatalog(rds, "uscensus")
+covid19 <- rds.r::getCatalog(rds, "covid19")
 ```
 
 
 ### Get Specific Data Product
-We can get the 2010 Census Household / Person data product and display some of its information in the following section
+We can get the SBA Paycheck Protection Program data product and display some of its information in the following section
 
 ```{r}
-dataProduct <- rds.r::getDataProduct(census, "census2010-hp")
+dataProduct <- rds.r::getDataProduct(covid19, "ppp_loan")
 ```
 
 ### `r dataProduct@name`

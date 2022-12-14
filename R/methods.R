@@ -898,6 +898,9 @@ setMethod("rds.select", signature("rds.dataProduct"), function(dataProduct,
     for (row in 1:nrow(variableDf)) {
       id <- variableDf[row, "id"]
       dataType <- variableDf[row, "dataType"]
+      if(is.null(dataType)){
+        dataType <-  variableDf[row, "storageType"]
+      }
   
       if((isClassified(row, variableDf) || hasReservedValues(row, variableDf)) && inject == T){
         records[, id] <- as.factor(records[, id])
