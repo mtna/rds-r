@@ -27,13 +27,13 @@ The tabulate method allows tabulations to be created by specifying the dimension
 
 ### Getting the Data Product
 
-The first thing we need to do is set up a connection to the RDS server and get the data product we want to use, in this case we will use a subset of the Canadian Labor Force Survey.
+The first thing we need to do is set up a connection to the RDS server and get the data product we want to use, in this case we will use the SBA Paycheck Protection Loan data.
 
 ```{r }
-# provide the root application URL to get the server
-rds <- get.rds("https://covid19.richdataservices.com/rds")
-catalog <- rds.r::getCatalog(rds, "ca")
-dataProduct <- rds.r::getDataProduct(catalog, "pums_lfs")
+# provide the api URL to get the server
+rds <- get.rds("https://public.richdataservices.com/rds")
+catalog <- rds.r::getCatalog(rds, "covid19")
+dataProduct <- rds.r::getDataProduct(catalog, "ppp_loan")
 ```
 
 ### Basic Tabulation 
@@ -41,9 +41,9 @@ dataProduct <- rds.r::getDataProduct(catalog, "pums_lfs")
 We will begin with a basic tabulation and show the count of respondents by province To do this we only need to specify the dimension we want, the default measure is a count.
 
 ```{r fig.width=7, fig.height=4}
-tabulation <- rds.tabulate(dataProduct, dimensions = "prov")
+tabulation <- rds.tabulate(dataProduct, dimensions = "us_state_fips")
 
-ggplot(tabulation@records, aes(x = PROV, y = count, color = PROV)) +
+ggplot(tabulation@records, aes(x = us_state_fips, y = count, color = us_state_fips)) +
   geom_bar(stat = "identity", fill = "white") + 
   scale_y_continuous(labels = comma) + xlab("Province") + ylab("Count")
 ```
@@ -58,9 +58,13 @@ Here is the same bar chart with the labels injected.
 
 ```{r fig.width=7, fig.height=4}
 tabulation <-
-  rds.tabulate(dataProduct, dimensions = "prov", inject = T)
+  rds.tabulate(dataProduct, dimensions = "us_state_fips", inject = T)
 
-ggplot(tabulation@records, aes(x = PROV, y = count, color = PROV)) +
+ggplot(tabulation@records, aes(
+  x = us_state_fips,
+  y = as.numeric(as.character(count)),
+  color = us_state_fips
+)) +
   geom_bar(stat = "identity", fill = "white") + 
   scale_y_continuous(labels = comma) + xlab("Province") + ylab("Count") +
   theme(axis.text.x = element_text(angle = 35, hjust = 1))
@@ -83,12 +87,12 @@ In this example we will get the percentage of respondents by state.
 tabulation <-
   rds.tabulate(
     dataProduct,
-    dimensions = "prov",
+    dimensions = "us_state_fips",
     measures = "percent:PERCENT(*)",
     inject = T
   )
 
-ggplot(tabulation@records, aes(x = PROV, y = percent, color = PROV)) +
+ggplot(tabulation@records, aes(x = us_state_fips, y = percent, color = us_state_fips)) +
   geom_bar(stat = "identity", fill = "white") + 
   scale_y_continuous(labels = function(x) paste0(x, "%")) + xlab("Province") + ylab("Percent of Respondents") +
   theme(axis.text.x = element_text(angle = 35, hjust = 1))
@@ -96,22 +100,22 @@ ggplot(tabulation@records, aes(x = PROV, y = percent, color = PROV)) +
 
 #### Multiple Dimensions and Measures
 
-Multiple dimensions and measures can be used if desired. In this example we will get a cross tabulation of province, marriage status, and sex, with their percentages returned to us. 
+Multiple dimensions and measures can be used if desired. In this example we will get a cross tabulation of state and sex, with their percentages returned to us. 
 
 ```{r fig.width=7, fig.height=4}
 tabulation <-
   rds.tabulate(
     dataProduct,
-    dimensions = c("prov", "marstat", "sex"),
+    dimensions = c("us_state_fips", "gender"),
     measures = c("percent:PERCENT(*)"),
     inject = T
   )
 
 
 # Make the plot
-ggplot(tabulation@records, aes(x=PROV, y=percent, fill=MARSTAT)) + geom_bar(stat="identity") +
+ggplot(tabulation@records, aes(x=us_state_fips, y=percent)) + geom_bar(stat="identity") +
   scale_y_continuous(name = "Percent") + 
-  facet_grid(as.factor(tabulation@records$SEX)) +
+  facet_grid(as.factor(tabulation@records$gender)) +
   theme(axis.text.x=element_text(angle=45, hjust = 1))
 
 ```

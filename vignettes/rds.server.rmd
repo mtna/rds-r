@@ -22,8 +22,8 @@ library("knitr")
 
 Setting up the connection to the RDS server is the starting point to interacting with the RDS API through R. It provides an entry point to the API and will facilitate the handling of API calls for catalogs and data products. 
 ```{r}
-# set up the root application URL
-url = "https://covid19.richdataservices.com/rds"
+# set up the base URL
+url = "https://public.richdataservices.com/rds"
 
 # connect to the server
 rds <- get.rds(url)
@@ -67,7 +67,7 @@ kable(catalogDf)
 ### Get Specific Catalog
 
 ```{r}
-catalog <- rds.r::getCatalog(rds, "ca")
+catalog <- rds.r::getCatalog(rds, "covid19")
 df <-
   data.frame(
     catalog@id,
