@@ -3,15 +3,15 @@ library("rds.r")
 library("knitr")
 
 ## -----------------------------------------------------------------------------
-# set up the host / domain name of the RDS instance
-host = "http://dev.richdataservices.com"
+# set up the base API URL
+url = "https://public.richdataservices.com/rds"
 
 # connect to the server
-rds <- get.rds(host)
+rds <- get.rds(url)
 
 # get a catalog
-census <- rds.r::getCatalog(rds, "uscensus")
+covid19 <- rds.r::getCatalog(rds, "covid19")
 
 ## -----------------------------------------------------------------------------
-dataProduct <- rds.r::getDataProduct(census, "census2010-hp")
+dataProduct <- rds.r::getDataProduct(covid19, "ppp_loan")
 
