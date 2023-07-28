@@ -4,10 +4,11 @@
 #'
 #' @param server The server to query for the catalogs.#' 
 #' @param apiKey The user's apiKey to access the API, if the API is not secured this can be NULL.
+#' @param lang The language to return metadata in, if this is null or an invalid parameter the default language will be returned.
 #' @name getCatalogs
 #' @rdname getCatalogs
 #' @exportMethod getCatalogs
-setGeneric("getCatalogs", function(server, apiKey = NULL)
+setGeneric("getCatalogs", function(server, apiKey = NULL, lang = NULL)
   standardGeneric("getCatalogs"))
 
 #' Get Catalogs
@@ -16,9 +17,16 @@ setGeneric("getCatalogs", function(server, apiKey = NULL)
 #'
 #' @param server The server to query for the catalogs.
 #' @param apiKey The user's apiKey to access the API, if the API is not secured this can be NULL.
-setMethod("getCatalogs", signature("rds.server"), function(server, apiKey = NULL) {
+#' @param lang The language to return metadata in, if this is null or an invalid parameter the default language will be returned.
+setMethod("getCatalogs", signature("rds.server"), function(server, apiKey = NULL, lang = NULL) {
   # Query the server for all the catalogs
-  response <- callApi(paste(server@baseUrl, "/api/catalog", sep = ""), apiKey)
+  catalogUrl <- paste(server@baseUrl, "/api/catalog", sep = "")
+  paramPrefix = "?"
+  if (!is.null(lang)) {
+    catalogUrl <- paste(catalogUrl, paramPrefix, "lang=", lang, sep = "")
+    paramPrefix = "&"
+  }
+  response <- callApi(catalogUrl, apiKey)
   catalogs <- response[[1]]
   
   # Build the catalog classes
@@ -47,10 +55,11 @@ setMethod("getCatalogs", signature("rds.server"), function(server, apiKey = NULL
 #' @param server The server to query for the catalog.
 #' @param catalogId The ID of the desired catalog.
 #' @param apiKey The user's apiKey to access the API, if the API is not secured this can be NULL.
+#' @param lang The language to return metadata in, if this is null or an invalid parameter the default language will be returned.
 #' @name getCatalog
 #' @rdname getCatalog
 #' @exportMethod getCatalog
-setGeneric("getCatalog", function(server, catalogId, apiKey = NULL)
+setGeneric("getCatalog", function(server, catalogId, apiKey = NULL, lang = NULL)
   standardGeneric("getCatalog"))
 
 #' Get Catalog
@@ -60,11 +69,18 @@ setGeneric("getCatalog", function(server, catalogId, apiKey = NULL)
 #' @param server The server to query for the catalog.
 #' @param catalogId The ID of the desired catalog.
 #' @param apiKey The user's apiKey to access the API, if the API is not secured this can be NULL.
-setMethod("getCatalog", signature("rds.server", "character"), function(server, catalogId, apiKey = NULL) {
+#' @param lang The language to return metadata in, if this is null or an invalid parameter the default language will be returned.
+setMethod("getCatalog", signature("rds.server", "character"), function(server, catalogId, apiKey = NULL, lang = NULL) {
   # Query the server for the specified catlog
   rdsCatalog <- NULL
   tryCatch({
-    catalog <- callApi(paste(server@baseUrl, "/api/catalog/", catalogId, sep = ""), apiKey)
+    catalogUrl <- paste(server@baseUrl, "/api/catalog/", catalogId, sep = "")
+    paramPrefix = "?"
+    if (!is.null(lang)) {
+      catalogUrl <- paste(catalogUrl, paramPrefix, "lang=", lang, sep = "")
+      paramPrefix = "&"
+    }
+    catalog <- callApi(catalogUrl, apiKey)
     rdsCatalog <- new(
       "rds.catalog",
       server = server,
@@ -97,10 +113,11 @@ setMethod("getCatalog", signature("rds.server", "character"), function(server, c
 #'
 #' @param catalog The catalog to query for the data products.
 #' @param apiKey The user's apiKey to access the API, if the API is not secured this can be NULL.
+#' @param lang The language to return metadata in, if this is null or an invalid parameter the default language will be returned.
 #' @name getDataProducts
 #' @rdname getDataProducts
 #' @exportMethod getDataProducts
-setGeneric("getDataProducts", function(catalog, apiKey = NULL)
+setGeneric("getDataProducts", function(catalog, apiKey = NULL, lang = NULL)
   standardGeneric("getDataProducts"))
 
 #' Get Data Products
@@ -109,10 +126,17 @@ setGeneric("getDataProducts", function(catalog, apiKey = NULL)
 #'
 #' @param catalog The catalog to query for the data products.
 #' @param apiKey The user's apiKey to access the API, if the API is not secured this can be NULL.
-setMethod("getDataProducts", signature("rds.catalog"), function(catalog, apiKey = NULL) {
+#' @param lang The language to return metadata in, if this is null or an invalid parameter the default language will be returned.
+setMethod("getDataProducts", signature("rds.catalog"), function(catalog, apiKey = NULL, lang = NULL) {
   # Set up the request URL
   server <- catalog@server
-  response <- callApi(paste(server@baseUrl, "/api/catalog/", catalog@id, sep = ""), apiKey)
+  dataProductUrl <- paste(server@baseUrl, "/api/catalog/", catalog@id, sep = "")
+  paramPrefix = "?"
+  if (!is.null(lang)) {
+    dataProductUrl <- paste(dataProductUrl, paramPrefix, "lang=", lang, sep = "")
+    paramPrefix = "&"
+  }
+  response <- callApi(dataProductUrl, apiKey)
   dataProducts = response[[1]]
   
   # Build the data product classes
@@ -144,10 +168,11 @@ setMethod("getDataProducts", signature("rds.catalog"), function(catalog, apiKey 
 #' @param catalog The catalog to query for the data product.
 #' @param dataProductId The ID of the desired data product.
 #' @param apiKey The user's apiKey to access the API, if the API is not secured this can be NULL.
+#' @param lang The language to return metadata in, if this is null or an invalid parameter the default language will be returned.
 #' @name getDataProduct
 #' @rdname getDataProduct
 #' @exportMethod getDataProduct
-setGeneric("getDataProduct", function(catalog, dataProductId, apiKey=NULL)
+setGeneric("getDataProduct", function(catalog, dataProductId, apiKey=NULL, lang = NULL)
   standardGeneric("getDataProduct"))
 
 #' Get Data Product
@@ -157,14 +182,21 @@ setGeneric("getDataProduct", function(catalog, dataProductId, apiKey=NULL)
 #' @param catalog The catalog to query for the data product.
 #' @param dataProductId The ID of the desired data product.
 #' @param apiKey The user's apiKey to access the API, if the API is not secured this can be NULL.
-setMethod("getDataProduct", signature("rds.catalog", "character"), function(catalog, dataProductId, apiKey=NULL) {
+#' @param lang The language to return metadata in, if this is null or an invalid parameter the default language will be returned.
+setMethod("getDataProduct", signature("rds.catalog", "character"), function(catalog, dataProductId, apiKey=NULL, lang = NULL) {
   # Get the server from the catalog
   server <- catalog@server
   
   # Query the server for the specified data product
   rdsDataProduct <- NULL
   tryCatch({
-    dataProduct <- callApi(paste(server@baseUrl, "/api/catalog/", catalog@id, "/", dataProductId,sep = ""), apiKey)
+    dataProductUrl <- paste(server@baseUrl, "/api/catalog/", catalog@id, "/", dataProductId,sep = "")
+    paramPrefix = "?"
+    if (!is.null(lang)) {
+      dataProductUrl <- paste(dataProductUrl, paramPrefix, "lang=", lang, sep = "")
+      paramPrefix = "&"
+    }
+    dataProduct <- callApi(dataProductUrl, apiKey)
     rdsDataProduct <- new(
       "rds.dataProduct",
       catalog = catalog,
@@ -214,6 +246,7 @@ setMethod("getDataProduct", signature("rds.catalog", "character"), function(cata
 #' @param collimit An optional limit to the variables returned. If left NULL no limit will be applied.
 #' @param coloffset An optional offset to the variables returned. If left NULL no offset will be applied
 #' @param apiKey The user's apiKey to access the API, if the API is not secured this can be NULL.
+#' @param lang The language to return metadata in, if this is null or an invalid parameter the default language will be returned.
 #' @name getVariables
 #' @rdname getVariables
 #' @exportMethod getVariables
@@ -221,7 +254,8 @@ setGeneric("getVariables", function(dataProduct,
                                     cols = NULL,
                                     collimit = NULL,
                                     coloffset = NULL,
-                                    apiKey = NULL)
+                                    apiKey = NULL,
+                                    lang = NULL)
   standardGeneric("getVariables"))
 
 #' Get Variables
@@ -233,11 +267,13 @@ setGeneric("getVariables", function(dataProduct,
 #' @param collimit An optional limit to the variables returned. If left NULL no limit will be applied.
 #' @param coloffset An optional offset to the variables returned. If left NULL no offset will be applied
 #' @param apiKey The user's apiKey to access the API, if the API is not secured this can be NULL.
+#' @param lang The language to return metadata in, if this is null or an invalid parameter the default language will be returned.
 setMethod("getVariables", signature("rds.dataProduct"), function(dataProduct,
                                                                  cols = NULL,
                                                                  collimit = NULL,
                                                                  coloffset = NULL,
-                                                                 apiKey = NULL) {
+                                                                 apiKey = NULL,
+                                                                 lang = NULL) {
   # Get catalog
   catalog <- dataProduct@catalog
   
@@ -265,6 +301,10 @@ setMethod("getVariables", signature("rds.dataProduct"), function(dataProduct,
     variablesUrl <-
       paste(variablesUrl, paramPrefix, "coloffset=", coloffset, sep = "")
   }
+  if (!is.null(lang)) {
+    variablesUrl <-
+      paste(variablesUrl, paramPrefix, "lang=", lang, sep = "")
+  }
   variables <- callApi(variablesUrl, apiKey)
   variables <- parseVariables(variables)
   return (variables)
@@ -277,10 +317,11 @@ setMethod("getVariables", signature("rds.dataProduct"), function(dataProduct,
 #' @param dataProduct The rds.dataProduct to query for the variable.
 #' @param variableId The ID of the desired variable.
 #' @param apiKey The user's apiKey to access the API, if the API is not secured this can be NULL.
+#' @param lang The language to return metadata in, if this is null or an invalid parameter the default language will be returned.
 #' @name getVariable
 #' @rdname getVariable
 #' @exportMethod getVariable
-setGeneric("getVariable", function(dataProduct, variableId, apiKey = NULL)
+setGeneric("getVariable", function(dataProduct, variableId, apiKey = NULL, lang = NULL)
   standardGeneric("getVariable"))
 
 #' Get Variable
@@ -290,7 +331,8 @@ setGeneric("getVariable", function(dataProduct, variableId, apiKey = NULL)
 #' @param dataProduct The rds.dataProduct to query for the variable.
 #' @param variableId The ID of the desired variable.
 #' @param apiKey The user's apiKey to access the API, if the API is not secured this can be NULL.
-setMethod("getVariable", signature("rds.dataProduct", "character"), function(dataProduct, variableId, apiKey = NULL) {
+#' @param lang The language to return metadata in, if this is null or an invalid parameter the default language will be returned.
+setMethod("getVariable", signature("rds.dataProduct", "character"), function(dataProduct, variableId, apiKey = NULL, lang = NULL) {
   # Get the catalog from the data product
   catalog <- dataProduct@catalog
   
@@ -302,6 +344,11 @@ setMethod("getVariable", signature("rds.dataProduct", "character"), function(dat
   tryCatch({
     variableUrl <- 
       paste(server@baseUrl, "/api/catalog/", catalog@id, "/", dataProduct@id, "/variable/", variableId, sep = "")
+    paramPrefix = "?"
+    if (!is.null(lang)) {
+      variableUrl <- paste(variableUrl, paramPrefix, "lang=", lang, sep = "")
+      paramPrefix = "&"
+    }
     print(variableUrl)
     variable <- callApi(variableUrl, apiKey)
     
@@ -372,7 +419,10 @@ setMethod("getVariable", signature("rds.dataProduct", "character"), function(dat
       index = variable$index,
       label = ifelse(is.null(variable$label), NA_character_, variable$label),
       description = ifelse(is.null(variable$description), NA_character_, variable$description),
+      exclusion = ifelse(is.null(variable$exclusion), NA_character_, variable$exclusion),
+      note = ifelse(is.null(variable$note), NA_character_, variable$note),
       questionText = ifelse(is.null(variable$questionText), NA_character_, variable$questionText),
+      universe = ifelse(is.null(variable$universe), NA_character_, variable$universe),
       dataType = ifelse(!is.null(variable$dataType), variable$dataType, NA_character_),
       fixedStorageWidth = ifelse(is.null(variable$fixedStorageWidth), NA_integer_, variable$fixedStorageWidth),
       startPosition = ifelse(is.null(variable$startPosition), NA_integer_, variable$startPosition),
@@ -382,8 +432,11 @@ setMethod("getVariable", signature("rds.dataProduct", "character"), function(dat
       classificationUri = ifelse(is.null(variable$classificationUri), NA_character_, variable$classificationUri),
       reference = ifelse(is.null(variable$reference), FALSE, variable$reference),
       isDimension = ifelse(is.null(variable$isDimension), FALSE, variable$isDimension),
+      isDisclosive = ifelse(is.null(variable$isDisclosive), FALSE, variable$isDisclosive),
+      isGeographical = ifelse(is.null(variable$isGeographical), FALSE, variable$isGeographical),
       isMeasure = ifelse(is.null(variable$isMeasure), FALSE, variable$isMeasure),
       isRequired = ifelse(is.null(variable$isRequired), FALSE, variable$isRequired),
+      isTemporal = ifelse(is.null(variable$isTemporal), FALSE, variable$isTemporal),
       isWeight = ifelse(is.null(variable$isWeight), FALSE, variable$isWeight),
       statistics = variableStatistics,
       frequencies = variableFrequencies
@@ -518,6 +571,9 @@ setMethod("parseVariables", signature("data.frame"), function(variableDf) {
       label  <- variableDf[row, "label"]
       description  <- variableDf[row, "description"]
       questionText  <- variableDf[row, "questionText"]
+      universe  <- variableDf[row, "universe"]
+      note  <- variableDf[row, "note"]
+      exclusion  <- variableDf[row, "exclusion"]
       dataType  <- variableDf[row, "dataType"]
       uri  <- variableDf[row, "uri"]
       fixedStorageWidth  <- variableDf[row, "fixedStorageWidth"]
@@ -529,8 +585,11 @@ setMethod("parseVariables", signature("data.frame"), function(variableDf) {
       classificationUri  <- variableDf[row, "classificationUri"]
       reference  <- variableDf[row, "reference"]
       isDimension  <- variableDf[row, "isDimension"]
+      isDisclosive  <- variableDf[row, "isDisclosive"]
+      isGeographical  <- variableDf[row, "isGeographical"]
       isMeasure  <- variableDf[row, "isMeasure"]
       isRequired  <- variableDf[row, "isRequired"]
+      isTemporal  <- variableDf[row, "isTemporal"]
       isWeight  <- variableDf[row, "isWeight"]
       
       rdsVariable <- new(
@@ -541,7 +600,10 @@ setMethod("parseVariables", signature("data.frame"), function(variableDf) {
         index = ifelse(is.null(index), NA_integer_, index),
         label = ifelse(is.null(label), NA_character_, label),
         description = ifelse(is.null(description), NA_character_, description),
+        exclusion = ifelse(is.null(exclusion), NA_character_, exclusion),
+        note = ifelse(is.null(note), NA_character_, note),
         questionText = ifelse(is.null(questionText), NA_character_, questionText),
+        universe = ifelse(is.null(universe), NA_character_, universe),
         dataType = ifelse(!is.null(dataType), dataType, NA_character_),
         fixedStorageWidth = ifelse(is.null(fixedStorageWidth), NA_integer_, fixedStorageWidth),
         startPosition = ifelse(is.null(startPosition), NA_integer_, startPosition),
@@ -551,8 +613,11 @@ setMethod("parseVariables", signature("data.frame"), function(variableDf) {
         classificationUri = ifelse(is.null(classificationUri), NA_character_, classificationUri),
         reference = ifelse(is.null(reference), FALSE, reference),
         isDimension = ifelse(is.null(isDimension), FALSE, isDimension),
+        isDisclosive = ifelse(is.null(isDisclosive), FALSE, isDisclosive),
+        isGeographical = ifelse(is.null(isGeographical), FALSE, isGeographical),
         isMeasure = ifelse(is.null(isMeasure), FALSE, isMeasure),
         isRequired = ifelse(is.null(isRequired), FALSE, isRequired),
+        isTemporal = ifelse(is.null(isTemporal), FALSE, isTemporal),
         isWeight = ifelse(is.null(isWeight), FALSE, isWeight),
         reservedValues = variableReservedValues,
         statistics = variableStatistics,
@@ -573,13 +638,15 @@ setMethod("parseVariables", signature("data.frame"), function(variableDf) {
 #' @param limit Specifies the number of classifications to return.
 #' @param offset Specifies the starting index of the classifications.
 #' @param apiKey The user's apiKey to access the API, if the API is not secured this can be NULL.
+#' @param lang The language to return metadata in, if this is null or an invalid parameter the default language will be returned.
 #' @name getClassifications
 #' @rdname getClassifications
 #' @exportMethod getClassifications
 setGeneric("getClassifications", function(dataProduct,
                                           limit = NULL,
                                           offset = NULL,
-                                          apiKey = NULL)
+                                          apiKey = NULL,
+                                          lang = NULL)
   standardGeneric("getClassifications"))
 
 #' Get Classifications
@@ -590,10 +657,12 @@ setGeneric("getClassifications", function(dataProduct,
 #' @param limit Specifies the number of classifications to return.
 #' @param offset Specifies the starting index of the classifications.
 #' @param apiKey The user's apiKey to access the API, if the API is not secured this can be NULL.
+#' @param lang The language to return metadata in, if this is null or an invalid parameter the default language will be returned.
 setMethod("getClassifications", signature("rds.dataProduct"), function(dataProduct,
                                                                        limit = NULL,
                                                                        offset = NULL,
-                                                                       apiKey = NULL) {
+                                                                       apiKey = NULL,
+                                                                       lang = NULL) {
   # Get the catalog from the data product
   catalog <- dataProduct@catalog
   
@@ -617,6 +686,12 @@ setMethod("getClassifications", signature("rds.dataProduct"), function(dataProdu
       paste(request, paramPrefix, "offset=", offset, sep = "")
     paramPrefix = "&"
   }
+  
+  if (!is.null(lang)) {
+    request <-
+      paste(request, paramPrefix, "lang=", lang, sep = "")
+    paramPrefix = "&"
+  }
   classifications <- callApi(request, apiKey)
   return(classifications)
 })
@@ -630,6 +705,7 @@ setMethod("getClassifications", signature("rds.dataProduct"), function(dataProdu
 #' @param limit Specifies the number of codes to return.
 #' @param offset Specifies the starting index of the codes.
 #' @param apiKey The user's apiKey to access the API, if the API is not secured this can be NULL.
+#' @param lang The language to return metadata in, if this is null or an invalid parameter the default language will be returned.
 #' @name getClassification
 #' @rdname getClassification
 #' @exportMethod getClassification
@@ -637,7 +713,8 @@ setGeneric("getClassification", function(dataProduct,
                                          classificationId,
                                          limit = 1000,
                                          offset = 0,
-                                         apiKey = NULL)
+                                         apiKey = NULL,
+                                         lang = NULL)
   standardGeneric("getClassification"))
 
 #' Get Classification
@@ -649,11 +726,13 @@ setGeneric("getClassification", function(dataProduct,
 #' @param limit Specifies the number of codes to return.
 #' @param offset Specifies the starting index of the codes.
 #' @param apiKey The user's apiKey to access the API, if the API is not secured this can be NULL.
+#' @param lang The language to return metadata in, if this is null or an invalid parameter the default language will be returned.
 setMethod("getClassification", signature("rds.dataProduct", "character"), function(dataProduct,
                                                                                    classificationId,
                                                                                    limit = 1000,
                                                                                    offset = 0,
-                                                                                   apiKey = NULL) {
+                                                                                   apiKey = NULL,
+                                                                                   lang = NULL) {
   # Get the catalog from the data product
   catalog <- dataProduct@catalog
   
@@ -663,6 +742,11 @@ setMethod("getClassification", signature("rds.dataProduct", "character"), functi
   # create the GET request and retrieve the JSON result
   request <-
     paste(rds@baseUrl, "/api/catalog/", catalog@id, "/", dataProduct@id, "/classification/", classificationId, sep = "")
+  paramPrefix = "?"
+  if (!is.null(lang)) {
+    request <- paste(request, paramPrefix, "lang=", lang, sep = "")
+    paramPrefix = "&"
+  }
   json <- callApi(request, apiKey)
   id <- json$id
   codeCount <- json$rootCodeCount
@@ -684,6 +768,10 @@ setMethod("getClassification", signature("rds.dataProduct", "character"), functi
     if (!is.null(offset)) {
       codeRequest <-
         paste(codeRequest, paramPrefix, "offset=", offset, sep = "")
+      paramPrefix = "&"
+    }
+    if (!is.null(lang)) {
+      codeRequest <- paste(codeRequest, paramPrefix, "lang=", lang, sep = "")
       paramPrefix = "&"
     }
     codeListJson <- callApi(codeRequest, apiKey)
@@ -710,6 +798,7 @@ setMethod("getClassification", signature("rds.dataProduct", "character"), functi
 #' @param inject Specifies if metadata should be injected into the data frame. If true and there are classifications available the columns codes will be replaced with code values. Defaults to FALSE
 #' @param autoPage If set to true multiple queries will be sent to the RDS server in order to compile the complete data set.
 #' @param apiKey The user's apiKey to access the API, if the API is not secured this can be NULL.
+#' @param lang The language to return metadata in, if this is null or an invalid parameter the default language will be returned.
 #' @name rds.select
 #' @rdname rds.select
 #' @exportMethod rds.select
@@ -725,7 +814,8 @@ setGeneric("rds.select", function(dataProduct,
                                   where = NULL,
                                   inject = FALSE,
                                   autoPage = TRUE,
-                                  apiKey = NULL)
+                                  apiKey = NULL,
+                                  lang = NULL)
   standardGeneric("rds.select"))
 
 #' Select
@@ -746,6 +836,7 @@ setGeneric("rds.select", function(dataProduct,
 #' @param inject Specifies if metadata should be injected into the data frame. If true and there are classifications available the columns codes will be replaced with code values. Defaults to FALSE
 #' @param autoPage If set to true multiple queries will be sent to the RDS server in order to compile the complete data set.
 #' @param apiKey The user's apiKey to access the API, if the API is not secured this can be NULL.
+#' @param lang The language to return metadata in, if this is null or an invalid parameter the default language will be returned.
 setMethod("rds.select", signature("rds.dataProduct"), function(dataProduct,
                                                                limit = 20,
                                                                offset = 0,
@@ -758,7 +849,8 @@ setMethod("rds.select", signature("rds.dataProduct"), function(dataProduct,
                                                                where = NULL,
                                                                inject = FALSE,
                                                                autoPage = TRUE,
-                                                               apiKey = NULL) {
+                                                               apiKey = NULL,
+                                                               lang = NULL) {
   # Flag indicating that we need to run another query
   query = TRUE
   metadata = TRUE
@@ -841,6 +933,11 @@ setMethod("rds.select", signature("rds.dataProduct"), function(dataProduct,
     
     if (metadata) {
       select <- paste(select, paramPrefix, "metadata=TRUE", sep = "")
+      paramPrefix <- "&"
+    }
+    
+    if (!is.null(lang))  {
+      select <- paste(select, paramPrefix, "lang=", lang, sep = "")
       paramPrefix <- "&"
     }
     
@@ -946,6 +1043,7 @@ setMethod("rds.select", signature("rds.dataProduct"), function(dataProduct,
 #' @param totals Specifies if totals should be included. Totals are used to provide roll up information about the counts of dimensions at different levels.
 #' @param inject Specifies if metadata should be injected into the data frame. If true and there are classifications available the columns codes will be replaced with code values. Defaults to FALSE
 #' @param apiKey The user's apiKey to access the API, if the API is not secured this can be NULL.
+#' @param lang The language to return metadata in, if this is null or an invalid parameter the default language will be returned.
 #' @name rds.tabulate
 #' @rdname rds.tabulate
 #' @exportMethod rds.tabulate
@@ -959,7 +1057,8 @@ setGeneric("rds.tabulate", function(dataProduct,
                                     where = NULL,
                                     totals = TRUE,
                                     inject = FALSE,
-                                    apiKey = NULL)
+                                    apiKey = NULL,
+                                    lang = NULL)
   standardGeneric("rds.tabulate"))
 
 #' Tabulate
@@ -978,6 +1077,7 @@ setGeneric("rds.tabulate", function(dataProduct,
 #' @param totals Specifies if totals should be included. Totals are used to provide roll up information about the counts of dimensions at different levels.
 #' @param inject Specifies if metadata should be injected into the data frame. If true and there are classifications available the columns codes will be replaced with code values. Defaults to FALSE
 #' @param apiKey The user's apiKey to access the API, if the API is not secured this can be NULL.
+#' @param lang The language to return metadata in, if this is null or an invalid parameter the default language will be returned.
 setMethod("rds.tabulate", signature("rds.dataProduct", "character"), function(dataProduct,
                                                                               dimensions,
                                                                               measures = NULL,
@@ -988,7 +1088,8 @@ setMethod("rds.tabulate", signature("rds.dataProduct", "character"), function(da
                                                                               where = NULL,
                                                                               totals = TRUE,
                                                                               inject = FALSE,
-                                                                              apiKey = NULL) {
+                                                                              apiKey = NULL,
+                                                                              lang = NULL) {
   # Get the catalog from the data product
   catalog <- dataProduct@catalog
   
@@ -1054,6 +1155,11 @@ setMethod("rds.tabulate", signature("rds.dataProduct", "character"), function(da
   if (!is.null(orderby))  {
     tabulate <-
       paste(tabulate, paramPrefix, "orderby=", url_encode(paste(orderby, collapse = ",")), sep = "")
+    paramPrefix <- "&"
+  }
+  
+  if (!is.null(lang))  {
+    tabulate <- paste(tabulate, paramPrefix, "lang=", lang, sep = "")
     paramPrefix <- "&"
   }
   
